@@ -1,0 +1,184 @@
+ theoretical background used for formulating the computational approach
+
+ computation is then described, either by means of a complete listing of the func- tions that make up the program, or as a series of additions and modifications to an earlier program.
+
+ Essential but often neglected details such as the initial conditions, organization of the input and output, accuracy, convergence and efficiency are also addressed.
+
+atoms may, for example, require particular attention for molecules subject to constraints – each case must be treated individually.
+
+
+
+
+
+
+PIPELINE:
+ classical many-body problem at the atomistic level
+    In programming, the classical many-body problem refers to the computational challenge of simulating the behavior of a system consisting of a large number of interacting particles or bodies according to classical mechanics. Each particle interacts with every other particle in the system through forces such as gravity, electromagnetic forces, or other potential functions. This problem arises in various fields such as physics, chemistry, biology, and materials science, where understanding the collective behavior of many interacting entities is essential. 
+        Some common examples include 
+                molecular dynamics simulations,
+                astrophysical N-body simulations,
+                simulations of granular materials.
+    To tackle this problem, various algorithms and techniques have been developed, including:
+
+        Particle-based methods: These simulate the behavior of individual particles over time, updating their positions and velocities based on the forces acting on them. Examples include molecular dynamics methods like Verlet integration and neighbor-list algorithms.        VERLET INTEGRATION, NEIGHBOR LIST ALGORITHM
+
+        Grid-based methods: These divide the simulation space into a grid and calculate interactions between particles within neighboring grid cells. This reduces the number of pairwise interactions that need to be computed, improving efficiency. Examples include Barnes-Hut tree algorithms for gravitational N-body simulations.    BARNES-HUT TREE ALGORITHMS(GRAVITATIONAL N-BODY SIMULATION)
+
+        Fast multipole methods (FMM): FMM approximates the interactions between distant particles by recursively subdividing the simulation space into larger and smaller regions, allowing for efficient calculation of long-range interactions.  FAST MULTIPOLE METHODS(FMM) 
+        
+        Monte Carlo method:
+        NOT USEFUL IN OUR SITUATION, WE DON'T NEED TO STUDY STATISTICAL PROPERTIES
+
+
+
+---------------------
+relation between the bulk properties of matter – be it in the liquid, solid, or gaseous state 
+    Rather than attempting to deduce microscopic behavior directly from experiment, the molecular dynamics method – MD for short – follows the constructive approach in that it tries to reproduce the behavior using model systems.
+
+
+---------------------
+
+Atomowe lub cząsteczkowe modele materiałów
+ogólne zachowania systemów i dokładne obliczenia ich właściwości fizycznych
+
+    Demonstracja przejścia fazowego między stałą a cieczą w systemie atomów dysków o miękkich właściwościach
+         może pomóc zrozumieć, jak zachowują się cząsteczki w różnych warunkach temperaturowych i jak zmienia się ich struktura wraz z zmianą temperatury.
+
+    Obserwowanie lokalnego uporządkowania w prostym modelu wody
+         może pozwolić na zrozumienie, jak cząsteczki wody oddziałują ze sobą i jakie są efekty tych interakcji na strukturę wody.
+    
+    Śledzenie drgań bardzo idealizowanego łańcucha polimerowego
+         może pomóc zrozumieć podstawowe cechy zachowania polimerów, takie jak elastyczność, zwijanie się i rozciąganie.
+
+----------------
+Newton N-body problem
+Laplace
+Chaotic
+Equipotential lines
+Thermal equilibrium
+
+The N -body problem originated in the dynamics of the solar system, and the general problem turns out to be insoluble for three or more bodies. Once the atomic nature of matter became firmly established, quantum mechanics took charge of the microscopic world, and the situation became even more complicated because even the constituent particles seemed endowed with a rather ill-defined existence.
+
+------------------
+Foundations
+Rigid molecules require the use of the Euler equations, perhaps expressed in terms of Hamilton’s quaternions.
+Molecules with internal degrees of freedom, but that are also subject to structural constraints, might involve the Lagrange method for incorporating geometric constraints into the dynamical equations.
+
+Normal equilibrium MD corresponds to the microcanon- ical ensemble of statistical mechanics, but in certain cases properties at constant temperature (and sometimes pressure) are required; there are ways of modifying the equations of motion to produce such systems, but of course the individual tra- jectories no longer represent the solution of Newton’s equations.
+
+
+Termin "potencjał Lennarda-Jonesa" odnosi się do potencjału opisującego oddziaływania międzyatomowe, które występują w wielu modelach cząsteczkowych. Ma on charakterystyczne dwie części: przyciągającą, która jest proporcjonalna do odwrotności szóstej potęgi odległości między atomami, oraz odpychającą, która szybko wzrasta, gdy odległość między atomami maleje do zera. To właśnie silnie odpychające jądro tego potencjału powoduje niestabilność trajektorii atomów, co oznacza, że nawet najmniejsze zakłócenie może wywołać znaczne zmiany w zachowaniu atomów w czasie.
+
+Ogólnie rzecz biorąc, zdanie to sugeruje, że ze względu na tę niestabilność, próba uzyskania bardzo dokładnych trajektorii atomowych jest trudna, a nawet niemożliwa w praktyce, szczególnie w dłuższych okresach czasu. Dlatego też, w symulacjach dynamiki molekularnej czy innych modelach cząsteczkowych, często akceptuje się pewien stopień niedokładności w trajektoriach atomów, skupiając się raczej na ogólnych trendach i zjawiskach zachodzących w systemie. ". Thus a comparatively low-order numerical integration method often suffices;"
+
+W kontekście symulacji, w których wykorzystuje się te miękkie oddziaływania, stosowanie "wyższego rzędu integratora" oznacza korzystanie z bardziej zaawansowanych metod numerycznych do obliczania trajektorii cząsteczek. Takie integratory mogą lepiej radzić sobie z szybkimi zmianami w ruchu wewnętrznym cząsteczek i uniknąć błędów numerycznych związanych z użyciem zbyt dużych kroków czasowych. (INTEGRATOR)
+
+Dodatkowo, zmniejszenie "kroku czasowego" oznacza zwiększenie częstotliwości aktualizacji trajektorii w symulacji. W przypadku szybkich ruchów wewnętrznych cząsteczek, takich jak drgania sprężyn harmonicznych, konieczne jest częstsze uaktualnianie położeń i prędkości cząsteczek, aby zapewnić dokładność symulacji.
+
+
+In practice, the phenomena studied by MD simulation are those where relativistic effects are not observed and quantum effects can, if necessary, be in- corporated as semiclassical corrections – quantum theory shows how this should be done
+
+
+------------------
+Relation to statistical mechanics
+
+Ensemble averages
+Canonical ensemble
+    Ergodic hypothesis
+Importance sampling
+Tail probability
+Lattice(Group Theory)
+
+The Monte Carlo method considers only configuration space, having eliminated the momentum part of phase space. Since there are no dynamics, it can only be used to study systems in equilibrium, although if dynamical processes are represented in terms of collision cross sections it becomes possible to study the consequences of the process, even if not the detailed dynamics
+
+Molecular dynamics operates in the continuum, in contrast to lattice-based methods, such as cellular automata, which are spatially. discrete. 
+
+Some classes of phenomena may require re-
+peated runs based on different sets of initial conditions to sample adequately the
+kinds of behavior that can develop, adding to the computational demands. 
+
+Liquids represent the state of matter most frequently studied by MD methods.
+
+For solids, theory begins by assuming that the atomic constituents undergo small oscillations about fixed lattice positions; for gases, independent atoms are assumed and interactions are introduced as weak perturbations. In the case of liquids, however, the inter- actions are as important as in the solid state, but there is no underlying ordered structure to begin with.
+
+------------
+Possible applications
+
+Order of phase transitions
+
+
+Fundamental studies: equilibration, tests of molecular chaos, kinetic theory, diffusion, transport properties, size dependence, tests of models and potential functions.
+
+Phase transitions: first- and second-order, phase coexistence, order parameters, critical phenomena.
+
+Collective behavior: decay of space and time correlation functions, coupling of translational and rotational motion, vibration, spectroscopic measurements, orientational order, dielectric properties.
+
+Complex fluids: structure and dynamics of glasses, molecular liquids, pure wa- ter and aqueous solutions, liquid crystals, ionic liquids, fluid interfaces, films and monolayers.
+
+Polymers: chains, rings and branched molecules, equilibrium conformation, relaxation and transport processes.
+
+Solids: defect formation and migration, fracture, grain boundaries, structural transformations, radiation damage, elastic and plastic mechanical properties, friction, shock waves, molecular crystals, epitaxial growth.
+
+Biomolecules: structure and dynamics of proteins, protein folding, micelles, membranes, docking of molecules.
+Fluid dynamics: laminar flow, boundary layers, rheology of non-Newtonian fluids, unstable flow.
+
+Examples of this classification include whether the interactions are short- or long-ranged; whether the system is thermally and mechanically isolated or open to outside influence; whether, if in equilibrium, normal dynamical laws are used or the equations of motion are modified to produce a particular statistical mechanical ensemble; whether the constituent particles are simple structureless atoms or more complex molecules and, if the latter, whether the molecules are rigid or flexible; whether simple interactions are represented by continuous potential functions or by step potentials; whether interactions involve just pairs of particles or multiparticle contributions as well
+
+
+Langevin dynamics -> Brownian dynamics
+
+----------
+Organization case studies
+
+Chapter 2 introduces the MD approach using the simplest possible example, and
+demonstrates how the system behaves in practice; general issues of programming
+style and organization that are used throughout the book are also introduced here.
+In Chapter 3 we discuss the methodology for simulating monatomic systems, the
+algorithms used, and the considerations involved in efficient and accurate computa-
+tion. Chapter 4 focuses on measuring the thermodynamic and structural properties
+of systems in equilibrium; some of these properties correspond to what can be
+measured in the laboratory, while others provide a microscopic perspective unique
+to simulation. The dynamical properties of equilibrium systems are the subject of
+Chapter 5, including transport coefficients and the correlation functions that are
+associated with space- and time-dependent processes.
+
+Flexible molecules are discussed in Chapter 9 and a model for surfactants examined.
+
+Ewald Summation
+
+---------
+Chapter 1
+
+
+Periodic boundaries
+leapfrog method
+linear approximation
+
+
+
+
+
+
+
+
+
+
+BOOKS:
+The Art Of Molecular Dynamics Simulation
+
+
+
+ADDITIONAL INFO:
+Protein data bank
+
+
+FILE FORMATS:
+.PDP
+.XYZ
+.MOL2
+
+
+MODERN PROGRAMS:
+BIOVA Materials Studio
+Lammps
+Gromacs
