@@ -249,7 +249,7 @@ void StupJob(){
     InitAccels(); // initial accelerations
     AccumProps(0);
 }
-
+//kom
 
 
 int main(){
