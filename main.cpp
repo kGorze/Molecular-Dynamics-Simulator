@@ -38,6 +38,12 @@ using namespace std;
 #define VSCopy(v2,s1,v1){(v2).x = (s1)*(v1).x; (v2).y = (s1)*(v1).y;}
 #define VProd(v) {(v).x * (v).y}
 
+#define PropZero(v){v.sum = 0.0; v.sum2 = 0.0;}
+#define PropAccum(v){v.sum += v.val; v.sum2 += Sqr(v.val);}
+#define PropAvg(v,n){v.sum = /n; v.sum2 = sqrt(Max(v.sum2/n-Sqr(v.sum),0.0));}
+#define PropEst(v) (v.sum/n)
+
+
 typedef double real;
 
 typedef struct{
@@ -53,6 +59,11 @@ typedef struct{
 typedef struct {
     int x,y;
 } VecI;
+
+#define VSCopy(v2,s1,v1){ (v2).x = (s1) * (v1).x; (v2).y = (s1) * (v1).y;}
+#define VProd{(v).x * (v).y}
+
+
 
 // void ComputeForces(){
 //     VecR dr;
@@ -194,8 +205,9 @@ void InitCoords(){
 void InitVels(){
     //initializes the velocities of the particles
     int n;
+
     
-    VZero (vSum);
+    VZero (vSum); //accumulate the total velocity(momentum)
     DO_MOL{
         VRand(&mol[n].rv);
         VScale(mol[n].rv, velMag);
@@ -215,10 +227,49 @@ void AllocArrays(){
     AllocMem(mol,nMol,Mol);
 }
 
-void SetParams(){
-    rCut = pow(2.0,1.0/6.0);
-    VSCopy(region, 1/sqrt(density), initUcell);
+void EvalProps(){
+    real vv;
+    int n;
+
+    VZero(vSum);
+
+    vvSum = 0;
+    DO_MOL{
+        VVAdd(vSum, mol[n].rv);
+        vv = VLenSq(mol[n].rv);
+        vvSum += vv;
+    }
+    kinEnergy.val = 0.5*vvSum/nMol;
+    totEnergy.val = kinEnergy.val + uSum/nMol;
+    pressure.val = density*(vvSum - virSum)/(nMol*NDIM);
 }
+
+void SetParams(){
+    rCut = pow(2.0,1.0/6.0); 
+    VSCopy(region, 1/sqrt(density), initUcell);
+    nMol = VProd(initUcell); //The evaluation of nMol and region assumes just one atom per unit cell, and allowance is made for momentum conservation
+    //(which removes NDIM degrees of freedom)
+    velMag = sqrt(NDIM*(1 - 1/nMol)*temperature);
+}
+
+void AccumProps(int icode){
+    if(icode = 0){
+        PropZero(totEnergy);
+        PropZero(kinEnergy);
+        PropZero(pressure);
+    }
+    else if (icode == 1){
+        PropAccum(totEnergy);
+        PropAccum(kinEnergy);
+        PropAccum(pressure);
+    }else if(icode == 2){
+        PropAvg(totEnergy, stepAvg);
+        PropAvg(kinEnergy, stepAvg);
+        PropAvg(pressure, stepAvg);
+    }
+}
+
+
 
 void SingleStep(){
     stepCount++;
