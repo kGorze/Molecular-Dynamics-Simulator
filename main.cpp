@@ -3,6 +3,7 @@ This chapter provides the introductory appetizer and aims to leave the reader ne
 
 Of course, the technique for evaluating the forces discussed here is not particularly efficient from a computational point of view and the model is about the simplest there is
 */
+#include <stdio.h>
 
 #include <iostream>
 #include <math.h>
@@ -271,6 +272,8 @@ void AccumProps(int icode){
 
 
 
+
+
 void SingleStep(){
     stepCount++;
     timeNow = stepCount* deltaT;
@@ -292,6 +295,7 @@ void SingleStep(){
 
 }
 
+
 void StupJob(){
     AllocArrays();
     stepCount = 0;
@@ -300,11 +304,41 @@ void StupJob(){
     InitAccels(); // initial accelerations
     AccumProps(0);
 }
-//kom
+
+void PrintSummary (FILE *fp)
+{
+fprintf (fp,
+"%5d %8.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f\n",
+stepCount, timeNow, VCSum (vSum) / nMol, PropEst (totEnergy),
+PropEst (kinEnergy), PropEst (pressure));
+}
 
 
 int main(){
+
+    real deltaT, density, temperature;
+    int initUcell, stepAvg, stepEquil, stepLimit;
+
+    /*
+    deltaT 0.005
+    density 0.8
+    initUcell 20 20
+    stepAvg 100
+    stepEquil 0
+    stepLimit 10000
+    temperature 1    
+    */
+
+   //The initial configuration is a 20 × 20 square lattice so that there are a total of 400 atoms.
+   //The timestep value deltaT is determined by the requirement that energy be conserved by the leapfrog method 
+   //Temperature 1
+   
+    
+
+
     GetNameList(argc, argv);
+    NameList nameList
+
     PrintNameList(stdout);
     SetParams();
     SetupJob();
