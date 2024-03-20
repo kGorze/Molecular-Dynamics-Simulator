@@ -115,6 +115,33 @@ void ComputeForces(){
             }
         }
     }
+};
+
+void LeapfrogStep(int part){
+    // handles the task of integrating the coordinates and velocities
+    int n;
+    real s;
+    if(part == 1){
+        s = 0.5*deltaT;
+        DO_MOL{
+            VSAdd(mol[n].rv, s, mol[n].ra);
+            VSAdd(mol[n].r, deltaT, mol[n].rv);
+        }
+    }else{
+        s = 0.5*deltaT;
+        DO_MOL{
+            VSAdd(mol[n].rv, s, mol[n].ra);
+        }
+    }
+}
+
+void ApplyBoundaryCond(){
+    //responsible for taking care of any periodic wraparound in the updated coordinates
+    int n;
+    DO_MOL{
+        VWrapAll(mol[n].r);
+    }
+
 }
 
 
