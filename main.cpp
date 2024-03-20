@@ -33,7 +33,10 @@ using namespace std;
 
 #define NDIM 2
 
+#define AllocMem(a,n,t) a = (t*)malloc((n)*sizeof(t))
 
+#define VSCopy(v2,s1,v1){(v2).x = (s1)*(v1).x; (v2).y = (s1)*(v1).y;}
+#define VProd(v) {(v).x * (v).y}
 
 typedef double real;
 
@@ -100,7 +103,13 @@ typedef struct{
 } Prop;
 
 Mol *mol; // The variable mol is actually a pointer to a one-dimensional array that is allocated dynamically at the start of the run and sized according to the value of nMol. 
-VecR region, vSum;
+/*
+ From a practical point of view, writ- ing *mol in the above list of declarations is equivalent to mol[...] with a specific array size, except that in the former case the array size is established when the program is run rather than at compilation time
+*/
+VecR region, vSum; 
+/*
+The vector region contains the edge lengths of the simulation region.
+*/
 VecI initUcell;
 Prop kinEnergy, pressure, totEnergy;
 real deltaT, density, rCut, temperature, timeNow, uCut, uSum, virSum, velMag, virSum, vvSum;
@@ -152,6 +161,8 @@ void LeapfrogStep(int part){
     }
 }
 
+
+
 void ApplyBoundaryCond(){
     //responsible for taking care of any periodic wraparound in the updated coordinates
     int n;
@@ -198,6 +209,15 @@ void InitAccels(){
     //initializes the accelerations of the particles
     int n;
     DO_MOL VZero(mol[n].ra);
+}
+
+void AllocArrays(){
+    AllocMem(mol,nMol,Mol);
+}
+
+void SetParams(){
+    rCut = pow(2.0,1.0/6.0);
+    VSCopy(region, 1/sqrt(density), initUcell);
 }
 
 void SingleStep(){
