@@ -16,22 +16,23 @@ using namespace std;
 #define VSub(v1,v2,v3){(v1).x = (v2).x - (v3).x; (v1).y = (v2).y - (v3).y;}
 #define VDot(v1,v2) ((v1).x*(v2).x + (v1).y*(v2).y)
 #define VSAdd(v1,v2,s3,v3){(v1).x = (v2).x + (s3)*(v3).x; (v1).y = (v2).y + (s3)*(v3).y;}
+
+#define VMul(v1,v2,v3){(v1).x = (v2).x*(v3).x;(v1).y = (v2).y*(v3).y;}
+
 #define VSet(v1,s2){(v1).x = s2; (v1).y = s2;}
 #define VSetAll(v,s)(VSET(v,s,s))
 #define VZero(v)(VSetAll(v,0.0))
 #define VVSAdd(v1,s2,v2)(VSAdd(v1,v1,s2,v2))
 #define VLenSq(v)(VDot(v,v))
 
-#define VWrap(v,t){
-    if(v.t >= 0.5*region.t){
-        v.t -= region.t;
-    }else{
-        if(v.t < -0.5*region.t){
-            v.t += region.t;
-        }
-    }
-}
+#define VWrap(v,t){ if(v.t >= 0.5*region.t){ v.t -= region.t; else{ if(v.t < -0.5*region.t){ v.t += region.t;}}}
 #define VWrapAll(v){VWrap(v,x); VWrap(v,y);}
+
+#define VScale(v,s){(v).x *= s;(v).y *= s;}
+#define VVAdd(v1,v2) { VAdd(v1,v1,v2);}
+
+#define NDIM 2
+
 
 
 typedef double real;
@@ -45,6 +46,10 @@ typedef struct{
     VecR rv; //velocity
     VecR ra; //acceleration
 } Mol;
+
+typedef struct {
+    int x,y;
+} VecI;
 
 // void ComputeForces(){
 //     VecR dr;
@@ -89,6 +94,18 @@ typedef struct{
 //         }
 //     }
 // }
+
+typedef struct{
+    real val, sum, sum2;
+} Prop;
+
+Mol *mol; // The variable mol is actually a pointer to a one-dimensional array that is allocated dynamically at the start of the run and sized according to the value of nMol. 
+VecR region, vSum;
+VecI initUcell;
+Prop kinEnergy, pressure, totEnergy;
+real deltaT, density, rCut, temperature, timeNow, uCut, uSum, virSum, velMag, virSum, vvSum;
+int moreCycels, nMol, stepAvg, stepCount, stepEquil, stepLimit;
+
 
 void ComputeForces(){
     VecR dr;
@@ -144,6 +161,44 @@ void ApplyBoundaryCond(){
 
 }
 
+void InitCoords(){
+    //initializes the coordinates of the particles
+    VecR c, gap;
+    int n, nx, ny;
+
+    VDiv(gap,region,initUcell);
+    n= 0;
+    for(nx = 0; nx<initUcell.x; nx++){
+        for(ny = 0; ny<initUcell.y; ny++){
+    VSet(c, nx+0.5, ny+0.5);
+    VMul(c,c,gap);
+    VVSAdd(c, -0.5, region);
+    mol[n].r = c;
+    n++;
+        }
+    }
+}
+
+
+void InitVels(){
+    //initializes the velocities of the particles
+    int n;
+    
+    VZero (vSum);
+    DO_MOL{
+        VRand(&mol[n].rv);
+        VScale(mol[n].rv, velMag);
+        VVAdd(vSum, mol[n].rv);
+
+}
+DO_MOL VVSAdd(mol[n].rv, -1.0/nMol, vSum);
+}
+
+void InitAccels(){
+    //initializes the accelerations of the particles
+    int n;
+    DO_MOL VZero(mol[n].ra);
+}
 
 void SingleStep(){
     stepCount++;
@@ -169,9 +224,9 @@ void SingleStep(){
 void StupJob(){
     AllocArrays();
     stepCount = 0;
-    InitCords();
-    InitVels();
-    InitAccels();
+    InitCords(); // initial coordinates
+    InitVels(); // initial velocities
+    InitAccels(); // initial accelerations
     AccumProps(0);
 }
 
