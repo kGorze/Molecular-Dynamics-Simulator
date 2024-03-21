@@ -17,21 +17,9 @@ using namespace std;
 #define Sqr(x) ((x)*(x)) 
 #define Cube(x) ((x)*(x)*(x)) //macros for squaring and cubing numbers
 #define DO_MOL for(n = 0; n< nMol;n++) //This is a macro that is used to loop over all the molecules in the system. It is used in the ComputeForces and EvalProps functions.
+#define NDIM 2
 
 
-
-#define VSAdd(v1,v2,s3,v3){(v1).x = (v2).x + (s3)*(v3).x; (v1).y = (v2).y + (s3)*(v3).y;} //scalar addition of two vectors
-
-
-#define VSet(v1,s2){(v1).x = s2; (v1).y = s2;} //set the value of a vector
-
-
-#define VSetAll(v,s)(VSet(v,s)) //set the value of all the components of a vector to the same value
-
-#define VZero(v)(VSetAll(v,0)) //set the value of all the components of a vector to zero
-
-#define VVSAdd(v1,s2,v2)(VSAdd(v1,v1,s2,v2)) //add a scalar multiple of one vector to another
-#define VLenSq(v)(VDot(v,v)) //return the square of the length of a vector
 
 
 //DO OGARNIECIA
@@ -39,10 +27,8 @@ using namespace std;
 
 #define VWrapAll(v){VWrap(v,x); VWrap(v,y);}
 
-#define VScale(v,s){(v).x *= s;(v).y *= s;}
 #define VVAdd(v1,v2) { VAdd(v1,v1,v2);}
 
-#define NDIM 2
 
 #define AllocMem(a,n,t) a = (t*)malloc((n)*sizeof(t))
 
@@ -236,7 +222,39 @@ void AccumProps(int icode){
     }
 };
 
-void SetParams(){
+void SetParams(vector<KeyValue> &data){
+    for (const auto &param : {"deltaT", "density", "initUcell", "stepAvg", "stepEquil", "stepLimit", "temperature"}) {
+        // Find the entry in data that corresponds to the current parameter
+        string key = param;
+        string value;
+        for (const auto &entry : data) {
+            if (entry.key == key) {
+                value = entry.value;
+                break;
+            }
+        }
+
+        // Use the value to set the corresponding parameter
+        if (key == "deltaT") {
+            deltaT = stod(value);
+        } else if (key == "density") {
+            density = stod(value);
+        } else if (key == "initUcell") {
+            // Assuming initUcell is a vector of two integers
+            int x, y;
+            sscanf(value.c_str(), "%d %d", &x, &y);
+            initUcell = {x, y};
+        } else if (key == "stepAvg") {
+            stepAvg = stoi(value);
+        } else if (key == "stepEquil") {
+            stepEquil = stoi(value);
+        } else if (key == "stepLimit") {
+            stepLimit = stoi(value);
+        } else if (key == "temperature") {
+            temperature = stod(value);
+        }
+    }
+
     rCut = pow(2.0,1.0/6.0); 
     VSCopy(region, 1/sqrt(density), initUcell);
     nMol = VProd(initUcell); //The evaluation of nMol and region assumes just one atom per unit cell, and allowance is made for momentum conservation
@@ -321,6 +339,12 @@ void GetNameList(const char* fd, vector<KeyValue>& data) {
     file.close();
 };
 
+void PrintNameList (vector<KeyValue> &data){
+    for(const auto& kv : data) {
+        cout << kv.key << " " << kv.value << endl;
+    }
+};
+
 
 int main(){
 
@@ -344,10 +368,7 @@ int main(){
     //set parameters from input to the program
     vector<KeyValue> data;
     GetNameList("data.in", data);
-
-    for(const auto& kv : data) {
-        cout << kv.key << " " << kv.value << endl;
-    }
+    PrintNameList(data);
     
     //SetParams();
     //SetupJob();
