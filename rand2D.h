@@ -1,13 +1,13 @@
-#ifndef rand2D_h
-#define rand2D_h
-#include <cmath>
+#ifndef RAND2D_H
+#define RAND2D_H
+
 #include <random>
+#include "types.h"
 
-struct Mol;
 
-void myFunction(Mol *mol){
-    mol->rv.x = std::cos(2*cmath::M_PI*rand()/RAND_MAX);
-    mol->rv.y = std::cos(2*cmath::M_PI*rand()/RAND_MAX);
+void velocity_rand(Mol *mol){
+    mol->velocity.x = std::cos(2 * M_PI * static_cast<double>(rand()) / RAND_MAX);
+    mol->velocity.y = std::cos(2 * M_PI * static_cast<double>(rand()) / RAND_MAX);
 }
 
-#endif
+#endif // RAND2D_H

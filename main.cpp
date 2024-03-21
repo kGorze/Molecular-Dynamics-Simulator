@@ -4,6 +4,10 @@ This chapter provides the introductory appetizer and aims to leave the reader ne
 Of course, the technique for evaluating the forces discussed here is not particularly efficient from a computational point of view and the model is about the simplest there is
 */
 #include "vector_operations.h"
+#include "types.h"
+#include "rand2D.h"
+#include "statistics.h"
+#include "physical.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -19,50 +23,14 @@ using namespace std;
 #define DO_MOL for(n = 0; n< nMol;n++) //This is a macro that is used to loop over all the molecules in the system. It is used in the ComputeForces and EvalProps functions.
 #define NDIM 2
 
-
-
-
-//DO OGARNIECIA
-#define VWrap(v,t){ if(v.t >= 0.5*region.t){ v.t -= region.t; else{ if(v.t < -0.5*region.t){ v.t += region.t;}}} 
-
-#define VWrapAll(v){VWrap(v,x); VWrap(v,y);}
-
-#define VVAdd(v1,v2) { VAdd(v1,v1,v2);}
-
-
 #define AllocMem(a,n,t) a = (t*)malloc((n)*sizeof(t))
 
-#define PropZero(v){v.sum = 0.0; v.sum2 = 0.0;}
-#define PropAccum(v){v.sum += v.val; v.sum2 += Sqr(v.val);}
-#define PropAvg(v,n){v.sum = /n; v.sum2 = sqrt(Max(v.sum2/n-Sqr(v.sum),0.0));}
-#define PropEst(v) (v.sum/n)
 
 
-typedef double real;
 
-
-struct KeyValue {
-    string key;
-    string value;
-};
-
-
-typedef struct{
-    VecR coordinates; //coordinates
-    VecR velocity; //velocity
-    VecR accelaration; //acceleration
-} Mol;
-
-typedef struct {
-    int x,y;
-} VecI;
 
 #define VSCopy(v2,s1,v1){ (v2).x = (s1) * (v1).x; (v2).y = (s1) * (v1).y;}
 
-
-typedef struct{
-    real val, sum, sum2;
-} Prop;
 
 vector<Mol> mol; // Change the variable mol to be a vector of Mols
 /*
@@ -81,63 +49,63 @@ int moreCycels, nMol, stepAvg, stepCount, stepEquil, stepLimit;
 // };
 
 
-// void ComputeForces(){
-//     VecR dr;
-//     real fcVal, rr, rrCut, rri, rri3;
-//     int j1, j2, n;
+void ComputeForces(){
+    VecR dr;
+    real fcVal, rr, rrCut, rri, rri3;
+    int j1, j2, n;
 
-//     rrCut = Sqr(rCut);
-//     DO_MOL{VZero(mol[n].ra);}
-//     uSum = 0;
-//     virSum = 0;
-//     for(j1 = 0;j1< nMol-1;j1++){
-//         for(j2 = j1+1;j2<nMol;j2++){
-//             VSub(dr, mol[j1].r, mol[j2].r);
-//             VWrapAll(dr);
-//             rr = VLenSq(dr);
-//             if(rr < rrCut){
-//                 rri = 1.0/rr;
-//                 rri3 = Cube(rri);
-//                 fcVal = 48.0*rri3*(rri3-0.5)*rri;
-//                 VVSAdd(mol[j1].ra, fcVal, dr);
-//                 VVSAdd(mol[j2].ra, -fcVal, dr);
-//                 uSum += 4.0*rri3*(rri3-1.0) - uCut;
-//                 virSum += fcVal*rr;
-//             }
-//         }
-//     }
-// };
-
-
-
-// void LeapfrogStep(int part){
-//     // handles the task of integrating the coordinates and velocities
-//     int n;
-//     real s;
-//     if(part == 1){
-//         s = 0.5*deltaT;
-//         DO_MOL{
-//             VSAdd(mol[n].rv, s, mol[n].ra);
-//             VSAdd(mol[n].r, deltaT, mol[n].rv);
-//         }
-//     }else{
-//         s = 0.5*deltaT;
-//         DO_MOL{
-//             VSAdd(mol[n].rv, s, mol[n].ra);
-//         }
-//     }
-// };
+    rrCut = Sqr(rCut);
+    DO_MOL{VZero(&mol[n].accelaration);}
+    uSum = 0;
+    virSum = 0;
+    for(j1 = 0;j1< nMol-1;j1++){
+        for(j2 = j1+1;j2<nMol;j2++){
+            VSub(&dr, &mol[j1].coordinates, &mol[j2].coordinates);
+            VWrapAll(dr, region);
+            rr = VLenSq(&dr);
+            if(rr < rrCut){
+                rri = 1.0/rr;
+                rri3 = Cube(rri);
+                fcVal = 48.0*rri3*(rri3-0.5)*rri;
+                VVSAdd(&mol[j1].accelaration, fcVal, &dr);
+                VVSAdd(&mol[j2].accelaration, -fcVal, &dr);
+                uSum += 4.0*rri3*(rri3-1.0) - uCut;
+                virSum += fcVal*rr;
+            }
+        }
+    }
+};
 
 
 
-// void ApplyBoundaryCond(){
-//     //responsible for taking care of any periodic wraparound in the updated coordinates
-//     int n;
-//     DO_MOL{
-//         VWrapAll(mol[n].r);
-//     }
+void LeapfrogStep(int part){
+    // handles the task of integrating the coordinates and velocities
+    int n;
+    real s;
+    if(part == 1){
+        s = 0.5*deltaT;
+        DO_MOL{
+            VSAdd(&mol[n].velocity, s, &mol[n].accelaration);
+            VSAdd(&mol[n].coordinates, deltaT, &mol[n].velocity);
+        }
+    }else{
+        s = 0.5*deltaT;
+        DO_MOL{
+            VSAdd(mol[n].rv, s, mol[n].ra);
+        }
+    }
+};
 
-// };
+
+
+void ApplyBoundaryCond(){
+    //responsible for taking care of any periodic wraparound in the updated coordinates
+    int n;
+    DO_MOL{
+        VWrapAll(mol[n].coordinates, region);
+    }
+
+};
 
 void InitCoords(){
     //initializes the coordinates of the particles
@@ -164,59 +132,61 @@ void InitCoords(){
 void InitVels(){
     //initializes the velocities of the particles
     int n;
-
-    
     VZero (&vSum); //accumulate the total velocity(momentum)
     DO_MOL{
-        VRand(&mol[n].rv);
-        VScale(mol[n].rv, velMag);
-        VVAdd(vSum, mol[n].rv);
+        velocity_rand(&mol[n]);
+        VScale(&mol[n].velocity, velMag);
+        VVAdd(&vSum, &mol[n].velocity);
+    }
 
-}
-DO_MOL VVSAdd(mol[n].rv, -1.0/nMol, vSum);
+    DO_MOL{
+        VVSAdd(&mol[n].velocity, (-1.0/nMol), &vSum);
+    }
 };
 
-// void InitAccels(){
-//     //initializes the accelerations of the particles
-//     int n;
-//     DO_MOL VZero(mol[n].ra);
-// };
+void InitAccels(){
+    //initializes the accelerations of the particles
+    int n;
+    DO_MOL{
+        VZero(&mol[n].accelaration);
+    }
+};
 
 
-// void EvalProps(){
-//     real vv;
-//     int n;
+void EvalProps(){
+    real vv;
+    int n;
 
-//     VZero(vSum);
+    VZero(&vSum);
 
-//     vvSum = 0;
-//     DO_MOL{
-//         VVAdd(vSum, mol[n].rv);
-//         vv = VLenSq(mol[n].rv);
-//         vvSum += vv;
-//     }
-//     kinEnergy.val = 0.5*vvSum/nMol;
-//     totEnergy.val = kinEnergy.val + uSum/nMol;
-//     pressure.val = density*(vvSum - virSum)/(nMol*NDIM);
-// };
+    vvSum = 0;
+    DO_MOL{
+        VVAdd(&vSum, &mol[n].velocity);
+        vv = VLenSq(&mol[n].velocity);
+        vvSum += vv;
+    }
+    kinEnergy.val = 0.5*vvSum/nMol;
+    totEnergy.val = kinEnergy.val + uSum/nMol;
+    pressure.val = density*(vvSum - virSum)/(nMol*NDIM);
+};
 
 
-// void AccumProps(int icode){
-//     if(icode = 0){
-//         PropZero(totEnergy);
-//         PropZero(kinEnergy);
-//         PropZero(pressure);
-//     }
-//     else if (icode == 1){
-//         PropAccum(totEnergy);
-//         PropAccum(kinEnergy);
-//         PropAccum(pressure);
-//     }else if(icode == 2){
-//         PropAvg(totEnergy, stepAvg);
-//         PropAvg(kinEnergy, stepAvg);
-//         PropAvg(pressure, stepAvg);
-//     }
-// };
+void AccumProps(int icode){
+    if(icode = 0){
+        PropZero(totEnergy);
+        PropZero(kinEnergy);
+        PropZero(pressure);
+    }
+    else if (icode == 1){
+        PropAccum(totEnergy);
+        PropAccum(kinEnergy);
+        PropAccum(pressure);
+    }else if(icode == 2){
+        PropAvg(totEnergy, stepAvg);
+        PropAvg(kinEnergy, stepAvg);
+        PropAvg(pressure, stepAvg);
+    }
+};
 
 void SetParams(vector<KeyValue> *data){
     for (const auto &param : {"deltaT", "density", "initUcell", "stepAvg", "stepEquil", "stepLimit", "temperature"}) {
@@ -282,14 +252,13 @@ void SetParams(vector<KeyValue> *data){
 // };
 
 
-// void SetupJob(){
-//     AllocArrays();
-//     stepCount = 0;
-//     InitCoords(); // initial coordinates
-//     InitVels(); // initial velocities
-//     InitAccels(); // initial accelerations
-//     AccumProps(0);
-// };
+void SetupJob(){
+    stepCount = 0;
+    InitCoords(); // initial coordinates
+    InitVels(); // initial velocities
+    InitAccels(); // initial accelerations
+    AccumProps(0);
+};
 
 // void PrintSummary (FILE *fp)
 // {
@@ -369,9 +338,9 @@ int main(){
     //cout<<initUcell.x<<" "<<initUcell.y;
     InitCoords();
     //print all moll coordinates
-    for(int i = 0; i < mol.size(); i++){
-        cout<<mol[i].coordinates.x<<" "<<mol[i].coordinates.y<<endl;
-    }
+    // for(int i = 0; i < mol.size(); i++){
+    //     cout<<mol[i].coordinates.x<<" "<<mol[i].coordinates.y<<endl;
+    // }
 
 
     

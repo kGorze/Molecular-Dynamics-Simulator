@@ -1,14 +1,12 @@
-#ifndef vector_operations_h
-#define vector_operations_h
+#ifndef VECTOR_OPERATIONS_H
+#define VECTOR_OPERATIONS_H
 
-typedef struct{
-    double x;
-    double y;
-} VecR;
+#include "types.h"
 
 void VAdd(VecR *v1, const VecR *v2, const VecR *v3);  //addition of two VecRs
 void VSub(VecR *v1, const VecR *v2, const VecR *v3);  //subtraction of two VecRs
 void VMul(VecR *v1, const VecR *v2, const VecR *v3);  //multiplication of two VecRs
+float VLenSq(VecR *v1);  //length of a VecR squared
 
 float VDot(VecR *v1, const VecR *v2);  //dot product of two VecRs
 void VSAdd(VecR *v1, const VecR *v2, double s3, const VecR *v3);  //scalar addition of two VecRs
@@ -20,6 +18,15 @@ void VVSAdd(VecR *v1, double s2, const VecR *v2);  //add a scalar multiple of on
 void VScale(VecR *v1, double s2);
 void VSCopy(VecR *v1, double s2, const VecR *v2);
 void VDiv(VecR *result, VecR *numerator,  VecR *denominator);  //element-wise division of two VecRs
+void VVAdd(VecR *v1, VecR *v2);  //element-wise addition of two VecRs
+
+float VLenSq(VecR *v1){
+    return VDot(v1, v1);
+}
+
+void VVAdd(VecR *v1, VecR *v2){
+    VAdd(v1,v1,v2);
+}
 
 int VProd(VecR *v1);
 
