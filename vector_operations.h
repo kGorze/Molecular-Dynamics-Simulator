@@ -19,6 +19,13 @@ void VScale(VecR *v1, double s2);
 void VSCopy(VecR *v1, double s2, const VecR *v2);
 void VDiv(VecR *result, VecR *numerator,  VecR *denominator);  //element-wise division of two VecRs
 void VVAdd(VecR *v1, VecR *v2);  //element-wise addition of two VecRs
+float VCSum(VecR *v1);  //sum of the components of a VecR
+
+
+float VCSum(VecR *v1){
+    return v1->x + v1->y;
+
+}
 
 float VLenSq(VecR *v1){
     return VDot(v1, v1);
@@ -46,8 +53,8 @@ void VSCopy(VecR *v1, double s2, const VecR *v2){
 
 
 void VScale(VecR *v1, double s2){
-    v1->x = v1->x * s2;
-    v1->y = v1->y * s2;
+    v1->x *= s2;
+    v1->y *= s2;
 }
 
 void VVSAdd(VecR *v1, double s2, const VecR *v2) {

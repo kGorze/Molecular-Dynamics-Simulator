@@ -8,6 +8,7 @@ Of course, the technique for evaluating the forces discussed here is not particu
 #include "rand2D.h"
 #include "statistics.h"
 #include "physical.h"
+#include "leapfrog.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -44,6 +45,8 @@ Prop kinEnergy, pressure, totEnergy;
 real deltaT, density, rCut, temperature, timeNow, uCut, uSum, velMag, virSum, vvSum;
 int moreCycels, nMol, stepAvg, stepCount, stepEquil, stepLimit;
 
+FILE* filePtr;
+
 // void AllocArrays(){
 //     AllocMem(mol,nMol,Mol);
 // };
@@ -79,19 +82,15 @@ void ComputeForces(){
 
 
 void LeapfrogStep(int part){
-    // handles the task of integrating the coordinates and velocities
     int n;
-    real s;
     if(part == 1){
-        s = 0.5*deltaT;
         DO_MOL{
-            VSAdd(&mol[n].velocity, s, &mol[n].accelaration);
-            VSAdd(&mol[n].coordinates, deltaT, &mol[n].velocity);
+            leapfrog_velocity(mol[n].velocity, 0.5*deltaT, mol[n].accelaration);
+            leapfrog_coordinates(mol[n].coordinates, deltaT, mol[n].velocity);
         }
     }else{
-        s = 0.5*deltaT;
         DO_MOL{
-            VSAdd(mol[n].rv, s, mol[n].ra);
+            leapfrog_velocity(mol[n].velocity, 0.5*deltaT, mol[n].accelaration);
         }
     }
 };
@@ -165,8 +164,8 @@ void EvalProps(){
         vv = VLenSq(&mol[n].velocity);
         vvSum += vv;
     }
-    kinEnergy.val = 0.5*vvSum/nMol;
-    totEnergy.val = kinEnergy.val + uSum/nMol;
+    kinEnergy.val = (0.5*vvSum)/nMol;
+    totEnergy.val = kinEnergy.val + (uSum/nMol);
     pressure.val = density*(vvSum - virSum)/(nMol*NDIM);
 };
 
@@ -231,25 +230,32 @@ void SetParams(vector<KeyValue> *data){
     velMag = sqrt(NDIM*(1 - (1/nMol)*temperature));
 };
 
-// void SingleStep(){
-//     stepCount++;
-//     timeNow = stepCount* deltaT;
-//     LeapfrogStep(1);
+void PrintSummary (FILE *fp)
+{
+ //fprintf (fp, "%5d %8.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f\n", stepCount, timeNow, VCSum(&vSum) / nMol, PropEst(totEnergy),
+ //PropEst(kinEnergy), PropEst(pressure));
+cout<<stepCount<<" "<<timeNow<<" "<<VCSum(&vSum) / nMol<<" "<<PropEst(totEnergy)<<" "<<PropEst(kinEnergy)<<" "<<PropEst(pressure)<<endl;
+};
 
-//     ApplyBoundaryCond();
-//     ComputeForces();
-//     LeapfrogStep(2);
+void SingleStep(){
+    stepCount++;
+    timeNow = stepCount* deltaT;
+    LeapfrogStep(1);
 
-//     EvalProps();
+    ApplyBoundaryCond();
+    ComputeForces();
+    LeapfrogStep(2);
 
-//     AccumProps(1);
-//     if(stepCount % stepAvg == 0){
-//         AccumProps(2);
-//         PrintSummary();
-//         AccumProps(0);
-//     }
+    EvalProps();
 
-// };
+    AccumProps(1);
+    if(stepCount % stepAvg == 0){
+        AccumProps(2);
+        PrintSummary(filePtr);
+        AccumProps(0);
+    }
+
+};
 
 
 void SetupJob(){
@@ -260,13 +266,7 @@ void SetupJob(){
     AccumProps(0);
 };
 
-// void PrintSummary (FILE *fp)
-// {
-// fprintf (fp,
-// "%5d %8.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f\n",
-// stepCount, timeNow, VCSum (vSum) / nMol, PropEst (totEnergy),
-// PropEst (kinEnergy), PropEst (pressure));
-// };
+
 
 void GetNameList(const char* fd, vector<KeyValue>* data) {
     ifstream file(fd);
@@ -315,6 +315,7 @@ void PrintNameList (vector<KeyValue> *data){
 
 int main(){
     int stepAvg, stepEquil, stepLimit;
+    stepLimit = 1000;
 
     /*
     deltaT 0.005    
@@ -331,25 +332,24 @@ int main(){
    //Temperature 1
 
     //set parameters from input to the program
+    
+    FILE* filePtr = fopen("summary.txt", "w"); // Open file in write mode
+    if (filePtr == nullptr) {
+        std::cerr << "Error opening file for writing!" << std::endl;
+        return 1;
+    }
+    
     vector<KeyValue> data;
     GetNameList("data.in", &data);
     PrintNameList(&data);
     SetParams(&data);
     //cout<<initUcell.x<<" "<<initUcell.y;
     InitCoords();
+    SetupJob();
     //print all moll coordinates
     // for(int i = 0; i < mol.size(); i++){
     //     cout<<mol[i].coordinates.x<<" "<<mol[i].coordinates.y<<endl;
     // }
-
-
-    
-    //SetParams();
-    //SetupJob();
-
-
-/*
-
     int moreCycles = 1;
     while(moreCycles){
         SingleStep();
@@ -357,6 +357,6 @@ int main(){
             moreCycles = 0; 
         }
     }
-*/
-return 0;
+    fclose(filePtr);
+    return 0;
 };

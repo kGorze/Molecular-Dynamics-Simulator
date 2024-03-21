@@ -9,6 +9,7 @@
         "type_traits": "cpp",
         "xtr1common": "cpp",
         "cmath": "cpp",
-        "format": "cpp"
+        "format": "cpp",
+        "iostream": "cpp"
     }
 }
