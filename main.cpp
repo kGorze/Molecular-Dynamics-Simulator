@@ -64,7 +64,7 @@ typedef struct{
     real val, sum, sum2;
 } Prop;
 
-Mol *mol; // The variable mol is actually a pointer to a one-dimensional array that is allocated dynamically at the start of the run and sized according to the value of nMol. 
+vector<Mol> mol; // Change the variable mol to be a vector of Mols
 /*
  From a practical point of view, writ- ing *mol in the above list of declarations is equivalent to mol[...] with a specific array size, except that in the former case the array size is established when the program is run rather than at compilation time
 */
@@ -76,9 +76,9 @@ Prop kinEnergy, pressure, totEnergy;
 real deltaT, density, rCut, temperature, timeNow, uCut, uSum, velMag, virSum, vvSum;
 int moreCycels, nMol, stepAvg, stepCount, stepEquil, stepLimit;
 
-void AllocArrays(){
-    AllocMem(mol,nMol,Mol);
-};
+// void AllocArrays(){
+//     AllocMem(mol,nMol,Mol);
+// };
 
 
 // void ComputeForces(){
@@ -153,27 +153,28 @@ void InitCoords(){
             VSet(&c, nx+0.5, ny+0.5);
             VMul(&c,&c,&gap);
             VVSAdd(&c, -0.5, &region);
-            mol[n].coordinates = c;
+            Mol temp = {c, {0,0}, {0,0}};
+            mol.push_back(temp);
             n++;
         }
     }
 }
 
 
-// void InitVels(){
-//     //initializes the velocities of the particles
-//     int n;
+void InitVels(){
+    //initializes the velocities of the particles
+    int n;
 
     
-//     VZero (vSum); //accumulate the total velocity(momentum)
-//     DO_MOL{
-//         VRand(&mol[n].rv);
-//         VScale(mol[n].rv, velMag);
-//         VVAdd(vSum, mol[n].rv);
+    VZero (&vSum); //accumulate the total velocity(momentum)
+    DO_MOL{
+        VRand(&mol[n].rv);
+        VScale(mol[n].rv, velMag);
+        VVAdd(vSum, mol[n].rv);
 
-// }
-// DO_MOL VVSAdd(mol[n].rv, -1.0/nMol, vSum);
-// };
+}
+DO_MOL VVSAdd(mol[n].rv, -1.0/nMol, vSum);
+};
 
 // void InitAccels(){
 //     //initializes the accelerations of the particles
@@ -217,18 +218,19 @@ void InitCoords(){
 //     }
 // };
 
-void SetParams(vector<KeyValue> &data){
+void SetParams(vector<KeyValue> *data){
     for (const auto &param : {"deltaT", "density", "initUcell", "stepAvg", "stepEquil", "stepLimit", "temperature"}) {
         // Find the entry in data that corresponds to the current parameter
         string key = param;
         string value;
-        for (const auto &entry : data) {
+        for (const auto &entry : (*data)) {
             if (entry.key == key) {
-                value = entry.value;
+                size_t pos = entry.value.find_first_not_of(" ");
+                value = entry.value.substr(pos);
                 break;
             }
         }
-
+        //cout<<key<<value;
         // Use the value to set the corresponding parameter
         if (key == "deltaT") {
             deltaT = stod(value);
@@ -236,9 +238,10 @@ void SetParams(vector<KeyValue> &data){
             density = stod(value);
         } else if (key == "initUcell") {
             // Assuming initUcell is a vector of two integers
-            double x, y;
+            int x, y;
             sscanf(value.c_str(), "%d %d", &x, &y);
-            initUcell = {x, y};
+            initUcell.x = x;
+            initUcell.y = y;
         } else if (key == "stepAvg") {
             stepAvg = stoi(value);
         } else if (key == "stepEquil") {
@@ -255,7 +258,7 @@ void SetParams(vector<KeyValue> &data){
     VSCopy(region, 1/sqrt(density), initUcell);
     nMol = VProd(&initUcell); //The evaluation of nMol and region assumes just one atom per unit cell, and allowance is made for momentum conservation
     //(which removes NDIM degrees of freedom)
-    velMag = sqrt(NDIM*(1 - 1/nMol)*temperature);
+    velMag = sqrt(NDIM*(1 - (1/nMol)*temperature));
 };
 
 // void SingleStep(){
@@ -296,7 +299,7 @@ void SetParams(vector<KeyValue> &data){
 // PropEst (kinEnergy), PropEst (pressure));
 // };
 
-void GetNameList(const char* fd, vector<KeyValue>& data) {
+void GetNameList(const char* fd, vector<KeyValue>* data) {
     ifstream file(fd);
     if (!file.is_open()) {
         cerr << "Error opening file" << endl;
@@ -311,23 +314,22 @@ void GetNameList(const char* fd, vector<KeyValue>& data) {
 
         if (line.substr(0, pattern.size()) == pattern) {
             line.erase(0, pattern.size());
-
+            kv.key = pattern;
             size_t pos = line.find_first_not_of(" \t");
             if (pos != string::npos) {
                 line.erase(0, pos);
-                pos = line.find_first_of(" \t");
-                kv.key = line.substr(0, pos);
-                line.erase(0, pos);
                 kv.value = line;
-                data.push_back(kv);
+                (*data).push_back(kv);
             }
         } else {
             size_t pos = line.find_first_of(" \t");
             if (pos != string::npos) {
                 kv.key = line.substr(0, pos);
                 line.erase(0, pos);
+                size_t pos = line.find_first_not_of(" ");
+                line.erase(0, pos);
                 kv.value = line;
-                data.push_back(kv);
+                (*data).push_back(kv);
             }
         }
     }
@@ -335,16 +337,15 @@ void GetNameList(const char* fd, vector<KeyValue>& data) {
     file.close();
 };
 
-void PrintNameList (vector<KeyValue> &data){
-    for(const auto& kv : data) {
+void PrintNameList (vector<KeyValue> *data){
+    for(const auto& kv : (*data)) {
         cout << kv.key << " " << kv.value << endl;
     }
 };
 
 
 int main(){
-
-    int initUcell, stepAvg, stepEquil, stepLimit;
+    int stepAvg, stepEquil, stepLimit;
 
     /*
     deltaT 0.005    
@@ -362,8 +363,17 @@ int main(){
 
     //set parameters from input to the program
     vector<KeyValue> data;
-    GetNameList("data.in", data);
-    PrintNameList(data);
+    GetNameList("data.in", &data);
+    PrintNameList(&data);
+    SetParams(&data);
+    //cout<<initUcell.x<<" "<<initUcell.y;
+    InitCoords();
+    //print all moll coordinates
+    for(int i = 0; i < mol.size(); i++){
+        cout<<mol[i].coordinates.x<<" "<<mol[i].coordinates.y<<endl;
+    }
+
+
     
     //SetParams();
     //SetupJob();
