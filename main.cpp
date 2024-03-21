@@ -3,12 +3,14 @@ This chapter provides the introductory appetizer and aims to leave the reader ne
 
 Of course, the technique for evaluating the forces discussed here is not particularly efficient from a computational point of view and the model is about the simplest there is
 */
-#include "vector_operations.h"
-#include "types.h"
-#include "rand2D.h"
-#include "statistics.h"
-#include "physical.h"
-#include "leapfrog.h"
+
+#include "../MDS/hfiles/vector_operations.h"
+#include "../MDS/hfiles/types.h"
+#include "../MDS/hfiles/rand2D.h"
+#include "../MDS/hfiles/statistics.h"
+#include "../MDS/hfiles/physical.h"
+#include "../MDS/hfiles/leapfrog.h"
+
 
 #include <stdio.h>
 #include <iostream>
@@ -237,14 +239,15 @@ fprintf(fp, "%5d %8.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f\n",
         stepCount, timeNow, VCSum(&vSum) / nMol, PropEst(totEnergy),
         PropEstSig(totEnergy), PropEst(kinEnergy), PropEstSig(kinEnergy),
         PropEst(pressure), PropEstSig(pressure));
+fflush(fp);
 fflush(stdout);       
 
 
-cout<<stepCount<<" "<<timeNow<<" "<<VCSum(&vSum) / nMol<<" "
-    <<PropEst(totEnergy)<<" "<<PropEstSig(totEnergy)
-    <<" "<<PropEst(kinEnergy)<<" "<<PropEstSig(kinEnergy)
-    <<" "<<PropEst(pressure)<<" "<<PropEstSig(pressure)<<endl;
-};
+// cout<<stepCount<<" "<<timeNow<<" "<<VCSum(&vSum) / nMol<<" "
+//     <<PropEst(totEnergy)<<" "<<PropEstSig(totEnergy)
+//     <<" "<<PropEst(kinEnergy)<<" "<<PropEstSig(kinEnergy)
+//     <<" "<<PropEst(pressure)<<" "<<PropEstSig(pressure)<<endl;
+}; 
 
 void SingleStep(){
     stepCount++;
@@ -350,13 +353,14 @@ int main(){
     GetNameList("data.in", &data);
     PrintNameList(&data);
     SetParams(&data);
-    //cout<<initUcell.x<<" "<<initUcell.y;
     InitCoords();
     SetupJob();
+
     //print all moll coordinates
     // for(int i = 0; i < mol.size(); i++){
     //     cout<<mol[i].coordinates.x<<" "<<mol[i].coordinates.y<<endl;
     // }
+    
     int moreCycles = 1;
     while(moreCycles){
         SingleStep();
@@ -364,6 +368,7 @@ int main(){
             moreCycles = 0; 
         }
     }
+
     fclose(filePtr);
     return 0;
 };

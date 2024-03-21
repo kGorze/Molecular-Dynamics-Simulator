@@ -191,6 +191,11 @@ Gromacs
 
 ---------------------------------------------
 TO DO:
+    WLS 
+        VALGRIND
+            FIX MEMORYLEAKS
+                OUTPUT HANDLING
+
     RAND FUNCTION
         2D VERSION
     TEST PROGRAM

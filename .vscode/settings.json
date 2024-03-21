@@ -10,6 +10,7 @@
         "xtr1common": "cpp",
         "cmath": "cpp",
         "format": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "random": "cpp"
     }
 }
