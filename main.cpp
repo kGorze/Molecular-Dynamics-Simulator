@@ -3,6 +3,8 @@ This chapter provides the introductory appetizer and aims to leave the reader ne
 
 Of course, the technique for evaluating the forces discussed here is not particularly efficient from a computational point of view and the model is about the simplest there is
 */
+#include "vector_operations.h"
+
 #include <stdio.h>
 #include <iostream>
 #include <math.h>
@@ -11,13 +13,7 @@ using namespace std;
 
 #define Sqr(x) ((x)*(x)) 
 #define Cube(x) ((x)*(x)*(x)) //macros for squaring and cubing numbers
-
 #define DO_MOL for(n = 0; n< nMol;n++) //This is a macro that is used to loop over all the molecules in the system. It is used in the ComputeForces and EvalProps functions.
-
-#define VAdd(v1,v2,v3){(v1).x = (v2).x + (v3).x; (v1).y = (v2).y + (v3).y;} //addition of two vectors
-#define VSub(v1,v2,v3){(v1).x = (v2).x - (v3).x; (v1).y = (v2).y - (v3).y;} //subtraction of two vectors
-#define VMul(v1,v2,v3){(v1).x = (v2).x*(v3).x;(v1).y = (v2).y*(v3).y;} //multiplication of two vectors
-#define VDot(v1,v2) ((v1).x*(v2).x + (v1).y*(v2).y) //dot product of two vectors
 
 
 
