@@ -32,9 +32,6 @@ using namespace std;
 
 #define AllocMem(a,n,t) a = (t*)malloc((n)*sizeof(t))
 
-#define VSCopy(v2,s1,v1){(v2).x = (s1)*(v1).x; (v2).y = (s1)*(v1).y;}
-#define VProd(v) {(v).x * (v).y}
-
 #define PropZero(v){v.sum = 0.0; v.sum2 = 0.0;}
 #define PropAccum(v){v.sum += v.val; v.sum2 += Sqr(v.val);}
 #define PropAvg(v,n){v.sum = /n; v.sum2 = sqrt(Max(v.sum2/n-Sqr(v.sum),0.0));}
@@ -51,13 +48,9 @@ struct KeyValue {
 
 
 typedef struct{
-    real x, y, z;
-} VecR;
-
-typedef struct{
-    VecR r; //coordinates
-    VecR rv; //velocity
-    VecR ra; //acceleration
+    VecR coordinates; //coordinates
+    VecR velocity; //velocity
+    VecR accelaration; //acceleration
 } Mol;
 
 typedef struct {
@@ -65,7 +58,7 @@ typedef struct {
 } VecI;
 
 #define VSCopy(v2,s1,v1){ (v2).x = (s1) * (v1).x; (v2).y = (s1) * (v1).y;}
-#define VProd{(v).x * (v).y}
+
 
 typedef struct{
     real val, sum, sum2;
@@ -75,152 +68,154 @@ Mol *mol; // The variable mol is actually a pointer to a one-dimensional array t
 /*
  From a practical point of view, writ- ing *mol in the above list of declarations is equivalent to mol[...] with a specific array size, except that in the former case the array size is established when the program is run rather than at compilation time
 */
-VecR region, vSum; 
+VecR region, vSum,initUcell; 
 /*
 The vector region contains the edge lengths of the simulation region.
 */
-VecI initUcell;
 Prop kinEnergy, pressure, totEnergy;
-real deltaT, density, rCut, temperature, timeNow, uCut, uSum, virSum, velMag, virSum, vvSum;
+real deltaT, density, rCut, temperature, timeNow, uCut, uSum, velMag, virSum, vvSum;
 int moreCycels, nMol, stepAvg, stepCount, stepEquil, stepLimit;
-
-
-void ComputeForces(){
-    VecR dr;
-    real fcVal, rr, rrCut, rri, rri3;
-    int j1, j2, n;
-
-    rrCut = Sqr(rCut);
-    DO_MOL{VZero(mol[n].ra);}
-    uSum = 0;
-    virSum = 0;
-    for(j1 = 0;j1< nMol-1;j1++){
-        for(j2 = j1+1;j2<nMol;j2++){
-            VSub(dr, mol[j1].r, mol[j2].r);
-            VWrapAll(dr);
-            rr = VLenSq(dr);
-            if(rr < rrCut){
-                rri = 1.0/rr;
-                rri3 = Cube(rri);
-                fcVal = 48.0*rri3*(rri3-0.5)*rri;
-                VVSAdd(mol[j1].ra, fcVal, dr);
-                VVSAdd(mol[j2].ra, -fcVal, dr);
-                uSum += 4.0*rri3*(rri3-1.0) - uCut;
-                virSum += fcVal*rr;
-            }
-        }
-    }
-};
-
-
-
-void LeapfrogStep(int part){
-    // handles the task of integrating the coordinates and velocities
-    int n;
-    real s;
-    if(part == 1){
-        s = 0.5*deltaT;
-        DO_MOL{
-            VSAdd(mol[n].rv, s, mol[n].ra);
-            VSAdd(mol[n].r, deltaT, mol[n].rv);
-        }
-    }else{
-        s = 0.5*deltaT;
-        DO_MOL{
-            VSAdd(mol[n].rv, s, mol[n].ra);
-        }
-    }
-};
-
-
-
-void ApplyBoundaryCond(){
-    //responsible for taking care of any periodic wraparound in the updated coordinates
-    int n;
-    DO_MOL{
-        VWrapAll(mol[n].r);
-    }
-
-};
-
-void InitCoords(){
-    //initializes the coordinates of the particles
-    VecR c, gap;
-    int n, nx, ny;
-
-    VDiv(gap,region,initUcell);
-    n= 0;
-    for(nx = 0; nx<initUcell.x; nx++){
-        for(ny = 0; ny<initUcell.y; ny++){
-    VSet(c, nx+0.5, ny+0.5);
-    VMul(c,c,gap);
-    VVSAdd(c, -0.5, region);
-    mol[n].r = c;
-    n++;
-        }
-    }
-};
-
-
-void InitVels(){
-    //initializes the velocities of the particles
-    int n;
-
-    
-    VZero (vSum); //accumulate the total velocity(momentum)
-    DO_MOL{
-        VRand(&mol[n].rv);
-        VScale(mol[n].rv, velMag);
-        VVAdd(vSum, mol[n].rv);
-
-}
-DO_MOL VVSAdd(mol[n].rv, -1.0/nMol, vSum);
-};
-
-void InitAccels(){
-    //initializes the accelerations of the particles
-    int n;
-    DO_MOL VZero(mol[n].ra);
-};
 
 void AllocArrays(){
     AllocMem(mol,nMol,Mol);
 };
 
-void EvalProps(){
-    real vv;
-    int n;
 
-    VZero(vSum);
+// void ComputeForces(){
+//     VecR dr;
+//     real fcVal, rr, rrCut, rri, rri3;
+//     int j1, j2, n;
 
-    vvSum = 0;
-    DO_MOL{
-        VVAdd(vSum, mol[n].rv);
-        vv = VLenSq(mol[n].rv);
-        vvSum += vv;
+//     rrCut = Sqr(rCut);
+//     DO_MOL{VZero(mol[n].ra);}
+//     uSum = 0;
+//     virSum = 0;
+//     for(j1 = 0;j1< nMol-1;j1++){
+//         for(j2 = j1+1;j2<nMol;j2++){
+//             VSub(dr, mol[j1].r, mol[j2].r);
+//             VWrapAll(dr);
+//             rr = VLenSq(dr);
+//             if(rr < rrCut){
+//                 rri = 1.0/rr;
+//                 rri3 = Cube(rri);
+//                 fcVal = 48.0*rri3*(rri3-0.5)*rri;
+//                 VVSAdd(mol[j1].ra, fcVal, dr);
+//                 VVSAdd(mol[j2].ra, -fcVal, dr);
+//                 uSum += 4.0*rri3*(rri3-1.0) - uCut;
+//                 virSum += fcVal*rr;
+//             }
+//         }
+//     }
+// };
+
+
+
+// void LeapfrogStep(int part){
+//     // handles the task of integrating the coordinates and velocities
+//     int n;
+//     real s;
+//     if(part == 1){
+//         s = 0.5*deltaT;
+//         DO_MOL{
+//             VSAdd(mol[n].rv, s, mol[n].ra);
+//             VSAdd(mol[n].r, deltaT, mol[n].rv);
+//         }
+//     }else{
+//         s = 0.5*deltaT;
+//         DO_MOL{
+//             VSAdd(mol[n].rv, s, mol[n].ra);
+//         }
+//     }
+// };
+
+
+
+// void ApplyBoundaryCond(){
+//     //responsible for taking care of any periodic wraparound in the updated coordinates
+//     int n;
+//     DO_MOL{
+//         VWrapAll(mol[n].r);
+//     }
+
+// };
+
+void InitCoords(){
+    //initializes the coordinates of the particles
+    VecR c;
+    int n, nx, ny;
+
+    VecR gap;
+    VDiv(&gap,&region,&initUcell);
+    n= 0;
+    for(nx = 0; nx<initUcell.x; nx++){
+        for(ny = 0; ny<initUcell.y; ny++){
+            
+            VSet(&c, nx+0.5, ny+0.5);
+            VMul(&c,&c,&gap);
+            VVSAdd(&c, -0.5, &region);
+            mol[n].coordinates = c;
+            n++;
+        }
     }
-    kinEnergy.val = 0.5*vvSum/nMol;
-    totEnergy.val = kinEnergy.val + uSum/nMol;
-    pressure.val = density*(vvSum - virSum)/(nMol*NDIM);
-};
+}
 
 
-void AccumProps(int icode){
-    if(icode = 0){
-        PropZero(totEnergy);
-        PropZero(kinEnergy);
-        PropZero(pressure);
-    }
-    else if (icode == 1){
-        PropAccum(totEnergy);
-        PropAccum(kinEnergy);
-        PropAccum(pressure);
-    }else if(icode == 2){
-        PropAvg(totEnergy, stepAvg);
-        PropAvg(kinEnergy, stepAvg);
-        PropAvg(pressure, stepAvg);
-    }
-};
+// void InitVels(){
+//     //initializes the velocities of the particles
+//     int n;
+
+    
+//     VZero (vSum); //accumulate the total velocity(momentum)
+//     DO_MOL{
+//         VRand(&mol[n].rv);
+//         VScale(mol[n].rv, velMag);
+//         VVAdd(vSum, mol[n].rv);
+
+// }
+// DO_MOL VVSAdd(mol[n].rv, -1.0/nMol, vSum);
+// };
+
+// void InitAccels(){
+//     //initializes the accelerations of the particles
+//     int n;
+//     DO_MOL VZero(mol[n].ra);
+// };
+
+
+// void EvalProps(){
+//     real vv;
+//     int n;
+
+//     VZero(vSum);
+
+//     vvSum = 0;
+//     DO_MOL{
+//         VVAdd(vSum, mol[n].rv);
+//         vv = VLenSq(mol[n].rv);
+//         vvSum += vv;
+//     }
+//     kinEnergy.val = 0.5*vvSum/nMol;
+//     totEnergy.val = kinEnergy.val + uSum/nMol;
+//     pressure.val = density*(vvSum - virSum)/(nMol*NDIM);
+// };
+
+
+// void AccumProps(int icode){
+//     if(icode = 0){
+//         PropZero(totEnergy);
+//         PropZero(kinEnergy);
+//         PropZero(pressure);
+//     }
+//     else if (icode == 1){
+//         PropAccum(totEnergy);
+//         PropAccum(kinEnergy);
+//         PropAccum(pressure);
+//     }else if(icode == 2){
+//         PropAvg(totEnergy, stepAvg);
+//         PropAvg(kinEnergy, stepAvg);
+//         PropAvg(pressure, stepAvg);
+//     }
+// };
 
 void SetParams(vector<KeyValue> &data){
     for (const auto &param : {"deltaT", "density", "initUcell", "stepAvg", "stepEquil", "stepLimit", "temperature"}) {
@@ -241,7 +236,7 @@ void SetParams(vector<KeyValue> &data){
             density = stod(value);
         } else if (key == "initUcell") {
             // Assuming initUcell is a vector of two integers
-            int x, y;
+            double x, y;
             sscanf(value.c_str(), "%d %d", &x, &y);
             initUcell = {x, y};
         } else if (key == "stepAvg") {
@@ -255,50 +250,51 @@ void SetParams(vector<KeyValue> &data){
         }
     }
 
-    rCut = pow(2.0,1.0/6.0); 
+    rCut = pow(2.0, 1.0/6.0);
+
     VSCopy(region, 1/sqrt(density), initUcell);
-    nMol = VProd(initUcell); //The evaluation of nMol and region assumes just one atom per unit cell, and allowance is made for momentum conservation
+    nMol = VProd(&initUcell); //The evaluation of nMol and region assumes just one atom per unit cell, and allowance is made for momentum conservation
     //(which removes NDIM degrees of freedom)
     velMag = sqrt(NDIM*(1 - 1/nMol)*temperature);
 };
 
-void SingleStep(){
-    stepCount++;
-    timeNow = stepCount* deltaT;
-    LeapfrogStep(1);
+// void SingleStep(){
+//     stepCount++;
+//     timeNow = stepCount* deltaT;
+//     LeapfrogStep(1);
 
-    ApplyBoundaryCond();
-    ComputeForces();
-    LeapfrogStep(2);
+//     ApplyBoundaryCond();
+//     ComputeForces();
+//     LeapfrogStep(2);
 
-    EvalProps();
+//     EvalProps();
 
-    AccumProps(1);
-    if(stepCount % stepAvg == 0){
-        AccumProps(2);
-        PrintSummary();
-        AccumProps(0);
-    }
+//     AccumProps(1);
+//     if(stepCount % stepAvg == 0){
+//         AccumProps(2);
+//         PrintSummary();
+//         AccumProps(0);
+//     }
 
-};
+// };
 
 
-void SetupJob(){
-    AllocArrays();
-    stepCount = 0;
-    InitCords(); // initial coordinates
-    InitVels(); // initial velocities
-    InitAccels(); // initial accelerations
-    AccumProps(0);
-};
+// void SetupJob(){
+//     AllocArrays();
+//     stepCount = 0;
+//     InitCoords(); // initial coordinates
+//     InitVels(); // initial velocities
+//     InitAccels(); // initial accelerations
+//     AccumProps(0);
+// };
 
-void PrintSummary (FILE *fp)
-{
-fprintf (fp,
-"%5d %8.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f\n",
-stepCount, timeNow, VCSum (vSum) / nMol, PropEst (totEnergy),
-PropEst (kinEnergy), PropEst (pressure));
-};
+// void PrintSummary (FILE *fp)
+// {
+// fprintf (fp,
+// "%5d %8.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f\n",
+// stepCount, timeNow, VCSum (vSum) / nMol, PropEst (totEnergy),
+// PropEst (kinEnergy), PropEst (pressure));
+// };
 
 void GetNameList(const char* fd, vector<KeyValue>& data) {
     ifstream file(fd);
@@ -348,11 +344,10 @@ void PrintNameList (vector<KeyValue> &data){
 
 int main(){
 
-    real deltaT, density, temperature;
     int initUcell, stepAvg, stepEquil, stepLimit;
 
     /*
-    deltaT 0.005
+    deltaT 0.005    
     density 0.8
     initUcell 20 20
     stepAvg 100

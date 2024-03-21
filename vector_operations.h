@@ -4,60 +4,79 @@
 typedef struct{
     double x;
     double y;
-} Vector;
+} VecR;
 
-void VAdd(Vector *v1, const Vector *v2, const Vector *v3);  //addition of two vectors
-void VSub(Vector *v1, const Vector *v2, const Vector *v3);  //subtraction of two vectors
-void VMul(Vector *v1, const Vector *v2, const Vector *v3);  //multiplication of two vectors
+void VAdd(VecR *v1, const VecR *v2, const VecR *v3);  //addition of two VecRs
+void VSub(VecR *v1, const VecR *v2, const VecR *v3);  //subtraction of two VecRs
+void VMul(VecR *v1, const VecR *v2, const VecR *v3);  //multiplication of two VecRs
 
-float VDot(Vector *v1, const Vector *v2);  //dot product of two vectors
-void VSAdd(Vector *v1, const Vector *v2, double s3, const Vector *v3);  //scalar addition of two vectors
+float VDot(VecR *v1, const VecR *v2);  //dot product of two VecRs
+void VSAdd(VecR *v1, const VecR *v2, double s3, const VecR *v3);  //scalar addition of two VecRs
 
-void VSet(Vector *v1, double s2);  //set the value of a vector
-void VZero(Vector *v);  //set the value of all the components of a vector to zero
+void VSet(VecR *v1, double s2, double s3);  //set the value of a VecR
+void VZero(VecR *v);  //set the value of all the components of a VecR to zero
 
-void VVSAdd(Vector *v1, double s2, const Vector *v2);  //add a scalar multiple of one vector to another
-void VScale(Vector *v1, double s2);
+void VVSAdd(VecR *v1, double s2, const VecR *v2);  //add a scalar multiple of one VecR to another
+void VScale(VecR *v1, double s2);
+void VSCopy(VecR *v1, double s2, const VecR *v2);
+void VDiv(VecR *result, VecR *numerator,  VecR *denominator);  //element-wise division of two VecRs
 
-void VScale(Vector *v1, double s2){
+int VProd(VecR *v1);
+
+int VProd(VecR *v1){
+    return v1->x * v1->y;
+}
+
+void VDiv(VecR *result, VecR *numerator, VecR *denominator){
+    result->x = numerator->x / denominator->x;
+    result->y = numerator->y / denominator->y;
+}
+
+void VSCopy(VecR *v1, double s2, const VecR *v2){
+    v1->x = s2 * v2->x;
+    v1->y = s2 * v2->y;
+}
+
+
+void VScale(VecR *v1, double s2){
     v1->x = v1->x * s2;
     v1->y = v1->y * s2;
 }
 
-void VVSAdd(Vector *v1, double s2, const Vector *v2) {
+void VVSAdd(VecR *v1, double s2, const VecR *v2) {
     VSAdd(v1, v1, s2, v2);
 }
 
-void VZero(Vector *v){
+void VZero(VecR *v){
     v->x = 0;
     v->y = 0;
 }
 
-void VSet(Vector *v1, double s2){
+void VSet(VecR *v1, double s2, double s3){
     v1->x = s2;
-    v1->y = s2;
+    v1->y = s3;
 }
 
-void VAdd(Vector *v1, const Vector *v2, const Vector *v3){
+void VAdd(VecR *v1, const VecR *v2, const VecR *v3){
     v1->x = v2->x + v3->x;
     v1->y = v2->y + v3->y;
 }
 
-void VSub(Vector *v1, const Vector *v2, const Vector *v3){
+void VSub(VecR *v1, const VecR *v2, const VecR *v3){
     v1->x = v2->x - v3->x;
     v1->y = v2->y - v3->y;
 }
 
-void VMul(Vector *v1, const Vector *v2, const Vector *v3){
+void VMul(VecR *v1, const VecR *v2, const VecR *v3){
     v1->x = v2->x * v3->x;
     v1->y = v2->y * v3->y;
 }
 
-float VDot(Vector *v1, const Vector *v2){
+float VDot(VecR *v1, const VecR *v2){
     return v1->x * v2->x + v1->y * v2->y;
 }
 
-void VSAdd(Vector *v1, const Vector *v2, double s3, const Vector *v3){
+void VSAdd(VecR *v1, const VecR *v2, double s3, const VecR *v3){
     v1->x = v2->x + s3*v3->x; v1->y = v2->y + s3*v3->y;
 }
 
