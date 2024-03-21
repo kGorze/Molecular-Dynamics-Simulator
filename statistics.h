@@ -28,7 +28,11 @@ inline void PropAvg(Prop &v, int n) {
 
 // Function to compute an estimate of the property represented by v
 inline double PropEst(const Prop &v) {
-    return v.sum, v.sum2;
+    return v.sum;
+}
+
+inline double PropEstSig(const Prop &v) {
+    return v.sum2;
 }
 
 #endif // PROP_FUNCTIONS_H

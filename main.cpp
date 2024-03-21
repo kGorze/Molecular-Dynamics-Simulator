@@ -171,7 +171,7 @@ void EvalProps(){
 
 
 void AccumProps(int icode){
-    if(icode = 0){
+    if(icode == 0){
         PropZero(totEnergy);
         PropZero(kinEnergy);
         PropZero(pressure);
@@ -232,9 +232,18 @@ void SetParams(vector<KeyValue> *data){
 
 void PrintSummary (FILE *fp)
 {
- //fprintf (fp, "%5d %8.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f\n", stepCount, timeNow, VCSum(&vSum) / nMol, PropEst(totEnergy),
- //PropEst(kinEnergy), PropEst(pressure));
-cout<<stepCount<<" "<<timeNow<<" "<<VCSum(&vSum) / nMol<<" "<<PropEst(totEnergy)<<" "<<PropEst(kinEnergy)<<" "<<PropEst(pressure)<<endl;
+
+fprintf(fp, "%5d %8.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f\n",
+        stepCount, timeNow, VCSum(&vSum) / nMol, PropEst(totEnergy),
+        PropEstSig(totEnergy), PropEst(kinEnergy), PropEstSig(kinEnergy),
+        PropEst(pressure), PropEstSig(pressure));
+fflush(stdout);       
+
+
+cout<<stepCount<<" "<<timeNow<<" "<<VCSum(&vSum) / nMol<<" "
+    <<PropEst(totEnergy)<<" "<<PropEstSig(totEnergy)
+    <<" "<<PropEst(kinEnergy)<<" "<<PropEstSig(kinEnergy)
+    <<" "<<PropEst(pressure)<<" "<<PropEstSig(pressure)<<endl;
 };
 
 void SingleStep(){
@@ -314,8 +323,6 @@ void PrintNameList (vector<KeyValue> *data){
 
 
 int main(){
-    int stepAvg, stepEquil, stepLimit;
-    stepLimit = 1000;
 
     /*
     deltaT 0.005    

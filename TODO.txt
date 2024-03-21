@@ -189,12 +189,14 @@ Lammps
 Gromacs
 
 
-
+---------------------------------------------
 TO DO:
     RAND FUNCTION
         2D VERSION
-    REWRITE ALGEBRAIC EXPRESSIONS(ARITMETHIC) - HALF DONE
-    INPUT FILE HANDLING
-    CORRECT CALCULATE FORCES FUNCTION
     TEST PROGRAM
     ADD PSEUDORANDOM NUMBER GENERATOR(https://en.wikipedia.org/wiki/Linear_congruential_generator)
+
+--------------------------------------------
+    REWRITE ALGEBRAIC EXPRESSIONS(ARITMETHIC) - DONE
+    INPUT FILE HANDLING - DONE
+    CORRECT CALCULATE FORCES FUNCTION - DONE
