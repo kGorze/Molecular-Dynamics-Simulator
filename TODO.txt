@@ -197,3 +197,4 @@ TO DO:
     INPUT FILE HANDLING
     CORRECT CALCULATE FORCES FUNCTION
     TEST PROGRAM
+    ADD PSEUDORANDOM NUMBER GENERATOR(https://en.wikipedia.org/wiki/Linear_congruential_generator)
