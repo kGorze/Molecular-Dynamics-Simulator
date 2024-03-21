@@ -8,6 +8,9 @@ Of course, the technique for evaluating the forces discussed here is not particu
 #include <stdio.h>
 #include <iostream>
 #include <math.h>
+#include <vector>
+#include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -53,6 +56,13 @@ using namespace std;
 
 
 typedef double real;
+
+
+struct KeyValue {
+    string key;
+    string value;
+};
+
 
 typedef struct{
     real x, y, z;
@@ -134,7 +144,7 @@ void LeapfrogStep(int part){
             VSAdd(mol[n].rv, s, mol[n].ra);
         }
     }
-}
+};
 
 
 
@@ -145,7 +155,7 @@ void ApplyBoundaryCond(){
         VWrapAll(mol[n].r);
     }
 
-}
+};
 
 void InitCoords(){
     //initializes the coordinates of the particles
@@ -163,7 +173,7 @@ void InitCoords(){
     n++;
         }
     }
-}
+};
 
 
 void InitVels(){
@@ -179,17 +189,17 @@ void InitVels(){
 
 }
 DO_MOL VVSAdd(mol[n].rv, -1.0/nMol, vSum);
-}
+};
 
 void InitAccels(){
     //initializes the accelerations of the particles
     int n;
     DO_MOL VZero(mol[n].ra);
-}
+};
 
 void AllocArrays(){
     AllocMem(mol,nMol,Mol);
-}
+};
 
 void EvalProps(){
     real vv;
@@ -206,7 +216,7 @@ void EvalProps(){
     kinEnergy.val = 0.5*vvSum/nMol;
     totEnergy.val = kinEnergy.val + uSum/nMol;
     pressure.val = density*(vvSum - virSum)/(nMol*NDIM);
-}
+};
 
 
 void AccumProps(int icode){
@@ -224,7 +234,7 @@ void AccumProps(int icode){
         PropAvg(kinEnergy, stepAvg);
         PropAvg(pressure, stepAvg);
     }
-}
+};
 
 void SetParams(){
     rCut = pow(2.0,1.0/6.0); 
@@ -232,7 +242,7 @@ void SetParams(){
     nMol = VProd(initUcell); //The evaluation of nMol and region assumes just one atom per unit cell, and allowance is made for momentum conservation
     //(which removes NDIM degrees of freedom)
     velMag = sqrt(NDIM*(1 - 1/nMol)*temperature);
-}
+};
 
 void SingleStep(){
     stepCount++;
@@ -252,7 +262,7 @@ void SingleStep(){
         AccumProps(0);
     }
 
-}
+};
 
 
 void SetupJob(){
@@ -262,7 +272,7 @@ void SetupJob(){
     InitVels(); // initial velocities
     InitAccels(); // initial accelerations
     AccumProps(0);
-}
+};
 
 void PrintSummary (FILE *fp)
 {
@@ -270,7 +280,46 @@ fprintf (fp,
 "%5d %8.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f\n",
 stepCount, timeNow, VCSum (vSum) / nMol, PropEst (totEnergy),
 PropEst (kinEnergy), PropEst (pressure));
-}
+};
+
+void GetNameList(const char* fd, vector<KeyValue>& data) {
+    ifstream file(fd);
+    if (!file.is_open()) {
+        cerr << "Error opening file" << endl;
+        return;
+    }
+
+    string line;
+    const string pattern = "initUcell";
+
+    while (getline(file, line)) {
+        KeyValue kv;
+
+        if (line.substr(0, pattern.size()) == pattern) {
+            line.erase(0, pattern.size());
+
+            size_t pos = line.find_first_not_of(" \t");
+            if (pos != string::npos) {
+                line.erase(0, pos);
+                pos = line.find_first_of(" \t");
+                kv.key = line.substr(0, pos);
+                line.erase(0, pos);
+                kv.value = line;
+                data.push_back(kv);
+            }
+        } else {
+            size_t pos = line.find_first_of(" \t");
+            if (pos != string::npos) {
+                kv.key = line.substr(0, pos);
+                line.erase(0, pos);
+                kv.value = line;
+                data.push_back(kv);
+            }
+        }
+    }
+
+    file.close();
+};
 
 
 int main(){
@@ -292,12 +341,19 @@ int main(){
    //The timestep value deltaT is determined by the requirement that energy be conserved by the leapfrog method 
    //Temperature 1
 
-//set parameters from input to the program
-    GetNameList(argc, argv);
-    SetParams();
-    SetupJob();
+    //set parameters from input to the program
+    vector<KeyValue> data;
+    GetNameList("data.in", data);
+
+    for(const auto& kv : data) {
+        cout << kv.key << " " << kv.value << endl;
+    }
+    
+    //SetParams();
+    //SetupJob();
 
 
+/*
 
     int moreCycles = 1;
     while(moreCycles){
@@ -306,4 +362,6 @@ int main(){
             moreCycles = 0; 
         }
     }
-}
+*/
+return 0;
+};

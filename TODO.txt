@@ -166,6 +166,11 @@ linear approximation
 BOOKS:
 The Art Of Molecular Dynamics Simulation
 
+CURRENT DEVELOPMENT
+    2D ATOM IN SOLID/GAS, CHAOS SIMULATION
+
+SECOND PHASE OF A PROJECT
+    3D ONE  - https://aiichironakano.github.io/cs653/01SurveyMD.pdf
 
 
 ADDITIONAL INFO:
@@ -182,3 +187,13 @@ MODERN PROGRAMS:
 BIOVA Materials Studio
 Lammps
 Gromacs
+
+
+
+TO DO:
+    RAND FUNCTION
+        2D VERSION
+    REWRITE ALGEBRAIC EXPRESSIONS(ARITMETHIC)
+    INPUT FILE HANDLING
+    CORRECT CALCULATE FORCES FUNCTION
+    TEST PROGRAM

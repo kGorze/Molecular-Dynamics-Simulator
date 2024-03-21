@@ -1,35 +1,60 @@
-#include <stdio.h>
-#include <string.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+using namespace std;
 
-void GetNameList(const char *fd) {
-    FILE *file = fopen(fd, "r");
-    if (file == NULL) {
-        perror("Error opening file");
+struct KeyValue {
+    string key;
+    string value;
+};
+
+void GetNameList(const char* fd, vector<KeyValue>& data) {
+    ifstream file(fd);
+    if (!file.is_open()) {
+        cerr << "Error opening file" << endl;
         return;
     }
-    
-    char line[256];
-    char *key, *value;
-    char *pattern = "initUcell";
-    while (fgets(line, sizeof(line), file) != NULL) {
-        if (strncmp(line, pattern, strlen(pattern)) == 0) {
-            key = strtok(line + strlen(pattern), " \t\n");
-            value = strtok(NULL, " \t\n");
-            // Matrix of molecular unit cells
-            // _mdsim_globals[k] = _namelist_converter[k](nx, ny);
-            printf("%s %s\n", key, value); // Placeholder for processing the key-value pair
+
+    string line;
+    const string pattern = "initUcell";
+
+    while (getline(file, line)) {
+        KeyValue kv;
+
+        if (line.substr(0, pattern.size()) == pattern) {
+            line.erase(0, pattern.size());
+
+            size_t pos = line.find_first_not_of(" \t");
+            if (pos != string::npos) {
+                line.erase(0, pos);
+                pos = line.find_first_of(" \t");
+                kv.key = line.substr(0, pos);
+                line.erase(0, pos);
+                kv.value = line;
+                data.push_back(kv);
+            }
         } else {
-            key = strtok(line, " \t\n");
-            value = strtok(NULL, " \t\n");
-            // _mdsim_globals[k] = _namelist_converter[k](v);
-            printf("%s %s\n", key, value); // Placeholder for processing the key-value pair
+            size_t pos = line.find_first_of(" \t");
+            if (pos != string::npos) {
+                kv.key = line.substr(0, pos);
+                line.erase(0, pos);
+                kv.value = line;
+                data.push_back(kv);
+            }
         }
     }
-    
-    fclose(file);
+
+    file.close();
 }
 
 int main() {
-    GetNameList("data.in"); // Replace "filename.txt" with the actual filename
+    vector<KeyValue> data;
+    GetNameList("data.in", data);
+
+    for (const auto& kv : data) {
+        cout << kv.key << " " << kv.value << endl;
+    }
+
     return 0;
 }
