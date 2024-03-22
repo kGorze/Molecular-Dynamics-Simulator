@@ -35,7 +35,6 @@ using namespace std;
 #define VSCopy(v2,s1,v1){ (v2).x = (s1) * (v1).x; (v2).y = (s1) * (v1).y;}
 
 
-vector<Mol> mol; // Change the variable mol to be a vector of Mols
 /*
  From a practical point of view, writ- ing *mol in the above list of declarations is equivalent to mol[...] with a specific array size, except that in the former case the array size is established when the program is run rather than at compilation time
 */
@@ -45,7 +44,11 @@ The vector region contains the edge lengths of the simulation region.
 */
 Prop kinEnergy, pressure, totEnergy;
 real deltaT, density, rCut, temperature, timeNow, uCut, uSum, velMag, virSum, vvSum;
-int moreCycels, nMol, stepAvg, stepCount, stepEquil, stepLimit;
+int moreCycels, stepAvg, stepCount, stepEquil, stepLimit;
+
+int nMol = 400;
+Mol* mol = (Mol*)malloc(sizeof(Mol)*nMol); // Change the variable mol to be a vector of Mols// Change the allocation of memory for mol to use the vector class
+
 
 FILE* filePtr;
 
@@ -55,7 +58,7 @@ FILE* filePtr;
 
 
 void ComputeForces(){
-    VecR dr;
+    VecR dr, fc;
     real fcVal, rr, rrCut, rri, rri3;
     int j1, j2, n;
 
@@ -63,8 +66,10 @@ void ComputeForces(){
     DO_MOL{VZero(&mol[n].accelaration);}
     uSum = 0;
     virSum = 0;
+
     for(j1 = 0;j1< nMol-1;j1++){
         for(j2 = j1+1;j2<nMol;j2++){
+            
             VSub(&dr, &mol[j1].coordinates, &mol[j2].coordinates);
             VWrapAll(dr, region);
             rr = VLenSq(&dr);
@@ -123,7 +128,7 @@ void InitCoords(){
             VMul(&c,&c,&gap);
             VVSAdd(&c, -0.5, &region);
             Mol temp = {c, {0,0}, {0,0}};
-            mol.push_back(temp);
+            mol[n] = temp;
             n++;
         }
     }
@@ -235,10 +240,10 @@ void SetParams(vector<KeyValue> *data){
 void PrintSummary (FILE *fp)
 {
 
-fprintf(fp, "%5d %8.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f\n",
-        stepCount, timeNow, VCSum(&vSum) / nMol, PropEst(totEnergy),
-        PropEstSig(totEnergy), PropEst(kinEnergy), PropEstSig(kinEnergy),
-        PropEst(pressure), PropEstSig(pressure));
+// fprintf(fp, "%5d %8.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f\n",
+//         stepCount, timeNow, VCSum(&vSum) / nMol, PropEst(totEnergy),
+//         PropEstSig(totEnergy), PropEst(kinEnergy), PropEstSig(kinEnergy),
+//         PropEst(pressure), PropEstSig(pressure));
 fflush(fp);
 fflush(stdout);       
 
@@ -250,7 +255,7 @@ fflush(stdout);
 }; 
 
 void SingleStep(){
-    stepCount++;
+    stepCount++;    
     timeNow = stepCount* deltaT;
     LeapfrogStep(1);
 
@@ -325,6 +330,7 @@ void PrintNameList (vector<KeyValue> *data){
 };
 
 
+
 int main(){
 
     /*
@@ -351,7 +357,7 @@ int main(){
     
     vector<KeyValue> data;
     GetNameList("data.in", &data);
-    PrintNameList(&data);
+    //PrintNameList(&data);
     SetParams(&data);
     InitCoords();
     SetupJob();
@@ -368,7 +374,7 @@ int main(){
             moreCycles = 0; 
         }
     }
-
+    free(mol);
     fclose(filePtr);
     return 0;
 };

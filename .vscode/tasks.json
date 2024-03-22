@@ -8,6 +8,8 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
+                "-I${workspaceFolder}",
+                "-L${workspaceFolder}",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],

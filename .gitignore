@@ -1,2 +1,6 @@
 *.exe
 *.py
+*.out
+*.23365
+another/
+GUI/
