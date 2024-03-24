@@ -244,14 +244,14 @@ void PrintSummary (FILE *fp)
 //         stepCount, timeNow, VCSum(&vSum) / nMol, PropEst(totEnergy),
 //         PropEstSig(totEnergy), PropEst(kinEnergy), PropEstSig(kinEnergy),
 //         PropEst(pressure), PropEstSig(pressure));
-fflush(fp);
-fflush(stdout);       
+// fflush(fp);
+// fflush(stdout);       
 
 
-// cout<<stepCount<<" "<<timeNow<<" "<<VCSum(&vSum) / nMol<<" "
-//     <<PropEst(totEnergy)<<" "<<PropEstSig(totEnergy)
-//     <<" "<<PropEst(kinEnergy)<<" "<<PropEstSig(kinEnergy)
-//     <<" "<<PropEst(pressure)<<" "<<PropEstSig(pressure)<<endl;
+cout<<stepCount<<" "<<timeNow<<" "<<VCSum(&vSum) / nMol<<" "
+    <<PropEst(totEnergy)<<" "<<PropEstSig(totEnergy)
+    <<" "<<PropEst(kinEnergy)<<" "<<PropEstSig(kinEnergy)
+    <<" "<<PropEst(pressure)<<" "<<PropEstSig(pressure)<<endl;
 }; 
 
 void SingleStep(){
