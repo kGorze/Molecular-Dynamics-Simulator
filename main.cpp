@@ -26,7 +26,7 @@ using namespace std;
 #define DO_MOL for(n = 0; n< nMol;n++) //This is a macro that is used to loop over all the molecules in the system. It is used in the ComputeForces and EvalProps functions.
 #define NDIM 2
 
-#define AllocMem(a,n,t) a = (t*)malloc((n)*sizeof(t))
+#define AllocMem(a,n,t) a = (t*)malloc((n)*sizeof(t)) //This is a macro that is used to allocate memory for arrays. It is used in the main program to allocate memory for the mol array.
 
 
 
