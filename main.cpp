@@ -57,34 +57,46 @@ FILE* filePtr;
 // };
 
 
+// This function calculates the interatomic forces between all pairs of atoms
+// within a cutoff distance for a Molecular Dynamics simulation.
+
 void ComputeForces(){
-    VecR dr, fc;
-    real fcVal, rr, rrCut, rri, rri3;
-    int j1, j2, n;
+    VecR dr, fc; // Vector variables for distance between atoms and force between them
+    real fcVal, rr, rrCut, rri, rri3; // Variables for force magnitude, distance squared, cutoff distance squared, and reciprocal distance terms
+    int j1, j2, n; // Loop variables and atom index
 
-    rrCut = Sqr(rCut);
-    DO_MOL{VZero(&mol[n].accelaration);}
-    uSum = 0;
-    virSum = 0;
+    rrCut = Sqr(rCut); // Square of the cutoff distance for efficient comparison
+    DO_MOL{VZero(&mol[n].accelaration);} // Zero out accelerations for all atoms
+    uSum = 0; // Initialize potential energy sum
+    virSum = 0; // Initialize virial sum
 
-    for(j1 = 0;j1< nMol-1;j1++){
-        for(j2 = j1+1;j2<nMol;j2++){
+    // Nested loops over all pairs of atoms
+    for(j1 = 0; j1 < nMol-1; j1++){
+        for(j2 = j1+1; j2 < nMol; j2++){
             
+            // Calculate distance vector between atom j1 and j2
             VSub(&dr, &mol[j1].coordinates, &mol[j2].coordinates);
+            // Apply periodic boundary conditions to ensure the shortest distance
             VWrapAll(dr, region);
+            // Calculate squared distance between atoms
             rr = VLenSq(&dr);
+            // Check if the distance is within the cutoff radius
             if(rr < rrCut){
-                rri = 1.0/rr;
+                // Calculate reciprocal distance terms
+                rri = 1.0 / rr;
                 rri3 = Cube(rri);
-                fcVal = 48.0*rri3*(rri3-0.5)*rri;
+                // Calculate Lennard-Jones force magnitude
+                fcVal = 48.0 * rri3 * (rri3 - 0.5) * rri;
+                // Apply forces to atoms j1 and j2
                 VVSAdd(&mol[j1].accelaration, fcVal, &dr);
                 VVSAdd(&mol[j2].accelaration, -fcVal, &dr);
-                uSum += 4.0*rri3*(rri3-1.0) - uCut;
-                virSum += fcVal*rr;
+                // Accumulate potential energy and virial contribution
+                uSum += 4.0 * rri3 * (rri3 - 1.0) - uCut;
+                virSum += fcVal * rr;
             }
         }
     }
-};
+}
 
 
 
