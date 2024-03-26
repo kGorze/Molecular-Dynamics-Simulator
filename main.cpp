@@ -384,8 +384,9 @@ int main(){
     InitCoords();
     SetupJob();
 
-    //print all moll coordinates
-    // for(int i = 0; i < mol.size(); i++){
+
+    //print coordinates of the molecules
+    // for(int i = 0; i < nMol; i++){
     //     cout<<mol[i].coordinates.x<<" "<<mol[i].coordinates.y<<endl;
     // }
     
@@ -396,6 +397,7 @@ int main(){
             moreCycles = 0; 
         }
     }
+
     free(mol);
     fclose(filePtr);
     return 0;
