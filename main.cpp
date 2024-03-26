@@ -66,7 +66,17 @@ void ComputeForces(){
     int j1, j2, n; // Loop variables and atom index
 
     rrCut = Sqr(rCut); // Square of the cutoff distance for efficient comparison
+
     DO_MOL{VZero(&mol[n].accelaration);} // Zero out accelerations for all atoms
+
+    /*
+    #define DO_MOL for(n = 0; n< nMol;n++) //This is a macro that is used to loop over all the molecules in the system. It is used in the ComputeForces and EvalProps functions.
+
+    for(n = 0;n<nMol;n++){
+        ----------------
+    }
+    */
+        
     uSum = 0; // Initialize potential energy sum
     virSum = 0; // Initialize virial sum
 
