@@ -18,6 +18,7 @@ Of course, the technique for evaluating the forces discussed here is not particu
 #include <vector>
 #include <fstream>
 #include <string>
+#include <unordered_map>
 
 using namespace std;
 
@@ -51,7 +52,7 @@ vector<real> histVel(sizeHistVel);
 FILE* filePtr;
 FILE* histoPtr;
 
-
+real hFunction;
 
 
 // void AllocArrays(){
@@ -341,55 +342,59 @@ void AccumProps(int icode){
 
 //GOOD
 void SetParams(vector<KeyValue> *data){
-    for (const auto &param : {"deltaT", "density", "initUcell", "stepAvg", "stepEquil", "stepLimit", "temperature", "limitVel", "rangeVel", "sizeHistVel", "stepVel"}) {
-        // Find the entry in data that corresponds to the current parameter
-        string key = param;
-        string value;
-        for (const auto &entry : (*data)) {
-            if (entry.key == key) {
-                size_t pos = entry.value.find_first_not_of(" ");
-                value = entry.value.substr(pos);
-                break;
-            }
-        }
-        
-        // Use the value to set the corresponding parameter
-        if (key == "deltaT") {
-            deltaT = stod(value);
-        } else if (key == "density") {
-            density = stod(value);
-        } else if (key == "initUcell") {
-            // Assuming initUcell is a vector of two integers
-            int x, y;
-            sscanf(value.c_str(), "%d %d", &x, &y);
-            initUcell.x = x;
-            initUcell.y = y;
-        } else if (key == "stepAvg") {
-            stepAvg = stoi(value);
-        } else if (key == "stepEquil") {
-            stepEquil = stoi(value);
-        } else if (key == "stepLimit") {
-            stepLimit = stoi(value);
-        } else if (key == "temperature") {
-            temperature = stod(value);
-        } else if (key == "limitVel") {
-            limitVel = stoi(value);
-        } else if (key == "rangeVel") {
-            rangeVel = stod(value);
-        } else if (key == "sizeHistVel") {
-            sizeHistVel = stoi(value);
-        } else if (key == "stepVel") {
-            stepVel = stoi(value);
-        }
+    unordered_map<string, string> paramMap;
+
+    // Create a map of parameter names to values
+    for (const auto &entry : *data) {
+        paramMap[entry.key] = entry.value;
     }
 
-    rCut = pow(2.0, 1.0/6.0);
+    // Use the map to set the parameters
+    if (paramMap.find("deltaT") != paramMap.end()) {
+        deltaT = stod(paramMap["deltaT"]);
+    }
+    if (paramMap.find("density") != paramMap.end()) {
+        density = stod(paramMap["density"]);
+    }
+    if (paramMap.find("initUcell") != paramMap.end()) {
+        // Assuming initUcell is a vector of two integers
+        int x, y;
+        sscanf(paramMap["initUcell"].c_str(), "%d %d", &x, &y);
+        initUcell.x = x;
+        initUcell.y = y;
+    }
+    if (paramMap.find("stepAvg") != paramMap.end()) {
+        stepAvg = stoi(paramMap["stepAvg"]);
+    }
+    if (paramMap.find("stepEquil") != paramMap.end()) {
+        stepEquil = stoi(paramMap["stepEquil"]);
+    }
+    if (paramMap.find("stepLimit") != paramMap.end()) {
+        stepLimit = stoi(paramMap["stepLimit"]);
+    }
+    if (paramMap.find("temperature") != paramMap.end()) {
+        temperature = stod(paramMap["temperature"]);
+    }
+    if (paramMap.find("limitVel") != paramMap.end()) {
+        limitVel = stoi(paramMap["limitVel"]);
+    }
+    if (paramMap.find("rangeVel") != paramMap.end()) {
+        rangeVel = stod(paramMap["rangeVel"]);
+    }
+    if (paramMap.find("sizeHistVel") != paramMap.end()) {
+        sizeHistVel = stoi(paramMap["sizeHistVel"]);
+    }
+    if (paramMap.find("stepVel") != paramMap.end()) {
+        stepVel = stoi(paramMap["stepVel"]);
+    }
 
+    // Assuming rCut, region, nMol, and velMag are global variables
+    rCut = pow(2.0, 1.0/6.0);
     VSCopy(region, 1/sqrt(density), initUcell);
-    nMol = VProd(&initUcell); //The evaluation of nMol and region assumes just one atom per unit cell, and allowance is made for momentum conservation
-    //(which removes NDIM degrees of freedom)
+    nMol = VProd(&initUcell);
     velMag = sqrt(NDIM*(1 - (1/nMol)*temperature));
 }
+
 
 
 void PrintSummary (FILE *fp)
@@ -519,7 +524,12 @@ void EvalVelDist(){
         }
         countVel = 0;
     }
-    cout<<".";
+    hFunction = 0;
+    for(j = 0; j<sizeHistVel; j++){
+        if(histVel[j] > 0){
+            hFunction += histVel[j]*log(histVel[j]/((j+0.5)*deltaV));
+        }
+    }
 }
 
 void PrintVelDist(FILE *fp){
@@ -531,4 +541,5 @@ void PrintVelDist(FILE *fp){
         vBin = (n + 0.5) * rangeVel / sizeHistVel;
         fprintf (fp, "%8.3f %8.3f\n", vBin, histVel[n]);
     }
+    fprintf (fp, "hfun: %8.3f %8.3f\n", timeNow, hFunction);
 }

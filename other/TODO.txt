@@ -191,6 +191,10 @@ Gromacs
 
 ---------------------------------------------
 TO DO:
+
+    CREATE SIMULATIONS TO GET DISTRIBUTION
+    RANDOM SEED FOR VEOLCITIES
+    
     OPENGL
     WLS 
         VALGRIND

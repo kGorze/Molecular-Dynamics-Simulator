@@ -9,3 +9,4 @@ limitVel          4
 rangeVel          3.0
 sizeHistVel       50
 stepVel           5
+randSeed          17
