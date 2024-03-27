@@ -189,6 +189,8 @@ Lammps
 Gromacs
 
 
+
+
 ---------------------------------------------
 TO DO:
 
@@ -210,3 +212,5 @@ TO DO:
     REWRITE ALGEBRAIC EXPRESSIONS(ARITMETHIC) - DONE
     INPUT FILE HANDLING - DONE
     CORRECT CALCULATE FORCES FUNCTION - DONE
+
+    26.03 - 7h
