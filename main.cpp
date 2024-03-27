@@ -4,12 +4,12 @@ This chapter provides the introductory appetizer and aims to leave the reader ne
 Of course, the technique for evaluating the forces discussed here is not particularly efficient from a computational point of view and the model is about the simplest there is
 */
 
-#include "../MDS/hfiles/vector_operations.h"
-#include "../MDS/hfiles/types.h"
-#include "../MDS/hfiles/rand2D.h"
-#include "../MDS/hfiles/statistics.h"
-#include "../MDS/hfiles/physical.h"
-#include "../MDS/hfiles/leapfrog.h"
+#include "vector_operations.h"
+#include "types.h"
+#include "rand2D.h"
+#include "statistics.h"
+#include "physical.h"
+#include "leapfrog.h"
 
 
 #include <stdio.h>
@@ -103,15 +103,18 @@ int main(){
    //Temperature 1
 
     //set parameters from input to the program
-    
-    FILE* filePtr = fopen("summary.txt", "w"); // Open file in write mode
-    if (filePtr == nullptr) {
+    FILE* filePtr = nullptr;
+    FILE* histoPtr = nullptr;
+    errno_t err;
+
+    err = fopen_s(&filePtr,"summary.txt", "w"); // Open file in write mode
+    if (err != 0) {
         std::cerr << "Error opening file for writing summary" << std::endl;
         return 1;
     }
 
-    FILE* histoPtr = fopen("histo.txt", "w"); // Open file in write mode
-    if (histoPtr == nullptr) {
+    err = fopen_s(&histoPtr,"histo.txt", "w"); // Open file in write mode
+    if (err != 0) {
         std::cerr << "Error opening file for writing! histo" << std::endl;
         return 1;
     }
@@ -146,8 +149,12 @@ int main(){
     }
     PrintVelDist(histoPtr);
 
-    fclose(filePtr);
-    fclose(histoPtr);
+    if (histoPtr != nullptr) {
+        fclose(histoPtr);
+    }
+    if (filePtr != nullptr) {
+		fclose(filePtr);
+	}
     return 0;
 };
 
@@ -359,7 +366,7 @@ void SetParams(vector<KeyValue> *data){
     if (paramMap.find("initUcell") != paramMap.end()) {
         // Assuming initUcell is a vector of two integers
         int x, y;
-        sscanf(paramMap["initUcell"].c_str(), "%d %d", &x, &y);
+        sscanf_s(paramMap["initUcell"].c_str(), "%d %d", &x, &y);
         initUcell.x = x;
         initUcell.y = y;
     }

@@ -1,0 +1,15 @@
+﻿  main.cpp
+C:\Users\konrad_guest\source\repos\MDS\vector_operations.h(34,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\konrad_guest\source\repos\MDS\vector_operations.h(53,18): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\konrad_guest\source\repos\MDS\vector_operations.h(102,26): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(217,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(218,54): warning C4244: 'argument': conversion from 'real' to 'float', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(222,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(520,37): warning C4244: '=': conversion from 'real' to 'int', possible loss of data
+  MDSVS.vcxproj -> C:\Users\konrad_guest\source\repos\MDS\x64\Debug\MDSVS.exe
