@@ -3,6 +3,14 @@
 
 #include "types.h"
 
+#define Sqr(x) ((x)*(x)) 
+#define Cube(x) ((x)*(x)*(x)) //macros for squaring and cubing numbers
+#define DO_MOL for(n = 0; n< nMol;n++) //This is a macro that is used to loop over all the molecules in the system. It is used in the ComputeForces and EvalProps functions.
+#define NDIM 2
+#define Min(x,y) ((x)<(y)?(x):(y)) //This is a macro that is used to find the minimum of two numbers. It is used in the EvalVelDist function.
+#define Max(x,y) ((x)>(y)?(x):(y)) //This is a macro that is used to find the maximum of two numbers. It is used in the EvalVelDist function.
+
+
 void VAdd(VecR *v1, const VecR *v2, const VecR *v3);  //addition of two VecRs
 void VSub(VecR *v1, const VecR *v2, const VecR *v3);  //subtraction of two VecRs
 void VMul(VecR *v1, const VecR *v2, const VecR *v3);  //multiplication of two VecRs
@@ -28,7 +36,11 @@ float VCSum(VecR *v1){
 }
 
 float VLenSq(VecR *v1){
-    return VDot(v1, v1);
+    return VDot(v1,v1);
+}
+
+float VLen(VecR *v1){
+    return Sqr(VDot(v1,v1));
 }
 
 void VVAdd(VecR *v1, VecR *v2){
@@ -91,7 +103,9 @@ float VDot(VecR *v1, const VecR *v2){
 }
 
 void VSAdd(VecR *v1, const VecR *v2, double s3, const VecR *v3){
-    v1->x = v2->x + s3*v3->x; v1->y = v2->y + s3*v3->y;
+    v1->x = v2->x + s3*v3->x; 
+    v1->y = v2->y + s3*v3->y;
 }
+
 
 #endif
