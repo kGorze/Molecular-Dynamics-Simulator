@@ -29,6 +29,7 @@ Of course, the technique for evaluating the forces discussed here is not particu
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "shader.h"
 
 using namespace std;
 
@@ -108,6 +109,9 @@ int Simulation();
 
 void renderRectangle(GLFWwindow* window, unsigned int shaderProgram);
 void renderTwoTrianglesEBO(GLFWwindow* window, unsigned int shaderProgram);
+void renderTwoTriangles1(GLFWwindow* window, unsigned int shaderProgram);
+void renderTwoTrianglesDifferent(GLFWwindow* window, unsigned int shaderProgram);
+void renderWithTwoShaders(GLFWwindow* window, unsigned int shaderProgram1, unsigned int shaderProgram2);
 
 void framebuffer_size_callback(GLFWwindow* window, int widht, int height) {
     glViewport(0, 0, widht, height);
@@ -123,26 +127,15 @@ void processInput(GLFWwindow* window) {
 
 int main(void) {
 
-    const char* vertexShaderSource = "#version 330 core\n"
-        "layout (location = 0) in vec3 aPos;\n"
-        "void main()\n"
-        "{\n"
-        "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-        "}\0";
-
-    const char* fragmentShaderSource = "#version 330 core\n"
-        "out vec4 FragColor;\n"
-        "void main()\n"
-        "{\n"
-        "   FragColor = vec4(0.8f, 0.3f, 0.02f, 1.0f);\n"
-        "}\n\0";
+    const unsigned int SCR_WIDTH = 800;
+    const unsigned int SCR_HEIGHT = 600;
 
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Test", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Test", NULL, NULL);
     if (window == NULL) {
         cout << "Failed to create GLFW window" << endl;
         glfwTerminate();
@@ -154,58 +147,217 @@ int main(void) {
         cout << "Failed to initialize GLAD" << endl;
         return -1;
     }
-    glViewport(0, 0, 800, 600);
+    glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 
-    //VERTEX SHADER
-    unsigned int vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
+    Shader ourShader1("vertex.vs", "fragment1.fs");
+    Shader ourShader2("vertex.vs", "fragment2.fs");
 
-    int  success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << endl;
-	}
+    float offset = 0.2f;
+    ourShader1.setFloat("xOffset", offset);
 
-    //FRAGMENT SHADER
-    unsigned int fragmentShader;
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
 
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << endl;
+    float firstTriangle[] = {
+       -0.9f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+       -0.0f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+       -0.45f, 0.5f, 0.0f , 0.0f, 0.0f, 1.0f
+    };
+
+    float secondTriangle[] = {
+        0.0f, -0.5f, 0.0f, //left
+        0.9f, -0.5f, 0.0f, //right
+        0.45f, 0.5f, 0.0f //top
+    };
+
+    unsigned int VBOs[2], VAOs[2];
+
+    glGenVertexArrays(2, VAOs);
+    glGenBuffers(2, VBOs);
+
+    glBindVertexArray(VAOs[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(firstTriangle), firstTriangle, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+
+    glBindVertexArray(VAOs[1]);
+    glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(secondTriangle), secondTriangle, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    while (!glfwWindowShouldClose(window)) {
+        processInput(window);
+
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        ourShader1.use();
+
+        ////TIME
+        //float timeValue = glfwGetTime();
+        //float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+        //int vertexColorLocation = glGetUniformLocation(shaderProgramOrange, "ourColor");
+        //glUniform4f(vertexColorLocation,0.0f,greenValue,0.0f,1.0f);
+
+        glBindVertexArray(VAOs[0]);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        ourShader2.use();
+        glBindVertexArray(VAOs[1]);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        glfwPollEvents();
+        glfwSwapBuffers(window);
     }
-    
-    //SHDER PROGRAM
-    unsigned int shaderProgram;
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << endl;
-    }
-
-    glUseProgram(shaderProgram);
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
-    renderTwoTrianglesEBO(window, shaderProgram);
     
     glfwTerminate();
     return 0;
+};
+
+void renderWithTwoShaders(GLFWwindow* window, unsigned int shaderProgram1, unsigned int shaderProgram2) {
+    
+    float firstTriangle[] = {
+       -0.9f, -0.5f, 0.0f, //left
+       -0.0f, -0.5f, 0.0f, //right
+       -0.45f, 0.5f, 0.0f //top
+    };
+
+    float secondTriangle[] = {
+        0.0f, -0.5f, 0.0f, //left
+        0.9f, -0.5f, 0.0f, //right
+        0.45f, 0.5f, 0.0f //top
+    };
+
+    unsigned int VBOs[2], VAOs[2];
+
+    glGenVertexArrays(2, VAOs);
+    glGenBuffers(2, VBOs);
+
+    glBindVertexArray(VAOs[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(firstTriangle), firstTriangle, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glBindVertexArray(VAOs[1]);
+    glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(secondTriangle), secondTriangle, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    
+    while (!glfwWindowShouldClose(window)) {
+		processInput(window);
+
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		glUseProgram(shaderProgram1);
+        glBindVertexArray(VAOs[0]);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		glUseProgram(shaderProgram2);
+        glBindVertexArray(VAOs[1]);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		glfwPollEvents();
+		glfwSwapBuffers(window);
+	}
+}
+
+void renderTwoTrianglesDifferent(GLFWwindow* window, unsigned int shaderProgram) {
+    float firstTriangle[] = {
+		-0.9f, -0.5f, 0.0f, //left
+		-0.0f, -0.5f, 0.0f, //right
+		-0.45f, 0.5f, 0.0f //top
+	};
+
+    float secondTriangle[] = {
+        0.0f, -0.5f, 0.0f, //left
+        0.9f, -0.5f, 0.0f, //right
+        0.45f, 0.5f, 0.0f //top
+    };
+
+    unsigned int VBOs[2], VAOs[2];
+    
+    glGenVertexArrays(2, VAOs);
+    glGenBuffers(2, VBOs);
+
+    glBindVertexArray(VAOs[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(firstTriangle), firstTriangle, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glBindVertexArray(VAOs[1]);
+    glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(secondTriangle), secondTriangle, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    while (!glfwWindowShouldClose(window)) {
+		processInput(window);
+
+		glUseProgram(shaderProgram);
+		glBindVertexArray(VAOs[0]);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		glBindVertexArray(VAOs[1]);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		glfwPollEvents();
+		glfwSwapBuffers(window);
+	}
+
+};
+
+void renderTwoTriangles1(GLFWwindow* window, unsigned int shaderProgram) {
+    float verticies[] = {
+		-0.5f, -0.5f, 0.0f, //bottom left
+		0.5f, -0.5f, 0.0f, //bottom right
+		0.0f, 0.5f, 0.0f, //top
+
+        0.5f, -0.5f, 0.0f, //bottom left
+        1.0f, -0.5f, 0.0f, //bottom right
+        0.75f, 0.5f, 0.0f //top 
+	};
+
+    unsigned VBO, VAO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(verticies), verticies, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindVertexArray(0);
+
+    while (!glfwWindowShouldClose(window)) {
+		processInput(window);
+
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		glUseProgram(shaderProgram);
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		glfwPollEvents();
+		glfwSwapBuffers(window);
+	}
+
 };
 
 void renderTwoTrianglesEBO(GLFWwindow* window, unsigned int shaderProgram){

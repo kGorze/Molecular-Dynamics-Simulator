@@ -273,6 +273,9 @@
     <None Include="Dependencies\include\glm\gtx\vector_query.inl" />
     <None Include="Dependencies\include\glm\gtx\wrap.inl" />
     <None Include="Dependencies\lib\glfw3.dll" />
+    <None Include="fragment1.fs" />
+    <None Include="fragment2.fs" />
+    <None Include="vertex.vs" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="histo.txt" />
@@ -575,6 +578,7 @@
     <ClInclude Include="leapfrog.h" />
     <ClInclude Include="physical.h" />
     <ClInclude Include="rand2D.h" />
+    <ClInclude Include="shader.h" />
     <ClInclude Include="statistics.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="vector_operations.h" />

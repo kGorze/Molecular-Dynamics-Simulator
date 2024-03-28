@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="Thirdparty">
+      <UniqueIdentifier>{994289c9-a7e8-4bef-bb08-0377fb00ad19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenGL">
+      <UniqueIdentifier>{786f0c32-1981-4db0-8258-1512199c1e8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenGL\Shaders">
+      <UniqueIdentifier>{8660a35d-ab20-4638-b97d-088ae1c5c8ed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -24,7 +33,9 @@
     <ClCompile Include="Dependencies\include\glm\detail\glm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Dependencies\include\glm\glm.cppm" />
+    <ClCompile Include="Dependencies\include\glm\glm.cppm">
+      <Filter>Thirdparty</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="leapfrog.h">
@@ -921,6 +932,9 @@
     <ClInclude Include="Dependencies\include\glm\vector_relational.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="histo.txt">
@@ -939,7 +953,6 @@
     </None>
     <None Include=".gitignore" />
     <None Include=".gitattributes" />
-    <None Include="Dependencies\lib\glfw3.dll" />
     <None Include="Dependencies\include\glm\detail\func_common.inl">
       <Filter>Header Files</Filter>
     </None>
@@ -1354,10 +1367,28 @@
     <None Include="Dependencies\include\glm\gtx\wrap.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="Dependencies\lib\glfw3.dll">
+      <Filter>Thirdparty</Filter>
+    </None>
+    <None Include="vertex.vs">
+      <Filter>OpenGL\Shaders</Filter>
+    </None>
+    <None Include="fragment1.fs">
+      <Filter>OpenGL\Shaders</Filter>
+    </None>
+    <None Include="fragment2.fs">
+      <Filter>OpenGL\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="Dependencies\lib\glfw3.lib" />
-    <Library Include="Dependencies\lib\glfw3_mt.lib" />
-    <Library Include="Dependencies\lib\glfw3dll.lib" />
+    <Library Include="Dependencies\lib\glfw3.lib">
+      <Filter>Thirdparty</Filter>
+    </Library>
+    <Library Include="Dependencies\lib\glfw3_mt.lib">
+      <Filter>Thirdparty</Filter>
+    </Library>
+    <Library Include="Dependencies\lib\glfw3dll.lib">
+      <Filter>Thirdparty</Filter>
+    </Library>
   </ItemGroup>
 </Project>

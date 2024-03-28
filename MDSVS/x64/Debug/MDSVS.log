@@ -8,11 +8,9 @@ C:\Users\konrad_guest\source\repos\MDS\vector_operations.h(53,18): warning C4244
 C:\Users\konrad_guest\source\repos\MDS\vector_operations.h(102,26): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(448,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(449,54): warning C4244: 'argument': conversion from 'real' to 'float', possible loss of data
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(453,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(751,37): warning C4244: '=': conversion from 'real' to 'int', possible loss of data
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(390,1): warning C4715: 'Simulation': not all control paths return a value
-MDSVS\x64\Debug\glm.obj : warning LNK4042: object specified more than once; extras ignored
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(600,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(601,54): warning C4244: 'argument': conversion from 'real' to 'float', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(605,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(903,37): warning C4244: '=': conversion from 'real' to 'int', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(542,1): warning C4715: 'Simulation': not all control paths return a value
   MDSVS.vcxproj -> C:\Users\konrad_guest\source\repos\MDS\x64\Debug\MDSVS.exe
