@@ -28,11 +28,15 @@
               "RelativeDocumentMoniker": "main.cpp",
               "ToolTip": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AQIAAG0AAAAAAAAAAAAAAIIAAAAUAAAA",
+              "ViewState": "AQIAABcAAAAAAAAAAAAcwCAAAAAUAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-03-27T17:00:35.703Z",
               "IsPinned": true,
               "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
               "$type": "Document",
@@ -44,12 +48,7 @@
               "RelativeToolTip": ".gitignore",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-03-28T13:12:26.106Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+              "WhenOpened": "2024-03-28T13:12:26.106Z"
             }
           ]
         }

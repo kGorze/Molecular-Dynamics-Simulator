@@ -22,9 +22,29 @@ Of course, the technique for evaluating the forces discussed here is not particu
 
 //----------------
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <iostream>
+#include <cmath>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace std;
+
+const char* vertexShaderSource = "#version 330 core\n"
+"layout (location = 0) in vec3 aPos;\n"
+"void main()\n"
+"{\n"
+"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+"}\0";
+
+const char* fragmentShaderSource = "#version 330 core\n"
+"out vec4 FragColor;\n"
+"void main()\n"
+"{\n"
+"   FragColor = vec4(0.8f, 0.3f, 0.02f, 1.0f);\n"
+"}\n\0";
 
 
 #define AllocMem(a,n,t) a = (t*)malloc((n)*sizeof(t)) //This is a macro that is used to allocate memory for arrays. It is used in the main program to allocate memory for the mol array.
@@ -91,43 +111,120 @@ int Simulation();
 
 
 int main(void){
+    // Initialize GLFW
+    glfwInit();
 
-    //Simulation();
+    // Set OpenGL version and profile
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-
-
-
-
-    GLFWwindow* window;
-
-    /* Initialize the library */
-    if (!glfwInit())
-        return -1;
-
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    if (!window)
+    // Create a GLFW window
+    GLFWwindow* window = glfwCreateWindow(800, 800, "YoutubeOpenGL", NULL, NULL);
+    if (window == NULL)
     {
+        std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
     }
-
-    /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
-    /* Loop until the user closes the window */
+    // Load OpenGL function pointers
+    gladLoadGL();
+
+    // Set viewport size
+    glViewport(0, 0, 800, 800);
+
+    // Compile vertex shader
+    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+    glCompileShader(vertexShader);
+
+    // Compile fragment shader
+    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+    glCompileShader(fragmentShader);
+
+    // Create shader program
+    GLuint shaderProgram = glCreateProgram();
+    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, fragmentShader);
+    glLinkProgram(shaderProgram);
+
+    // Delete shaders (no longer needed)
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+
+    // Vertices coordinates for a circle
+    const int numSegments = 100;
+    GLfloat vertices[numSegments * 3];
+    float radius = 0.5f;
+    for (int i = 0; i < numSegments; ++i)
+    {
+        float theta = 2.0f * M_PI * i / numSegments;
+        vertices[i * 3] = radius * cos(theta);
+        vertices[i * 3 + 1] = radius * sin(theta);
+        vertices[i * 3 + 2] = 0.0f;
+    }
+
+    // Create vertex array object (VAO) and vertex buffer object (VBO)
+    GLuint VAO, VBO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+
+    // Bind VAO and VBO
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+    // Load vertex data into VBO
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    // Set vertex attribute pointers
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    // Unbind VAO and VBO
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    // Main loop
     while (!glfwWindowShouldClose(window))
     {
-        /* Render here */
+        // Clear the color buffer
+        glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+        // Use shader program
+        glUseProgram(shaderProgram);
 
-        /* Poll for and process events */
+        // Bind VAO
+        glBindVertexArray(VAO);
+
+        // Draw circles
+        for (int i = 0; i < 4; ++i)
+        {
+            float angle = static_cast<float>(i) / 4.0f * 2.0f * M_PI;
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(cos(angle) * 0.5f, sin(angle) * 0.5f, 0.0f));
+            glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+            glDrawArrays(GL_TRIANGLE_FAN, 0, numSegments);
+        }
+
+        // Unbind VAO
+        glBindVertexArray(0);
+
+        // Swap buffers and poll events
+        glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
+    // Delete VAO and VBO
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+
+    // Delete shader program
+    glDeleteProgram(shaderProgram);
+
+    // Terminate GLFW
     glfwTerminate();
     return 0;
 };
