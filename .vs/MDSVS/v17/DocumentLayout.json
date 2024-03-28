@@ -7,8 +7,16 @@
       "RelativeMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|C:\\Users\\konrad_guest\\source\\repos\\MDS\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|solutionrelative:.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+      "AbsoluteMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|C:\\Users\\konrad_guest\\source\\repos\\MDS\\TODO.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|solutionrelative:TODO.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|C:\\Users\\konrad_guest\\source\\repos\\MDS\\summary.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|solutionrelative:summary.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|C:\\Users\\konrad_guest\\source\\repos\\MDS\\histo.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|solutionrelative:histo.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,8 +26,51 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 4,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "TODO.txt",
+              "DocumentMoniker": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\TODO.txt",
+              "RelativeDocumentMoniker": "TODO.txt",
+              "ToolTip": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\TODO.txt",
+              "RelativeToolTip": "TODO.txt",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2024-03-27T17:08:32.56Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "histo.txt",
+              "DocumentMoniker": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\histo.txt",
+              "RelativeDocumentMoniker": "histo.txt",
+              "ToolTip": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\histo.txt",
+              "RelativeToolTip": "histo.txt",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAADMAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2024-03-27T17:07:50.066Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "summary.txt",
+              "DocumentMoniker": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\summary.txt",
+              "RelativeDocumentMoniker": "summary.txt",
+              "ToolTip": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\summary.txt",
+              "RelativeToolTip": "summary.txt",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2024-03-27T17:08:29.673Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -28,28 +79,10 @@
               "RelativeDocumentMoniker": "main.cpp",
               "ToolTip": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AQIAAG0AAAAAAAAAAAAAAIIAAAAUAAAA",
+              "ViewState": "AQIAAGEAAAAAAAAAAAAAAHAAAAARAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-03-27T17:00:35.703Z",
-              "IsPinned": true,
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": ".gitignore",
-              "DocumentMoniker": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\.gitignore",
-              "RelativeDocumentMoniker": ".gitignore",
-              "ToolTip": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\.gitignore",
-              "RelativeToolTip": ".gitignore",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-03-28T13:12:26.106Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             }
           ]
         }
