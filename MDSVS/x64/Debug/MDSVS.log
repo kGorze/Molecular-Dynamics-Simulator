@@ -8,13 +8,11 @@ C:\Users\konrad_guest\source\repos\MDS\vector_operations.h(53,18): warning C4244
 C:\Users\konrad_guest\source\repos\MDS\vector_operations.h(102,26): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(164,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(206,25): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(360,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(361,54): warning C4244: 'argument': conversion from 'real' to 'float', possible loss of data
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(365,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(663,37): warning C4244: '=': conversion from 'real' to 'int', possible loss of data
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(302,1): warning C4715: 'Simulation': not all control paths return a value
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(448,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(449,54): warning C4244: 'argument': conversion from 'real' to 'float', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(453,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(751,37): warning C4244: '=': conversion from 'real' to 'int', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(390,1): warning C4715: 'Simulation': not all control paths return a value
 MDSVS\x64\Debug\glm.obj : warning LNK4042: object specified more than once; extras ignored
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   MDSVS.vcxproj -> C:\Users\konrad_guest\source\repos\MDS\x64\Debug\MDSVS.exe
