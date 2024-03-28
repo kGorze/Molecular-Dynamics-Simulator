@@ -8,9 +8,9 @@ C:\Users\konrad_guest\source\repos\MDS\vector_operations.h(53,18): warning C4244
 C:\Users\konrad_guest\source\repos\MDS\vector_operations.h(102,26): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(600,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(601,54): warning C4244: 'argument': conversion from 'real' to 'float', possible loss of data
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(605,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(903,37): warning C4244: '=': conversion from 'real' to 'int', possible loss of data
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(542,1): warning C4715: 'Simulation': not all control paths return a value
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(635,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(636,54): warning C4244: 'argument': conversion from 'real' to 'float', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(640,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(938,37): warning C4244: '=': conversion from 'real' to 'int', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(577,1): warning C4715: 'Simulation': not all control paths return a value
   MDSVS.vcxproj -> C:\Users\konrad_guest\source\repos\MDS\x64\Debug\MDSVS.exe

@@ -7,20 +7,20 @@
       "RelativeMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|C:\\Users\\konrad_guest\\source\\repos\\MDS\\fragment1.fs||{8A5AA6CF-46E3-4520-A70A-7393D15233E9}",
-      "RelativeMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|solutionrelative:fragment1.fs||{8A5AA6CF-46E3-4520-A70A-7393D15233E9}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|C:\\Users\\konrad_guest\\source\\repos\\MDS\\vertex.vs||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|solutionrelative:vertex.vs||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|C:\\Users\\konrad_guest\\source\\repos\\MDS\\shader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|solutionrelative:shader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|C:\\Users\\konrad_guest\\source\\repos\\MDS\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|solutionrelative:.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|C:\\Users\\konrad_guest\\source\\repos\\MDS\\fragment1.fs||{8A5AA6CF-46E3-4520-A70A-7393D15233E9}",
+      "RelativeMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|solutionrelative:fragment1.fs||{8A5AA6CF-46E3-4520-A70A-7393D15233E9}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|C:\\Users\\konrad_guest\\source\\repos\\MDS\\shader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{36308E1D-136A-4386-B6FA-83684C41879B}|MDSVS.vcxproj|solutionrelative:shader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -40,7 +40,7 @@
               "RelativeDocumentMoniker": "main.cpp",
               "ToolTip": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AQIAAIcAAAAAAAAAAAAAAJsAAAAAAAAA",
+              "ViewState": "AQIAANkAAAAAAAAAAAAAwPQAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-03-27T17:00:35.703Z",
               "IsPinned": true,
@@ -48,7 +48,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "shader.h",
               "DocumentMoniker": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\shader.h",
               "RelativeDocumentMoniker": "shader.h",
@@ -57,8 +57,7 @@
               "ViewState": "AQIAADAAAAAAAAAAAAAAADUAAAAYAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-03-28T20:05:15.26Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Bookmark",
@@ -70,7 +69,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "fragment1.fs",
               "DocumentMoniker": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\fragment1.fs",
               "RelativeDocumentMoniker": "fragment1.fs",
@@ -78,25 +77,24 @@
               "RelativeToolTip": "fragment1.fs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAlAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-03-28T20:49:16.634Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-03-28T20:49:16.634Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "vertex.vs",
               "DocumentMoniker": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\vertex.vs",
               "RelativeDocumentMoniker": "vertex.vs",
               "ToolTip": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\vertex.vs",
               "RelativeToolTip": "vertex.vs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAcAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2024-03-28T20:44:35.481Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": ".gitignore",
               "DocumentMoniker": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\.gitignore",
               "RelativeDocumentMoniker": ".gitignore",
