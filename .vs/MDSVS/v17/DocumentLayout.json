@@ -29,10 +29,6 @@
           "SelectedChildIndex": 4,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "TODO.txt",
@@ -42,7 +38,8 @@
               "RelativeToolTip": "TODO.txt",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2024-03-27T17:08:32.56Z"
+              "WhenOpened": "2024-03-27T17:08:32.56Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -54,7 +51,12 @@
               "RelativeToolTip": "histo.txt",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAADMAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2024-03-27T17:07:50.066Z"
+              "WhenOpened": "2024-03-27T17:07:50.066Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
               "$type": "Document",
@@ -66,7 +68,8 @@
               "RelativeToolTip": "summary.txt",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2024-03-27T17:08:29.673Z"
+              "WhenOpened": "2024-03-27T17:08:29.673Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -76,7 +79,7 @@
               "RelativeDocumentMoniker": "main.cpp",
               "ToolTip": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AQIAAGEAAAAAAAAAAAAAAGgAAAAuAAAA",
+              "ViewState": "AQIAAGEAAAAAAAAAAAAAAHAAAAARAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-03-27T17:00:35.703Z",
               "EditorCaption": ""
