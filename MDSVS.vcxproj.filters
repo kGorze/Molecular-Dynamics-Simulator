@@ -18,25 +18,64 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="hfiles\leapfrog.h">
+    <ClInclude Include="leapfrog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="hfiles\physical.h">
+    <ClInclude Include="physical.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="hfiles\rand2D.h">
+    <ClInclude Include="rand2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="hfiles\statistics.h">
+    <ClInclude Include="statistics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="hfiles\types.h">
+    <ClInclude Include="types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="hfiles\vector_operations.h">
+    <ClInclude Include="vector_operations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Dependencies\include\GLFW\glfw3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\include\GLFW\glfw3native.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\include\KHR\khrplatform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\include\glad\glad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="histo.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="summary.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="TODO.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data.in">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include=".gitignore" />
+    <None Include=".gitattributes" />
+    <None Include="Dependencies\lib\glfw3.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="Dependencies\lib\glfw3.lib" />
+    <Library Include="Dependencies\lib\glfw3_mt.lib" />
+    <Library Include="Dependencies\lib\glfw3dll.lib" />
   </ItemGroup>
 </Project>
