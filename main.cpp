@@ -20,6 +20,10 @@ Of course, the technique for evaluating the forces discussed here is not particu
 #include <string>
 #include <unordered_map>
 
+//----------------
+
+#include <GLFW/glfw3.h>
+
 using namespace std;
 
 
@@ -80,40 +84,82 @@ void GetNameList(const char *fileName, vector<KeyValue> *data);
 void PrintNameList(vector<KeyValue> *data);
 void EvalVelDist();
 void PrintVelDist(FILE *fp);
+int Simulation();
 
 
 
 
 
+int main(void){
 
-int main(){
-    
+    //Simulation();
+
+
+
+
+
+    GLFWwindow* window;
+
+    /* Initialize the library */
+    if (!glfwInit())
+        return -1;
+
+    /* Create a windowed mode window and its OpenGL context */
+    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    if (!window)
+    {
+        glfwTerminate();
+        return -1;
+    }
+
+    /* Make the window's context current */
+    glfwMakeContextCurrent(window);
+
+    /* Loop until the user closes the window */
+    while (!glfwWindowShouldClose(window))
+    {
+        /* Render here */
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        /* Swap front and back buffers */
+        glfwSwapBuffers(window);
+
+        /* Poll for and process events */
+        glfwPollEvents();
+    }
+
+    glfwTerminate();
+    return 0;
+};
+
+int Simulation() {
+
     /*
-    deltaT 0.005    
+    deltaT 0.005
     density 0.8
     initUcell 20 20
     stepAvg 100
     stepEquil 0
     stepLimit 10000
-    temperature 1    
+    temperature 1
     */
 
-   //The initial configuration is a 20 × 20 square lattice so that there are a total of 400 atoms.
-   //The timestep value deltaT is determined by the requirement that energy be conserved by the leapfrog method 
-   //Temperature 1
+    //The initial configuration is a 20 × 20 square lattice so that there are a total of 400 atoms.
+    //The timestep value deltaT is determined by the requirement that energy be conserved by the leapfrog method 
+    //Temperature 1
 
-    //set parameters from input to the program
+     //set parameters from input to the program
     FILE* filePtr = nullptr;
     FILE* histoPtr = nullptr;
     errno_t err;
 
-    err = fopen_s(&filePtr,"summary.txt", "w"); // Open file in write mode
+    err = fopen_s(&filePtr, "summary.txt", "w"); // Open file in write mode
     if (err != 0) {
         std::cerr << "Error opening file for writing summary" << std::endl;
         return 1;
     }
 
-    err = fopen_s(&histoPtr,"histo.txt", "w"); // Open file in write mode
+    err = fopen_s(&histoPtr, "histo.txt", "w"); // Open file in write mode
     if (err != 0) {
         std::cerr << "Error opening file for writing! histo" << std::endl;
         return 1;
@@ -122,12 +168,12 @@ int main(){
 
     vector<KeyValue> data;
     GetNameList("data.in", &data);
-    
+
     //PrintNameList(&data);
     SetParams(&data);
 
-    
-    cout<<"test"<<endl;
+
+    cout << "test" << endl;
 
 
     InitCoords();
@@ -138,13 +184,13 @@ int main(){
     // for(int i = 0; i < nMol; i++){
     //     cout<<mol[i].coordinates.x<<" "<<mol[i].coordinates.y<<endl;
     // }
-    
+
     int moreCycles = 1;
-    while(moreCycles){
+    while (moreCycles) {
         SingleStep(filePtr);
         //temperature +=0,5;
-        if(stepCount>=stepLimit){
-            moreCycles = 0; 
+        if (stepCount >= stepLimit) {
+            moreCycles = 0;
         }
     }
     PrintVelDist(histoPtr);
@@ -153,10 +199,10 @@ int main(){
         fclose(histoPtr);
     }
     if (filePtr != nullptr) {
-		fclose(filePtr);
-	}
-    return 0;
-};
+        fclose(filePtr);
+    }
+
+}
 
 void ComputeForces ()
 {

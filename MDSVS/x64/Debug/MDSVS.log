@@ -1,4 +1,5 @@
-﻿  main.cpp
+﻿  glad.c
+  main.cpp
 C:\Users\konrad_guest\source\repos\MDS\vector_operations.h(34,18): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'main.cpp')
   
@@ -8,8 +9,22 @@ C:\Users\konrad_guest\source\repos\MDS\vector_operations.h(53,18): warning C4244
 C:\Users\konrad_guest\source\repos\MDS\vector_operations.h(102,26): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(217,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(218,54): warning C4244: 'argument': conversion from 'real' to 'float', possible loss of data
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(222,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\konrad_guest\source\repos\MDS\main.cpp(520,37): warning C4244: '=': conversion from 'real' to 'int', possible loss of data
-  MDSVS.vcxproj -> C:\Users\konrad_guest\source\repos\MDS\x64\Debug\MDSVS.exe
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(160,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(202,25): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(203,13): error C2653: 'glm': is not a class or namespace name
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(203,18): error C2065: 'mat4': undeclared identifier
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(203,23): error C2146: syntax error: missing ';' before identifier 'model'
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(203,23): error C2065: 'model': undeclared identifier
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(203,31): error C2653: 'glm': is not a class or namespace name
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(203,46): error C2653: 'glm': is not a class or namespace name
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(203,51): error C3861: 'mat4': identifier not found
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(203,63): error C2653: 'glm': is not a class or namespace name
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(203,68): error C3861: 'vec3': identifier not found
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(203,36): error C3861: 'translate': identifier not found
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(204,91): error C2653: 'glm': is not a class or namespace name
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(204,106): error C2065: 'model': undeclared identifier
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(204,96): error C3861: 'value_ptr': identifier not found
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(356,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(357,54): warning C4244: 'argument': conversion from 'real' to 'float', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(361,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\konrad_guest\source\repos\MDS\main.cpp(659,37): warning C4244: '=': conversion from 'real' to 'int', possible loss of data
