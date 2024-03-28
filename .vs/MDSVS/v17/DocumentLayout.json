@@ -70,60 +70,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "TODO.txt",
-              "DocumentMoniker": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\TODO.txt",
-              "RelativeDocumentMoniker": "TODO.txt",
-              "ToolTip": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\TODO.txt",
-              "RelativeToolTip": "TODO.txt",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2024-03-27T17:08:32.56Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "histo.txt",
-              "DocumentMoniker": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\histo.txt",
-              "RelativeDocumentMoniker": "histo.txt",
-              "ToolTip": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\histo.txt",
-              "RelativeToolTip": "histo.txt",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAADMAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2024-03-27T17:07:50.066Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "summary.txt",
-              "DocumentMoniker": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\summary.txt",
-              "RelativeDocumentMoniker": "summary.txt",
-              "ToolTip": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\summary.txt",
-              "RelativeToolTip": "summary.txt",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2024-03-27T17:08:29.673Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
               "Title": "main.cpp",
               "DocumentMoniker": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
               "ToolTip": "C:\\Users\\konrad_guest\\source\\repos\\MDS\\main.cpp",
               "RelativeToolTip": "main.cpp",
-<<<<<<< HEAD
               "ViewState": "AQIAAGEAAAAAAAAAAAAAAGgAAAAuAAAA",
-=======
-              "ViewState": "AQIAAGEAAAAAAAAAAAAAAHAAAAARAAAA",
->>>>>>> parent of cef41eb (added glad and GLFW libraries)
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-03-27T17:00:35.703Z",
               "EditorCaption": ""
