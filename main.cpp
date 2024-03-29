@@ -135,9 +135,9 @@ int main(){
 
 
     //print coordinates of the molecules
-    // for(int i = 0; i < nMol; i++){
-    //     cout<<mol[i].coordinates.x<<" "<<mol[i].coordinates.y<<endl;
-    // }
+     for(int i = 0; i < nMol; i++){
+         cout<<mol[i].coordinates.x<<" "<<mol[i].coordinates.y<<endl;
+     }
     
     int moreCycles = 1;
     while(moreCycles){
