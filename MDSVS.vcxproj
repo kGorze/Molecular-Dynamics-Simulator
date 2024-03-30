@@ -129,6 +129,7 @@
     <ClCompile Include="Dependencies\include\glm\glm.cppm" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="render.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
@@ -278,6 +279,7 @@
     <None Include="vertex.vs" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="coordinates.txt" />
     <Text Include="histo.txt" />
     <Text Include="summary.txt" />
     <Text Include="TODO.txt" />
@@ -578,6 +580,7 @@
     <ClInclude Include="leapfrog.h" />
     <ClInclude Include="physical.h" />
     <ClInclude Include="rand2D.h" />
+    <ClInclude Include="render.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="statistics.h" />
     <ClInclude Include="types.h" />

@@ -4,48 +4,57 @@ This chapter provides the introductory appetizer and aims to leave the reader ne
 Of course, the technique for evaluating the forces discussed here is not particularly efficient from a computational point of view and the model is about the simplest there is
 */
 
+#ifndef STDIO_H
+#define STDIO_H
+#include <stdio.h>
+#endif
+
+#ifndef IOSTREAM_H
+#define IOSTREAM_H
+#include <iostream>
+#endif
+
+#ifndef MATH_H
+#define MATH_H
+#include <math.h>
+#endif
+
+#ifndef VECTOR_H
+#define VECTOR_H
+#include <vector>
+#endif
+
+#ifndef FSTREAM_H
+#define FSTREAM_H
+#include <fstream>
+#endif
+
+#ifndef STRING_H
+#define STRING_H
+#include <string>
+#endif
+
+#ifndef UNORDERED_MAP_H
+#define UNORDERED_MAP_H
+#include <unordered_map>
+#endif
+
+#ifndef SSTREAM_H
+#define SSTREAM_H
+#include <sstream>
+#endif
+
 #include "vector_operations.h"
 #include "types.h"
 #include "rand2D.h"
 #include "statistics.h"
 #include "physical.h"
 #include "leapfrog.h"
+#include "render.h"
 
-
-#include <stdio.h>
-#include <iostream>
-#include <math.h>
-#include <vector>
-#include <fstream>
-#include <string>
-#include <unordered_map>
-
-//----------------
-
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <iostream>
-#include <cmath>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include "shader.h"
 
 using namespace std;
 
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\0";
-
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vec4(0.8f, 0.3f, 0.02f, 1.0f);\n"
-"}\n\0";
 
 
 #define AllocMem(a,n,t) a = (t*)malloc((n)*sizeof(t)) //This is a macro that is used to allocate memory for arrays. It is used in the main program to allocate memory for the mol array.
@@ -73,6 +82,7 @@ int sizeHistVel = 50;
 vector<Mol> mol(nMol);
 vector<real> histVel(sizeHistVel);
 
+std::vector<vector<vector<double>>> dataCoords(5000);
 
 FILE* filePtr;
 FILE* histoPtr;
@@ -99,6 +109,8 @@ void EvalProps();
 void AccumProps(int icode);
 void SetParams(vector<KeyValue>* data);
 void PrintSummary(FILE *fp);
+void PrintCoordinates(const char* fileName);
+std::vector<std::vector<std::vector<double>>> readFile(const std::string& filename);
 void SetupJob();
 void SingleStep(FILE *fp);
 void GetNameList(const char *fileName, vector<KeyValue> *data);
@@ -107,402 +119,35 @@ void EvalVelDist();
 void PrintVelDist(FILE *fp);
 int Simulation();
 
-void renderRectangle(GLFWwindow* window, unsigned int shaderProgram);
-void renderTwoTrianglesEBO(GLFWwindow* window, unsigned int shaderProgram);
-void renderTwoTriangles1(GLFWwindow* window, unsigned int shaderProgram);
-void renderTwoTrianglesDifferent(GLFWwindow* window, unsigned int shaderProgram);
-void renderWithTwoShaders(GLFWwindow* window, unsigned int shaderProgram1, unsigned int shaderProgram2);
-
-void framebuffer_size_callback(GLFWwindow* window, int widht, int height) {
-    glViewport(0, 0, widht, height);
-}
-
-void processInput(GLFWwindow* window) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-		glfwSetWindowShouldClose(window, true);
-	}
-}
 
 
-
-int main(void) {
-
-    const unsigned int SCR_WIDTH = 800;
-    const unsigned int SCR_HEIGHT = 600;
-
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Test", NULL, NULL);
-    if (window == NULL) {
-        cout << "Failed to create GLFW window" << endl;
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
-
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        cout << "Failed to initialize GLAD" << endl;
-        return -1;
-    }
-    glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+int main() {
+    //Simulation();
+    //PrintCoordinates("coordinates.txt");
 
 
-    Shader ourShader1("vertex.vs", "fragment1.fs");
-    //Shader ourShader2("vertex.vs", "fragment2.fs");
-
-    /*float offset = 0.2f;
-    ourShader1.setFloat("xOffset", offset);*/
-
-    //glm::mat4 trans = glm::mat4(1.0f);
-
-    //trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
-    //trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
-
-    //unsigned int transformLoc = glGetUniformLocation(ourShader1.ID, "transform");
-    //glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-
-
-
-
-    float vertices[] = {
-        // positions           // texture coords
-         0.5f,  0.5f, 0.0f,    1.0f, 1.0f, // top right
-         0.5f, -0.5f, 0.0f,    1.0f, 0.0f, // bottom right
-        -0.5f, -0.5f, 0.0f,    0.0f, 0.0f, // bottom left
-        -0.5f,  0.5f, 0.0f,    0.0f, 1.0f  // top left 
-    };
-    unsigned int indices[] = {
-        0, 1, 3, // first triangle
-        1, 2, 3  // second triangle
-    };
-
-    unsigned int VBO, VAO, EBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    // texture coord attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    ourShader1.use();
-
-    //glBindVertexArray(VAOs[1]);
-    //glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(secondTriangle), secondTriangle, GL_STATIC_DRAW);
-    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    //glEnableVertexAttribArray(0);
-
-    while (!glfwWindowShouldClose(window)) {
-        // input
-        // -----
-        processInput(window);
-
-        // render
-        // ------
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-
-        glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        // first container
-        // ---------------
-        transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-        transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-        // get their uniform location and set matrix (using glm::value_ptr)
-        unsigned int transformLoc = glGetUniformLocation(ourShader1.ID, "transform");
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
-
-        // with the uniform matrix set, draw the first container
-        glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-        // second transformation
-        // ---------------------
-        transform = glm::mat4(1.0f); // reset it to identity matrix
-        transform = glm::translate(transform, glm::vec3(-0.5f, 0.5f, 0.0f));
-        float scaleAmount = static_cast<float>(sin(glfwGetTime()));
-        transform = glm::scale(transform, glm::vec3(scaleAmount, scaleAmount, scaleAmount));
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, &transform[0][0]); // this time take the matrix value array's first element as its memory pointer value
-
-        // now with the uniform matrix being replaced with new transformations, draw it again.
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-        // -------------------------------------------------------------------------------
-        glfwSwapBuffers(window);
-        glfwPollEvents();
-    }
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
+    dataCoords = readFile("coordinates.txt");
+    GLFWwindow* window = initializeScreen(800, 800);
     
-    glfwTerminate();
+  
+    renderAtoms(window, dataCoords);
+    terminateScreen();
+
+
+
+
+    //for (int i = 0; i < dataCoords.size(); i++) {
+    //    for (int j = 0; j < dataCoords[i].size(); j++) {
+    //        cout << dataCoords[i][j][0] << " " << dataCoords[i][j][1] << "\t ";
+    //    }
+    //    cout << "\n" << i << endl;
+    //}
+
+
+
+
     return 0;
-};
-
-void renderWithTwoShaders(GLFWwindow* window, unsigned int shaderProgram1, unsigned int shaderProgram2) {
-    
-    float firstTriangle[] = {
-       -0.9f, -0.5f, 0.0f, //left
-       -0.0f, -0.5f, 0.0f, //right
-       -0.45f, 0.5f, 0.0f //top
     };
-
-    float secondTriangle[] = {
-        0.0f, -0.5f, 0.0f, //left
-        0.9f, -0.5f, 0.0f, //right
-        0.45f, 0.5f, 0.0f //top
-    };
-
-    unsigned int VBOs[2], VAOs[2];
-
-    glGenVertexArrays(2, VAOs);
-    glGenBuffers(2, VBOs);
-
-    glBindVertexArray(VAOs[0]);
-    glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(firstTriangle), firstTriangle, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glBindVertexArray(VAOs[1]);
-    glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(secondTriangle), secondTriangle, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    
-    while (!glfwWindowShouldClose(window)) {
-		processInput(window);
-
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		glUseProgram(shaderProgram1);
-        glBindVertexArray(VAOs[0]);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		glUseProgram(shaderProgram2);
-        glBindVertexArray(VAOs[1]);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		glfwPollEvents();
-		glfwSwapBuffers(window);
-	}
-}
-
-void renderTwoTrianglesDifferent(GLFWwindow* window, unsigned int shaderProgram) {
-    float firstTriangle[] = {
-		-0.9f, -0.5f, 0.0f, //left
-		-0.0f, -0.5f, 0.0f, //right
-		-0.45f, 0.5f, 0.0f //top
-	};
-
-    float secondTriangle[] = {
-        0.0f, -0.5f, 0.0f, //left
-        0.9f, -0.5f, 0.0f, //right
-        0.45f, 0.5f, 0.0f //top
-    };
-
-    unsigned int VBOs[2], VAOs[2];
-    
-    glGenVertexArrays(2, VAOs);
-    glGenBuffers(2, VBOs);
-
-    glBindVertexArray(VAOs[0]);
-    glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(firstTriangle), firstTriangle, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glBindVertexArray(VAOs[1]);
-    glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(secondTriangle), secondTriangle, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    while (!glfwWindowShouldClose(window)) {
-		processInput(window);
-
-		glUseProgram(shaderProgram);
-		glBindVertexArray(VAOs[0]);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		glBindVertexArray(VAOs[1]);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		glfwPollEvents();
-		glfwSwapBuffers(window);
-	}
-
-};
-
-void renderTwoTriangles1(GLFWwindow* window, unsigned int shaderProgram) {
-    float verticies[] = {
-		-0.5f, -0.5f, 0.0f, //bottom left
-		0.5f, -0.5f, 0.0f, //bottom right
-		0.0f, 0.5f, 0.0f, //top
-
-        0.5f, -0.5f, 0.0f, //bottom left
-        1.0f, -0.5f, 0.0f, //bottom right
-        0.75f, 0.5f, 0.0f //top 
-	};
-
-    unsigned VBO, VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(verticies), verticies, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    glBindVertexArray(0);
-
-    while (!glfwWindowShouldClose(window)) {
-		processInput(window);
-
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		glUseProgram(shaderProgram);
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		glfwPollEvents();
-		glfwSwapBuffers(window);
-	}
-
-};
-
-void renderTwoTrianglesEBO(GLFWwindow* window, unsigned int shaderProgram){
-    float verticies[] = {
-        0.3f, 0.5f, 0.0f, //top right
-        0.5f, -0.5f, 0.0f, //bottom right
-        0.0f, -0.5f, 0.0f, //bottom middle 
-        -0.5f,-0.5f, 0.0f, //bottom left
-        -0.3f, 0.5f, 0.0f //top left
-    };
-    unsigned int indices[] = {
-        0,1,2,
-        2,3,4
-    };
-
-    unsigned int VAO, VBO, EBO;
-
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(verticies), verticies, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
-    while (!glfwWindowShouldClose(window)) {
-        processInput(window);
-
-        glUseProgram(shaderProgram);
-        glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-        glfwPollEvents();
-        glfwSwapBuffers(window);
-    }
-
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
-    glDeleteProgram(shaderProgram);
-
-}
-
-void renderRectangle(GLFWwindow* window, unsigned int shaderProgram) {
-    float vertices[] = {
-         0.5f,  0.5f, 0.0f,  // top right    
-         0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f,  0.5f, 0.0f   // top left 
-    };
-
-    unsigned int indices[] = {  // note that we start from 0!
-    0, 1, 3,   // first triangle
-    1, 2, 3    // second triangle
-    };
-
-    unsigned int VAO, VBO, EBO;
-
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    //VERTEX ARRAY OBJECT
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
-
-    while (!glfwWindowShouldClose(window)) {
-        processInput(window);
-
-
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        glUseProgram(shaderProgram);
-        glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-
-        glfwPollEvents();
-        glfwSwapBuffers(window);
-    }
-
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
-    glDeleteProgram(shaderProgram);
-
-}
 
 int Simulation() {
 
@@ -561,6 +206,8 @@ int Simulation() {
     while (moreCycles) {
         SingleStep(filePtr);
         //temperature +=0,5;
+        //iterate over the mol array and save the coordinates to dataCoords
+
         if (stepCount >= stepLimit) {
             moreCycles = 0;
         }
@@ -575,6 +222,62 @@ int Simulation() {
     }
 
 }
+
+//make a function PrintCoordinates that will take name of the file - not a pointer to a file - to save the coordinates and open the file in write mode
+void PrintCoordinates(const char* fileName) {
+	FILE* filePtr = nullptr;
+	errno_t err;
+
+	err = fopen_s(&filePtr, fileName, "w"); // Open file in write mode
+    if (err != 0) {
+		std::cerr << "Error opening file for writing" << std::endl;
+		return;
+	}
+
+    //print the coordinates from dataCoords
+    for (int i = 0; i < dataCoords.size(); i++) {
+        for (int j = 0; j < dataCoords[i].size(); j++) {
+			fprintf(filePtr, "%5d %8.4f %8.4f\n", i, dataCoords[i][j][0], dataCoords[i][j][1]);
+		}
+	}
+
+    if (filePtr != nullptr) {
+		fclose(filePtr);
+	}
+
+}
+
+std::vector<std::vector<std::vector<double>>> readFile(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return {};
+    }
+
+    std::vector<std::vector<std::vector<double>>> dataCoords;
+
+    std::string line;
+    while (std::getline(file, line)) {
+        std::istringstream iss(line);
+        int index;
+        double x, y;
+        if (!(iss >> index >> x >> y)) {
+            std::cerr << "Error parsing line: " << line << std::endl;
+            continue;
+        }
+
+        if (index >= dataCoords.size()) {
+            dataCoords.resize(index + 1);
+        }
+
+        dataCoords[index].push_back({ x, y });
+    }
+
+    return dataCoords;
+}
+
+
+
 
 void ComputeForces ()
 {
@@ -632,12 +335,12 @@ void LeapfrogStep(int part){
     int n;
     if(part == 1){
         DO_MOL{
-            leapfrog_velocity(mol[n].velocity, 0.5*deltaT, mol[n].accelaration);
-            leapfrog_coordinates(mol[n].coordinates, deltaT, mol[n].velocity);
+            leapfrog_velocity(&mol[n].velocity, 0.5*deltaT, &mol[n].accelaration);
+            leapfrog_coordinates(&mol[n].coordinates, deltaT, &mol[n].velocity);
         }
     }else{
         DO_MOL{
-            leapfrog_velocity(mol[n].velocity, 0.5*deltaT, mol[n].accelaration);
+            leapfrog_velocity(&mol[n].velocity, 0.5*deltaT, &mol[n].accelaration);
         }
     }
 };
@@ -859,6 +562,9 @@ void SingleStep(FILE *fp){
 
     EvalProps();
     AccumProps(1);
+    for (int i = 0; i < nMol; i++) {
+        dataCoords.at(stepCount - 1).push_back({ mol[i].coordinates.x, mol[i].coordinates.y });
+    }
     if(stepCount % stepAvg == 0){
         AccumProps(2);
         if(stepCount>=stepEquil && (stepCount - stepEquil) % stepVel == 0){

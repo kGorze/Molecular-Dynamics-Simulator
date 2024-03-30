@@ -36,6 +36,9 @@
     <ClCompile Include="Dependencies\include\glm\glm.cppm">
       <Filter>Thirdparty</Filter>
     </ClCompile>
+    <ClCompile Include="render.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="leapfrog.h">
@@ -935,6 +938,9 @@
     <ClInclude Include="shader.h">
       <Filter>OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="render.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="histo.txt">
@@ -944,6 +950,9 @@
       <Filter>Resource Files</Filter>
     </Text>
     <Text Include="TODO.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="coordinates.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>
