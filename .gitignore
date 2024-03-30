@@ -4,3 +4,12 @@
 *.23365
 another/
 GUI/
+.vs/
+
+coordinates.txt
+*.ipch
+*.suo
+*.user
+*.ncb
+*.sbr
+*.log

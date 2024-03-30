@@ -4,23 +4,57 @@ This chapter provides the introductory appetizer and aims to leave the reader ne
 Of course, the technique for evaluating the forces discussed here is not particularly efficient from a computational point of view and the model is about the simplest there is
 */
 
+#ifndef STDIO_H
+#define STDIO_H
+#include <stdio.h>
+#endif
+
+#ifndef IOSTREAM_H
+#define IOSTREAM_H
+#include <iostream>
+#endif
+
+#ifndef MATH_H
+#define MATH_H
+#include <math.h>
+#endif
+
+#ifndef VECTOR_H
+#define VECTOR_H
+#include <vector>
+#endif
+
+#ifndef FSTREAM_H
+#define FSTREAM_H
+#include <fstream>
+#endif
+
+#ifndef STRING_H
+#define STRING_H
+#include <string>
+#endif
+
+#ifndef UNORDERED_MAP_H
+#define UNORDERED_MAP_H
+#include <unordered_map>
+#endif
+
+#ifndef SSTREAM_H
+#define SSTREAM_H
+#include <sstream>
+#endif
+
 #include "vector_operations.h"
 #include "types.h"
 #include "rand2D.h"
 #include "statistics.h"
 #include "physical.h"
 #include "leapfrog.h"
+#include "render.h"
 
-
-#include <stdio.h>
-#include <iostream>
-#include <math.h>
-#include <vector>
-#include <fstream>
-#include <string>
-#include <unordered_map>
 
 using namespace std;
+
 
 
 #define AllocMem(a,n,t) a = (t*)malloc((n)*sizeof(t)) //This is a macro that is used to allocate memory for arrays. It is used in the main program to allocate memory for the mol array.
@@ -48,6 +82,7 @@ int sizeHistVel = 50;
 vector<Mol> mol(nMol);
 vector<real> histVel(sizeHistVel);
 
+std::vector<vector<vector<double>>> dataCoords(5000);
 
 FILE* filePtr;
 FILE* histoPtr;
@@ -74,46 +109,74 @@ void EvalProps();
 void AccumProps(int icode);
 void SetParams(vector<KeyValue>* data);
 void PrintSummary(FILE *fp);
+void PrintCoordinates(const char* fileName);
+std::vector<std::vector<std::vector<double>>> readFile(const std::string& filename);
 void SetupJob();
 void SingleStep(FILE *fp);
 void GetNameList(const char *fileName, vector<KeyValue> *data);
 void PrintNameList(vector<KeyValue> *data);
 void EvalVelDist();
 void PrintVelDist(FILE *fp);
+int Simulation();
 
 
 
+int main() {
+    //Simulation();
+    //PrintCoordinates("coordinates.txt");
 
 
-
-int main(){
+    dataCoords = readFile("coordinates.txt");
+    GLFWwindow* window = initializeScreen(800, 800);
     
+  
+    renderAtoms(window, dataCoords);
+    terminateScreen();
+
+
+
+
+    //for (int i = 0; i < dataCoords.size(); i++) {
+    //    for (int j = 0; j < dataCoords[i].size(); j++) {
+    //        cout << dataCoords[i][j][0] << " " << dataCoords[i][j][1] << "\t ";
+    //    }
+    //    cout << "\n" << i << endl;
+    //}
+
+
+
+
+    return 0;
+    };
+
+int Simulation() {
+
     /*
-    deltaT 0.005    
+    deltaT 0.005
     density 0.8
     initUcell 20 20
     stepAvg 100
     stepEquil 0
     stepLimit 10000
-    temperature 1    
+    temperature 1
     */
 
-   //The initial configuration is a 20 × 20 square lattice so that there are a total of 400 atoms.
-   //The timestep value deltaT is determined by the requirement that energy be conserved by the leapfrog method 
-   //Temperature 1
+    //The initial configuration is a 20 × 20 square lattice so that there are a total of 400 atoms.
+    //The timestep value deltaT is determined by the requirement that energy be conserved by the leapfrog method 
+    //Temperature 1
 
-    //set parameters from input to the program
+     //set parameters from input to the program
     FILE* filePtr = nullptr;
     FILE* histoPtr = nullptr;
     errno_t err;
 
-    err = fopen_s(&filePtr,"summary.txt", "w"); // Open file in write mode
+    err = fopen_s(&filePtr, "summary.txt", "w"); // Open file in write mode
     if (err != 0) {
         std::cerr << "Error opening file for writing summary" << std::endl;
         return 1;
     }
 
-    err = fopen_s(&histoPtr,"histo.txt", "w"); // Open file in write mode
+    err = fopen_s(&histoPtr, "histo.txt", "w"); // Open file in write mode
     if (err != 0) {
         std::cerr << "Error opening file for writing! histo" << std::endl;
         return 1;
@@ -122,12 +185,12 @@ int main(){
 
     vector<KeyValue> data;
     GetNameList("data.in", &data);
-    
+
     //PrintNameList(&data);
     SetParams(&data);
 
-    
-    cout<<"test"<<endl;
+
+    cout << "test" << endl;
 
 
     InitCoords();
@@ -138,13 +201,15 @@ int main(){
     // for(int i = 0; i < nMol; i++){
     //     cout<<mol[i].coordinates.x<<" "<<mol[i].coordinates.y<<endl;
     // }
-    
+
     int moreCycles = 1;
-    while(moreCycles){
+    while (moreCycles) {
         SingleStep(filePtr);
         //temperature +=0,5;
-        if(stepCount>=stepLimit){
-            moreCycles = 0; 
+        //iterate over the mol array and save the coordinates to dataCoords
+
+        if (stepCount >= stepLimit) {
+            moreCycles = 0;
         }
     }
     PrintVelDist(histoPtr);
@@ -153,10 +218,66 @@ int main(){
         fclose(histoPtr);
     }
     if (filePtr != nullptr) {
+        fclose(filePtr);
+    }
+
+}
+
+//make a function PrintCoordinates that will take name of the file - not a pointer to a file - to save the coordinates and open the file in write mode
+void PrintCoordinates(const char* fileName) {
+	FILE* filePtr = nullptr;
+	errno_t err;
+
+	err = fopen_s(&filePtr, fileName, "w"); // Open file in write mode
+    if (err != 0) {
+		std::cerr << "Error opening file for writing" << std::endl;
+		return;
+	}
+
+    //print the coordinates from dataCoords
+    for (int i = 0; i < dataCoords.size(); i++) {
+        for (int j = 0; j < dataCoords[i].size(); j++) {
+			fprintf(filePtr, "%5d %8.4f %8.4f\n", i, dataCoords[i][j][0], dataCoords[i][j][1]);
+		}
+	}
+
+    if (filePtr != nullptr) {
 		fclose(filePtr);
 	}
-    return 0;
-};
+
+}
+
+std::vector<std::vector<std::vector<double>>> readFile(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return {};
+    }
+
+    std::vector<std::vector<std::vector<double>>> dataCoords;
+
+    std::string line;
+    while (std::getline(file, line)) {
+        std::istringstream iss(line);
+        int index;
+        double x, y;
+        if (!(iss >> index >> x >> y)) {
+            std::cerr << "Error parsing line: " << line << std::endl;
+            continue;
+        }
+
+        if (index >= dataCoords.size()) {
+            dataCoords.resize(index + 1);
+        }
+
+        dataCoords[index].push_back({ x, y });
+    }
+
+    return dataCoords;
+}
+
+
+
 
 void ComputeForces ()
 {
@@ -214,12 +335,12 @@ void LeapfrogStep(int part){
     int n;
     if(part == 1){
         DO_MOL{
-            leapfrog_velocity(mol[n].velocity, 0.5*deltaT, mol[n].accelaration);
-            leapfrog_coordinates(mol[n].coordinates, deltaT, mol[n].velocity);
+            leapfrog_velocity(&mol[n].velocity, 0.5*deltaT, &mol[n].accelaration);
+            leapfrog_coordinates(&mol[n].coordinates, deltaT, &mol[n].velocity);
         }
     }else{
         DO_MOL{
-            leapfrog_velocity(mol[n].velocity, 0.5*deltaT, mol[n].accelaration);
+            leapfrog_velocity(&mol[n].velocity, 0.5*deltaT, &mol[n].accelaration);
         }
     }
 };
@@ -441,6 +562,9 @@ void SingleStep(FILE *fp){
 
     EvalProps();
     AccumProps(1);
+    for (int i = 0; i < nMol; i++) {
+        dataCoords.at(stepCount - 1).push_back({ mol[i].coordinates.x, mol[i].coordinates.y });
+    }
     if(stepCount % stepAvg == 0){
         AccumProps(2);
         if(stepCount>=stepEquil && (stepCount - stepEquil) % stepVel == 0){
