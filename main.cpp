@@ -118,7 +118,7 @@ void Showcase();
 
 
 int main() {
-    Simulation(1); //if parameter is 1, the program will print the coordinates to a file
+    //Simulation(1); //if parameter is 1, the program will print the coordinates to a file
     Showcase();
     return 0;
     };
