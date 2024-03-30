@@ -130,6 +130,7 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="render.cpp" />
+    <ClCompile Include="simulation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
@@ -582,6 +583,7 @@
     <ClInclude Include="rand2D.h" />
     <ClInclude Include="render.h" />
     <ClInclude Include="shader.h" />
+    <ClInclude Include="simulation.h" />
     <ClInclude Include="statistics.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="vector_operations.h" />

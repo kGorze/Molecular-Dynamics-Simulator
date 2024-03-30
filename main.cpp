@@ -44,6 +44,26 @@ Of course, the technique for evaluating the forces discussed here is not particu
 #include <sstream>
 #endif
 
+#ifndef CTIME_H
+#define CTIME_H
+#include <ctime>
+#endif
+
+#ifndef CSTDIO_H
+#define CSTDIO_H
+#include <cstdio>
+#endif
+
+#ifndef THREAD_H
+#define THREAD_H
+#include <thread>
+#endif
+
+#ifndef CHRONO_H
+#define CHRONO_H
+#include <chrono>
+#endif
+
 #include "vector_operations.h"
 #include "types.h"
 #include "rand2D.h"
@@ -107,7 +127,7 @@ void PrintSummary(FILE *fp);
 void PrintCoordinates(const char* fileName);
 std::vector<std::vector<std::vector<double>>> readFile(const std::string& filename);
 void SetupJob();
-void SingleStep(FILE *fp);
+double SingleStep(FILE *fp);
 void GetNameList(const char *fileName, std::vector<KeyValue> *data);
 void PrintNameList(std::vector<KeyValue> *data);
 void EvalVelDist();
@@ -118,8 +138,8 @@ void Showcase();
 
 
 int main() {
-    //Simulation(1); //if parameter is 1, the program will print the coordinates to a file
-    Showcase();
+    Simulation(1); //if parameter is 1, the program will print the coordinates to a file
+    //Showcase();
     return 0;
     };
 
@@ -130,12 +150,19 @@ void Showcase() {
     terminateScreen();
 }
 
-int Simulation(unsigned int option) {
+int Simulation(unsigned int option){
+    std::cout<<"-----------------------------------------------------------------------\n";
+    std::cout <<"Initializing simulation\n";
+    std::cout << "-----------------------------------------------------------------------\n\n";
+
+
+    std::vector<KeyValue> data;
 
      //set parameters from input to the program
     FILE* filePtr = nullptr;
     FILE* histoPtr = nullptr;
     errno_t err;
+
 
     err = fopen_s(&filePtr, "summary.txt", "w"); // Open file in write mode
     if (err != 0) {
@@ -149,24 +176,50 @@ int Simulation(unsigned int option) {
         return 1;
     }
 
-    std::vector<KeyValue> data;
+    
     GetNameList("data.in", &data);
+    std::cout << "-----------------------------------------------------------------------\n";
+    std::cout << "Parameters\n";
+    std::cout << "-----------------------------------------------------------------------\n";
+    PrintNameList(&data);
+    std::cout << "-----------------------------------------------------------------------\n\n";
+    
+    std::this_thread::sleep_for(std::chrono::seconds(4));
+    
 
-    //PrintNameList(&data);
     SetParams(&data);
 
     InitCoords();
     SetupJob();
 
+    system("cls");
+
     int moreCycles = 1;
-    while (moreCycles) {
+    float progress = 0.0;
+    float stepFraction = 0.0;
+    int barwidth = 50;
+
+    while (moreCycles && progress < 1.0) {
+        
+        std::cout<< "Progress: [";
+        int pos = barwidth * progress;
+        for (int i = 0; i < barwidth; ++i) {
+			if (i < pos) std::cout << "=";
+			else if (i == pos) std::cout << ">";
+			else std::cout << " ";
+		}
+        std::cout<< "] " << int(progress * 100.0) << " %\r\n";
+        std::flush(std::cout);
         SingleStep(filePtr);
+
+        stepFraction = float(stepCount) / float(stepLimit);
+        progress = stepFraction;
 
         if (stepCount >= stepLimit) {
             moreCycles = 0;
         }
     }
-    PrintVelDist(histoPtr);
+    //PrintVelDist(histoPtr);
 
     if (histoPtr != nullptr) {
         fclose(histoPtr);
@@ -500,7 +553,7 @@ void PrintSummary (FILE *fp)
     real pressureEst = PropEst(pressure);
     real pressureSig = PropEstSig(pressure);
 
-    // Print the values using fprintf
+    fprintf(fp, " Step   Time    Sum(v)  Etot            EtotSig            Ekin            EkinSig            Pressure        PressureSig\n");
     fprintf(fp, "%5d %8.4f %7.20f %7.20f %7.20f %7.20f %7.20f %7.20f %7.20f\n",
             stepCount, timeNow, vSumValue, totEnergyEst,
             totEnergySig, kinEnergyEst, kinEnergySig,
@@ -512,9 +565,12 @@ std::cout<<stepCount<<" "<<timeNow<<" "<<VCSum(&vSum) / nMol<<" "
     <<" "<<PropEst(pressure)<<" "<<PropEstSig(pressure)<<std::endl;
  }; 
 
-void SingleStep(FILE *fp){
+double SingleStep(FILE *fp){
     stepCount++;    
     timeNow = stepCount* deltaT;
+
+    clock_t start = clock();
+
 
     LeapfrogStep(1);
     ApplyBoundaryCond();
@@ -531,9 +587,12 @@ void SingleStep(FILE *fp){
         if(stepCount>=stepEquil && (stepCount - stepEquil) % stepVel == 0){
             EvalVelDist();
         }
-        PrintSummary(fp);
+        //PrintSummary(fp);
         AccumProps(0);
     }
+    clock_t end = clock();
+    double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+    return time_taken;
 
 };
 
@@ -634,4 +693,4 @@ void PrintVelDist(FILE *fp){
         fprintf (fp, "%8.3f %8.3f\n", vBin, histVel[n]);
     }
     fprintf (fp, "hfun: %8.3f %8.3f\n", timeNow, hFunction);
-}
+}   
