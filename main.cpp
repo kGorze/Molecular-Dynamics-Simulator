@@ -52,11 +52,6 @@ Of course, the technique for evaluating the forces discussed here is not particu
 #include "leapfrog.h"
 #include "render.h"
 
-
-using namespace std;
-
-
-
 #define AllocMem(a,n,t) a = (t*)malloc((n)*sizeof(t)) //This is a macro that is used to allocate memory for arrays. It is used in the main program to allocate memory for the mol array.
 
 #define VSCopy(v2,s1,v1){ (v2).x = (s1) * (v1).x; (v2).y = (s1) * (v1).y;}
@@ -67,7 +62,7 @@ using namespace std;
 */
 VecR region, vSum,initUcell; 
 /*
-The vector region contains the edge lengths of the simulation region.
+The std::vector region contains the edge lengths of the simulation region.
 */
 Prop kinEnergy, pressure, totEnergy;
 real deltaT, density, rCut, temperature, timeNow, uCut, uSum, velMag, virSum, vvSum;
@@ -79,10 +74,10 @@ int countVel, limitVel, stepVel;
 int nMol = 400;
 int sizeHistVel = 50;
 
-vector<Mol> mol(nMol);
-vector<real> histVel(sizeHistVel);
+std::vector<Mol> mol(nMol);
+std::vector<real> histVel(sizeHistVel);
 
-std::vector<vector<vector<double>>> dataCoords(5000);
+std::vector<std::vector<std::vector<double>>> dataCoords(500);
 
 FILE* filePtr;
 FILE* histoPtr;
@@ -107,63 +102,35 @@ void InitVels();
 void InitAccels();
 void EvalProps();
 void AccumProps(int icode);
-void SetParams(vector<KeyValue>* data);
+void SetParams(std::vector<KeyValue>* data);
 void PrintSummary(FILE *fp);
 void PrintCoordinates(const char* fileName);
 std::vector<std::vector<std::vector<double>>> readFile(const std::string& filename);
 void SetupJob();
 void SingleStep(FILE *fp);
-void GetNameList(const char *fileName, vector<KeyValue> *data);
-void PrintNameList(vector<KeyValue> *data);
+void GetNameList(const char *fileName, std::vector<KeyValue> *data);
+void PrintNameList(std::vector<KeyValue> *data);
 void EvalVelDist();
 void PrintVelDist(FILE *fp);
-int Simulation();
+int Simulation(unsigned int option);
+void Showcase();
 
 
 
 int main() {
-    //Simulation();
-    //PrintCoordinates("coordinates.txt");
-
-
-    dataCoords = readFile("coordinates.txt");
-    GLFWwindow* window = initializeScreen(800, 800);
-    
-  
-    renderAtoms(window, dataCoords);
-    terminateScreen();
-
-
-
-
-    //for (int i = 0; i < dataCoords.size(); i++) {
-    //    for (int j = 0; j < dataCoords[i].size(); j++) {
-    //        cout << dataCoords[i][j][0] << " " << dataCoords[i][j][1] << "\t ";
-    //    }
-    //    cout << "\n" << i << endl;
-    //}
-
-
-
-
+    Simulation(1); //if parameter is 1, the program will print the coordinates to a file
+    Showcase();
     return 0;
     };
 
-int Simulation() {
+void Showcase() {
+    dataCoords = readFile("coordinates.txt");
+    GLFWwindow* window = initializeScreen(800, 800);
+    renderAtoms(window, dataCoords);
+    terminateScreen();
+}
 
-    /*
-    deltaT 0.005
-    density 0.8
-    initUcell 20 20
-    stepAvg 100
-    stepEquil 0
-    stepLimit 10000
-    temperature 1
-    */
-
-    //The initial configuration is a 20 × 20 square lattice so that there are a total of 400 atoms.
-    //The timestep value deltaT is determined by the requirement that energy be conserved by the leapfrog method 
-    //Temperature 1
+int Simulation(unsigned int option) {
 
      //set parameters from input to the program
     FILE* filePtr = nullptr;
@@ -182,31 +149,18 @@ int Simulation() {
         return 1;
     }
 
-
-    vector<KeyValue> data;
+    std::vector<KeyValue> data;
     GetNameList("data.in", &data);
 
     //PrintNameList(&data);
     SetParams(&data);
 
-
-    cout << "test" << endl;
-
-
     InitCoords();
     SetupJob();
-
-
-    //print coordinates of the molecules
-    // for(int i = 0; i < nMol; i++){
-    //     cout<<mol[i].coordinates.x<<" "<<mol[i].coordinates.y<<endl;
-    // }
 
     int moreCycles = 1;
     while (moreCycles) {
         SingleStep(filePtr);
-        //temperature +=0,5;
-        //iterate over the mol array and save the coordinates to dataCoords
 
         if (stepCount >= stepLimit) {
             moreCycles = 0;
@@ -220,7 +174,14 @@ int Simulation() {
     if (filePtr != nullptr) {
         fclose(filePtr);
     }
-
+    
+    if (option == 1) {
+		PrintCoordinates("coordinates.txt");
+        return 0;
+    }
+    else {
+        return 0;
+    }
 }
 
 //make a function PrintCoordinates that will take name of the file - not a pointer to a file - to save the coordinates and open the file in write mode
@@ -257,7 +218,7 @@ std::vector<std::vector<std::vector<double>>> readFile(const std::string& filena
     std::vector<std::vector<std::vector<double>>> dataCoords;
 
     std::string line;
-    while (std::getline(file, line)) {
+    while (getline(file, line)) {
         std::istringstream iss(line);
         int index;
         double x, y;
@@ -298,7 +259,7 @@ void ComputeForces ()
     // Nested loops over all pairs of atoms
     for (j1 = 0; j1 < nMol - 1; j1++) {
         for (j2 = j1 + 1; j2 < nMol; j2++) {
-            // Calculate the distance vector between atom j1 and j2
+            // Calculate the distance std::vector between atom j1 and j2
             dr.x = mol[j1].coordinates.x - mol[j2].coordinates.x;
             dr.y = mol[j1].coordinates.y - mol[j2].coordinates.y;
 
@@ -386,12 +347,12 @@ void InitVels(){
 
     DO_MOL{
         velocity_rand(&mol[n]);
-        //cout<<"Velocity:";
-        //cout<<mol[n].velocity.x<<" "<<mol[n].velocity.y<<endl;
+        //std::cout<<"Velocity:";
+        //std::cout<<mol[n].velocity.x<<" "<<mol[n].velocity.y<<std::endl;
         VScale(&mol[n].velocity, velMag);
         VVAdd(&vSum, &mol[n].velocity);
-        //cout<<"Sum:";
-        //cout<<vSum.x<<" "<<vSum.y<<endl;
+        //std::cout<<"Sum:";
+        //std::cout<<vSum.x<<" "<<vSum.y<<std::endl;
     }
 
     DO_MOL{
@@ -399,11 +360,11 @@ void InitVels(){
     }
 
     // DO_MOL{
-    //     cout<<"Velocity of atom nr:"<<n<<endl;
-    //     cout<<mol[n].velocity.x<<" "<<mol[n].velocity.y<<endl;
+    //     std::cout<<"Velocity of atom nr:"<<n<<std::endl;
+    //     std::cout<<mol[n].velocity.x<<" "<<mol[n].velocity.y<<std::endl;
     // }
-    //cout<<"Sum:";
-    //cout<<vSum.x<<" "<<vSum.y<<endl;
+    //std::cout<<"Sum:";
+    //std::cout<<vSum.x<<" "<<vSum.y<<std::endl;
 };
 
 //GOOD
@@ -414,8 +375,8 @@ void InitAccels(){
         VZero(&mol[n].accelaration);
     }
     // DO_MOL{
-    //     cout<<"Acceleration of atom nr:"<<n<<endl;
-    //     cout<<mol[n].accelaration.x<<" "<<mol[n].accelaration.y<<endl;
+    //     std::cout<<"Acceleration of atom nr:"<<n<<std::endl;
+    //     std::cout<<mol[n].accelaration.x<<" "<<mol[n].accelaration.y<<std::endl;
     // }
 };
 
@@ -430,7 +391,7 @@ void EvalProps(){
 
     // Loop over all atoms in the system
     DO_MOL{
-        // Accumulate the velocity vector of each atom
+        // Accumulate the velocity std::vector of each atom
         VVAdd(&vSum, &mol[n].velocity);
         
         // Calculate the squared velocity magnitude of each atom
@@ -469,8 +430,8 @@ void AccumProps(int icode){
 };
 
 //GOOD
-void SetParams(vector<KeyValue> *data){
-    unordered_map<string, string> paramMap;
+void SetParams(std::vector<KeyValue> *data){
+    std::unordered_map<std::string, std::string> paramMap;
 
     // Create a map of parameter names to values
     for (const auto &entry : *data) {
@@ -485,7 +446,7 @@ void SetParams(vector<KeyValue> *data){
         density = stod(paramMap["density"]);
     }
     if (paramMap.find("initUcell") != paramMap.end()) {
-        // Assuming initUcell is a vector of two integers
+        // Assuming initUcell is a std::vector of two integers
         int x, y;
         sscanf_s(paramMap["initUcell"].c_str(), "%d %d", &x, &y);
         initUcell.x = x;
@@ -528,7 +489,7 @@ void SetParams(vector<KeyValue> *data){
 void PrintSummary (FILE *fp)
 {
     if(fp == nullptr){
-        cerr<<"Error opening file"<<endl;
+        std::cerr<<"Error opening file"<<std::endl;
         return;
     }
     real vSumValue = VCSum(&vSum) / nMol;
@@ -545,10 +506,10 @@ void PrintSummary (FILE *fp)
             totEnergySig, kinEnergyEst, kinEnergySig,
             pressureEst, pressureSig); 
 
-cout<<stepCount<<" "<<timeNow<<" "<<VCSum(&vSum) / nMol<<" "
+std::cout<<stepCount<<" "<<timeNow<<" "<<VCSum(&vSum) / nMol<<" "
     <<PropEst(totEnergy)<<" "<<PropEstSig(totEnergy)
     <<" "<<PropEst(kinEnergy)<<" "<<PropEstSig(kinEnergy)
-    <<" "<<PropEst(pressure)<<" "<<PropEstSig(pressure)<<endl;
+    <<" "<<PropEst(pressure)<<" "<<PropEstSig(pressure)<<std::endl;
  }; 
 
 void SingleStep(FILE *fp){
@@ -586,31 +547,31 @@ void SetupJob(){
     AccumProps(0);
 };
 
-void GetNameList(const char* fd, vector<KeyValue>* data) {
-    ifstream file(fd);
+void GetNameList(const char* fd, std::vector<KeyValue>* data) {
+    std::ifstream file(fd);
     if (!file.is_open()) {
-        cerr << "Error opening file" << endl;
+        std::cerr << "Error opening file" << std::endl;
         return;
     }
 
-    string line;
-    const string pattern = "initUcell";
+    std::string line;
+    const std::string pattern = "initUcell";
 
-    while (getline(file, line)) {
+    while (std::getline(file, line)) {
         KeyValue kv;
 
         if (line.substr(0, pattern.size()) == pattern) {
             line.erase(0, pattern.size());
             kv.key = pattern;
             size_t pos = line.find_first_not_of(" \t");
-            if (pos != string::npos) {
+            if (pos != std::string::npos) {
                 line.erase(0, pos);
                 kv.value = line;
                 (*data).push_back(kv);
             }
         } else {
             size_t pos = line.find_first_of(" \t");
-            if (pos != string::npos) {
+            if (pos != std::string::npos) {
                 kv.key = line.substr(0, pos);
                 line.erase(0, pos);
                 size_t pos = line.find_first_not_of(" ");
@@ -624,9 +585,9 @@ void GetNameList(const char* fd, vector<KeyValue>* data) {
     file.close();
 };
 
-void PrintNameList (vector<KeyValue> *data){
+void PrintNameList (std::vector<KeyValue> *data){
     for(const auto& kv : (*data)) {
-        cout << kv.key << " " << kv.value << endl;
+        std::cout << kv.key << " " << kv.value << std::endl;
     }
 };
 

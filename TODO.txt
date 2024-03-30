@@ -214,3 +214,9 @@ TO DO:
     CORRECT CALCULATE FORCES FUNCTION - DONE
 
     26.03 - 7h
+
+
+
+
+    Sztywne molekuły w 3D
+        - 
