@@ -64,6 +64,7 @@ Of course, the technique for evaluating the forces discussed here is not particu
 #include <chrono>
 #endif
 
+#include "inputhandler.h"
 #include "vector_operations.h"
 #include "types.h"
 #include "rand2D.h"
@@ -138,8 +139,9 @@ void Showcase();
 
 
 int main() {
-    Simulation(1); //if parameter is 1, the program will print the coordinates to a file
+    //Simulation(1); //if parameter is 1, the program will print the coordinates to a file
     //Showcase();
+    InputHandler temp("data.in");
     return 0;
     };
 
@@ -166,13 +168,13 @@ int Simulation(unsigned int option){
 
     err = fopen_s(&filePtr, "summary.txt", "w"); // Open file in write mode
     if (err != 0) {
-        std::cerr << "Error opening file for writing summary" << std::endl;
+        std::cerr << "Error opening file for writing summary" << "\n";
         return 1;
     }
 
     err = fopen_s(&histoPtr, "histo.txt", "w"); // Open file in write mode
     if (err != 0) {
-        std::cerr << "Error opening file for writing! histo" << std::endl;
+        std::cerr << "Error opening file for writing! histo" << "\n";
         return 1;
     }
 
@@ -244,7 +246,7 @@ void PrintCoordinates(const char* fileName) {
 
 	err = fopen_s(&filePtr, fileName, "w"); // Open file in write mode
     if (err != 0) {
-		std::cerr << "Error opening file for writing" << std::endl;
+		std::cerr << "Error opening file for writing" << "\n";
 		return;
 	}
 
@@ -264,7 +266,7 @@ void PrintCoordinates(const char* fileName) {
 std::vector<std::vector<std::vector<double>>> readFile(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Error opening file: " << filename << std::endl;
+        std::cerr << "Error opening file: " << filename << "\n";
         return {};
     }
 
@@ -276,7 +278,7 @@ std::vector<std::vector<std::vector<double>>> readFile(const std::string& filena
         int index;
         double x, y;
         if (!(iss >> index >> x >> y)) {
-            std::cerr << "Error parsing line: " << line << std::endl;
+            std::cerr << "Error parsing line: " << line << "\n";
             continue;
         }
 
@@ -401,11 +403,11 @@ void InitVels(){
     DO_MOL{
         velocity_rand(&mol[n]);
         //std::cout<<"Velocity:";
-        //std::cout<<mol[n].velocity.x<<" "<<mol[n].velocity.y<<std::endl;
+        //std::cout<<mol[n].velocity.x<<" "<<mol[n].velocity.y<<"\n";
         VScale(&mol[n].velocity, velMag);
         VVAdd(&vSum, &mol[n].velocity);
         //std::cout<<"Sum:";
-        //std::cout<<vSum.x<<" "<<vSum.y<<std::endl;
+        //std::cout<<vSum.x<<" "<<vSum.y<<"\n";
     }
 
     DO_MOL{
@@ -413,11 +415,11 @@ void InitVels(){
     }
 
     // DO_MOL{
-    //     std::cout<<"Velocity of atom nr:"<<n<<std::endl;
-    //     std::cout<<mol[n].velocity.x<<" "<<mol[n].velocity.y<<std::endl;
+    //     std::cout<<"Velocity of atom nr:"<<n<<"\n";
+    //     std::cout<<mol[n].velocity.x<<" "<<mol[n].velocity.y<<"\n";
     // }
     //std::cout<<"Sum:";
-    //std::cout<<vSum.x<<" "<<vSum.y<<std::endl;
+    //std::cout<<vSum.x<<" "<<vSum.y<<"\n";
 };
 
 //GOOD
@@ -428,8 +430,8 @@ void InitAccels(){
         VZero(&mol[n].accelaration);
     }
     // DO_MOL{
-    //     std::cout<<"Acceleration of atom nr:"<<n<<std::endl;
-    //     std::cout<<mol[n].accelaration.x<<" "<<mol[n].accelaration.y<<std::endl;
+    //     std::cout<<"Acceleration of atom nr:"<<n<<"\n";
+    //     std::cout<<mol[n].accelaration.x<<" "<<mol[n].accelaration.y<<"\n";
     // }
 };
 
@@ -542,7 +544,7 @@ void SetParams(std::vector<KeyValue> *data){
 void PrintSummary (FILE *fp)
 {
     if(fp == nullptr){
-        std::cerr<<"Error opening file"<<std::endl;
+        std::cerr<<"Error opening file"<<"\n";
         return;
     }
     real vSumValue = VCSum(&vSum) / nMol;
@@ -562,7 +564,7 @@ void PrintSummary (FILE *fp)
 std::cout<<stepCount<<" "<<timeNow<<" "<<VCSum(&vSum) / nMol<<" "
     <<PropEst(totEnergy)<<" "<<PropEstSig(totEnergy)
     <<" "<<PropEst(kinEnergy)<<" "<<PropEstSig(kinEnergy)
-    <<" "<<PropEst(pressure)<<" "<<PropEstSig(pressure)<<std::endl;
+    <<" "<<PropEst(pressure)<<" "<<PropEstSig(pressure)<<"\n";
  }; 
 
 double SingleStep(FILE *fp){
@@ -609,7 +611,7 @@ void SetupJob(){
 void GetNameList(const char* fd, std::vector<KeyValue>* data) {
     std::ifstream file(fd);
     if (!file.is_open()) {
-        std::cerr << "Error opening file" << std::endl;
+        std::cerr << "Error opening file" << "\n";
         return;
     }
 
@@ -646,7 +648,7 @@ void GetNameList(const char* fd, std::vector<KeyValue>* data) {
 
 void PrintNameList (std::vector<KeyValue> *data){
     for(const auto& kv : (*data)) {
-        std::cout << kv.key << " " << kv.value << std::endl;
+        std::cout << kv.key << " " << kv.value << "\n";
     }
 };
 
