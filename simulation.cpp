@@ -3,7 +3,7 @@
 
 #include "simulation.h"
 #include "rand2D.h"
-
+#include "progressbar.h"
 
 #include <string>
 #include <map>
@@ -297,6 +297,10 @@ void Simulation::printSummaryToScreen() {
         double pressureEst = PropEst(this->mpressure);
         double pressureSig = PropEstSig(this->mpressure);
 
+        std::cout << "\n-----------------------------------------------------------------------\n";
+        std::cout << "Simulation result\n";
+        std::cout << "-----------------------------------------------------------------------\n\n";
+
         std::cout << " Step   Time    Sum(v)  Etot            EtotSig            Ekin            EkinSig            Pressure        PressureSig\n";
 
         std::cout << this->mstepCount << " " << this->mtimeNow << " " << (VCSum(this->mvSum) / this->mnMol) << " "
@@ -377,31 +381,19 @@ void Simulation::runSimulation(unsigned int option) {
 
         system("cls");
 
+        uint64_t total_steps = mstepLimit;
+        this->mprogressBar.totalTicks(total_steps);
+
         int moreCycles = 1;
-        float progress = 0.0;
-        float stepFraction = 0.0;
-        int barwidth = 50;
 
-        while (moreCycles && progress < 1.0) {
-
-            std::cout << "Progress: [";
-            int pos = barwidth * progress;
-            for (int i = 0; i < barwidth; ++i) {
-                if (i < pos) std::cout << "=";
-                else if (i == pos) std::cout << ">";
-                else std::cout << " ";
-            }
-            std::cout << "] " << int(progress * 100.0) << " %\r\n";
-            std::flush(std::cout);
+        while (moreCycles) {
             this->singleSimulationStep();
-
-            stepFraction = float(this->mstepCount) / float(this->mstepLimit);
-            progress = stepFraction;
-
             if (this->mstepCount >= this->mstepLimit) {
                 moreCycles = 0;
             }
+            this->mprogressBar.tick();
         }
+        system("cls");
 
         if (option == 1) {
             this->printSummaryToScreen();
@@ -420,4 +412,8 @@ void Simulation::setFiles(const char* inputFileName, const char* coordinatesFile
 
 std::vector<std::vector<std::vector<double>>> Simulation::getCoordinatesData() {
     return this->mdataCoordinates;
+}
+
+void Simulation::setCoordinatesData(std::vector<std::vector<std::vector<double>>> &dataCoords) {
+    this->mdataCoordinates = dataCoords;
 }

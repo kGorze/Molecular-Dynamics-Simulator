@@ -5,6 +5,7 @@
 #include "outputhandler.h"
 #include "inputhandler.h"
 #include "vector_operations.h"
+#include "progressbar.h"
 
 #include <vector>
 
@@ -13,6 +14,8 @@ private:
 
 	OutputHandler moutputHandler;
 	InputHandler minputHandler;
+
+	Progressbar mprogressBar;
 
 
 	VecR mregion, mvSum, minitUcell;
@@ -57,6 +60,8 @@ public:
 	void evaluateProperties();
 	void evaluateVelocityDistribution();
 	double singleSimulationStep();
+
+	void setCoordinatesData(std::vector<std::vector<std::vector<double>>> &dataCoords);
 
 	std::vector<std::vector<std::vector<double>>> getCoordinatesData();
 

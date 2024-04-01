@@ -54,6 +54,9 @@
     <ClCompile Include="statistics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="progressbar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="leapfrog.h">
@@ -966,6 +969,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="filehandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="progressbar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -32,10 +32,15 @@ void InputHandler::setVariables(const char* inputFileName, const char* coordinat
 		exit(EXIT_FAILURE);
 	}
 	this->mCoordinatesDataFile.open(coordinatesFileName);
+
 	if (!mCoordinatesDataFile.is_open()) {
 		std::cout << "Error: File " << coordinatesFileName << " could not be opened." << "\n";
 		exit(EXIT_FAILURE);
 	}
+	//INICJALIZACJA WEKTORA KTÓRY JEST PUSTY - DO POPRAWY
+
+	//readCoordinatesFile();
+	//std::vector<std::vector<std::vector<double>>> temp = this->getmCoordinatesData();
 }
 
 void InputHandler::readInputDataFile() {
