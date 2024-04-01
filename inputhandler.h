@@ -37,8 +37,11 @@ private:
 	std::ifstream mInputDataFile;
 	std::map<std::string, std::variant<std::string, std::vector<std::string>>> mInputData;
 public:
+	InputHandler();
 	InputHandler(const char* inputFileName);
 	void readInputFile();
+	void loadInputFile(const char* inputFileName);
 	void printInputData() const;
+	std::map<std::string, std::variant<std::string, std::vector<std::string>>> getmInputData() const;
 
 };

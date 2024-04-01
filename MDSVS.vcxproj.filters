@@ -45,6 +45,9 @@
     <ClCompile Include="inputhandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="outputhandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="leapfrog.h">

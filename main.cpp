@@ -72,6 +72,7 @@ Of course, the technique for evaluating the forces discussed here is not particu
 #include "physical.h"
 #include "leapfrog.h"
 #include "render.h"
+#include "simulation.h"
 
 #define AllocMem(a,n,t) a = (t*)malloc((n)*sizeof(t)) //This is a macro that is used to allocate memory for arrays. It is used in the main program to allocate memory for the mol array.
 
@@ -129,11 +130,11 @@ void PrintCoordinates(const char* fileName);
 std::vector<std::vector<std::vector<double>>> readFile(const std::string& filename);
 void SetupJob();
 double SingleStep(FILE *fp);
-void GetNameList(const char *fileName, std::vector<KeyValue> *data);
+//void GetNameList(const char *fileName, std::vector<KeyValue> *data);
 void PrintNameList(std::vector<KeyValue> *data);
 void EvalVelDist();
 void PrintVelDist(FILE *fp);
-int Simulation(unsigned int option);
+int SimulationFUNCTION(unsigned int option);
 void Showcase();
 
 
@@ -142,6 +143,9 @@ int main() {
     //Simulation(1); //if parameter is 1, the program will print the coordinates to a file
     //Showcase();
     InputHandler temp("data.in");
+    Simulation Simulation("summary.txt", "data.in");
+    Simulation.setParameters();
+
     return 0;
     };
 
@@ -152,7 +156,7 @@ void Showcase() {
     terminateScreen();
 }
 
-int Simulation(unsigned int option){
+int SimulationFUNCTION(unsigned int option){
     std::cout<<"-----------------------------------------------------------------------\n";
     std::cout <<"Initializing simulation\n";
     std::cout << "-----------------------------------------------------------------------\n\n";
@@ -179,7 +183,7 @@ int Simulation(unsigned int option){
     }
 
     
-    GetNameList("data.in", &data);
+    //GetNameList("data.in", &data);
     std::cout << "-----------------------------------------------------------------------\n";
     std::cout << "Parameters\n";
     std::cout << "-----------------------------------------------------------------------\n";
@@ -189,9 +193,9 @@ int Simulation(unsigned int option){
     std::this_thread::sleep_for(std::chrono::seconds(4));
     
 
-    SetParams(&data);
+    //SetParams(&data);
 
-    InitCoords();
+    //InitCoords();
     SetupJob();
 
     system("cls");
@@ -371,56 +375,56 @@ void ApplyBoundaryCond(){
 
 };
 
-//GOOD
-void InitCoords(){
-    //initializes the coordinates of the particles
-    VecR c;
-    int n, nx, ny;
+////GOOD
+//void InitCoords(){
+//    //initializes the coordinates of the particles
+//    VecR c;
+//    int n, nx, ny;
+//
+//    VecR gap;
+//    VDiv(&gap,&region,&initUcell);
+//    n= 0;
+//
+//    for(nx = 0; nx<initUcell.x; nx++){
+//        for(ny = 0; ny<initUcell.y; ny++){
+//            
+//            VSet(&c, nx+0.5, ny+0.5);
+//            VMul(&c,&c,&gap);
+//            VVSAdd(&c, -0.5, &region);
+//            //Mol temp = {c, {0,0}, {0,0}};
+//            mol[n].coordinates = c;
+//            ++n;
+//        }
+//    }
+//}
 
-    VecR gap;
-    VDiv(&gap,&region,&initUcell);
-    n= 0;
-
-    for(nx = 0; nx<initUcell.x; nx++){
-        for(ny = 0; ny<initUcell.y; ny++){
-            
-            VSet(&c, nx+0.5, ny+0.5);
-            VMul(&c,&c,&gap);
-            VVSAdd(&c, -0.5, &region);
-            //Mol temp = {c, {0,0}, {0,0}};
-            mol[n].coordinates = c;
-            ++n;
-        }
-    }
-}
-
-//GOOD
-void InitVels(){
-    //initializes the velocities of the particles
-    int n;
-    VZero (&vSum); //accumulate the total velocity(momentum)
-
-    DO_MOL{
-        velocity_rand(&mol[n]);
-        //std::cout<<"Velocity:";
-        //std::cout<<mol[n].velocity.x<<" "<<mol[n].velocity.y<<"\n";
-        VScale(&mol[n].velocity, velMag);
-        VVAdd(&vSum, &mol[n].velocity);
-        //std::cout<<"Sum:";
-        //std::cout<<vSum.x<<" "<<vSum.y<<"\n";
-    }
-
-    DO_MOL{
-        VVSAdd(&mol[n].velocity, (-1.0/nMol), &vSum);
-    }
-
-    // DO_MOL{
-    //     std::cout<<"Velocity of atom nr:"<<n<<"\n";
-    //     std::cout<<mol[n].velocity.x<<" "<<mol[n].velocity.y<<"\n";
-    // }
-    //std::cout<<"Sum:";
-    //std::cout<<vSum.x<<" "<<vSum.y<<"\n";
-};
+////GOOD
+//void InitVels(){
+//    //initializes the velocities of the particles
+//    int n;
+//    VZero (&vSum); //accumulate the total velocity(momentum)
+//
+//    DO_MOL{
+//        velocity_rand(&mol[n]);
+//        //std::cout<<"Velocity:";
+//        //std::cout<<mol[n].velocity.x<<" "<<mol[n].velocity.y<<"\n";
+//        VScale(&mol[n].velocity, velMag);
+//        VVAdd(&vSum, &mol[n].velocity);
+//        //std::cout<<"Sum:";
+//        //std::cout<<vSum.x<<" "<<vSum.y<<"\n";
+//    }
+//
+//    DO_MOL{
+//        VVSAdd(&mol[n].velocity, (-1.0/nMol), &vSum);
+//    }
+//
+//    // DO_MOL{
+//    //     std::cout<<"Velocity of atom nr:"<<n<<"\n";
+//    //     std::cout<<mol[n].velocity.x<<" "<<mol[n].velocity.y<<"\n";
+//    // }
+//    //std::cout<<"Sum:";
+//    //std::cout<<vSum.x<<" "<<vSum.y<<"\n";
+//};
 
 //GOOD
 void InitAccels(){
@@ -484,60 +488,60 @@ void AccumProps(int icode){
     }
 };
 
-//GOOD
-void SetParams(std::vector<KeyValue> *data){
-    std::unordered_map<std::string, std::string> paramMap;
-
-    // Create a map of parameter names to values
-    for (const auto &entry : *data) {
-        paramMap[entry.key] = entry.value;
-    }
-
-    // Use the map to set the parameters
-    if (paramMap.find("deltaT") != paramMap.end()) {
-        deltaT = stod(paramMap["deltaT"]);
-    }
-    if (paramMap.find("density") != paramMap.end()) {
-        density = stod(paramMap["density"]);
-    }
-    if (paramMap.find("initUcell") != paramMap.end()) {
-        // Assuming initUcell is a std::vector of two integers
-        int x, y;
-        sscanf_s(paramMap["initUcell"].c_str(), "%d %d", &x, &y);
-        initUcell.x = x;
-        initUcell.y = y;
-    }
-    if (paramMap.find("stepAvg") != paramMap.end()) {
-        stepAvg = stoi(paramMap["stepAvg"]);
-    }
-    if (paramMap.find("stepEquil") != paramMap.end()) {
-        stepEquil = stoi(paramMap["stepEquil"]);
-    }
-    if (paramMap.find("stepLimit") != paramMap.end()) {
-        stepLimit = stoi(paramMap["stepLimit"]);
-    }
-    if (paramMap.find("temperature") != paramMap.end()) {
-        temperature = stod(paramMap["temperature"]);
-    }
-    if (paramMap.find("limitVel") != paramMap.end()) {
-        limitVel = stoi(paramMap["limitVel"]);
-    }
-    if (paramMap.find("rangeVel") != paramMap.end()) {
-        rangeVel = stod(paramMap["rangeVel"]);
-    }
-    if (paramMap.find("sizeHistVel") != paramMap.end()) {
-        sizeHistVel = stoi(paramMap["sizeHistVel"]);
-    }
-    if (paramMap.find("stepVel") != paramMap.end()) {
-        stepVel = stoi(paramMap["stepVel"]);
-    }
-
-    // Assuming rCut, region, nMol, and velMag are global variables
-    rCut = pow(2.0, 1.0/6.0);
-    VSCopy(region, 1/sqrt(density), initUcell);
-    nMol = VProd(&initUcell);
-    velMag = sqrt(NDIM*(1 - (1/nMol)*temperature));
-}
+////GOOD
+//void SetParams(std::vector<KeyValue> *data){
+//    std::unordered_map<std::string, std::string> paramMap;
+//
+//    // Create a map of parameter names to values
+//    for (const auto &entry : *data) {
+//        paramMap[entry.key] = entry.value;
+//    }
+//
+//    // Use the map to set the parameters
+//    if (paramMap.find("deltaT") != paramMap.end()) {
+//        deltaT = stod(paramMap["deltaT"]);
+//    }
+//    if (paramMap.find("density") != paramMap.end()) {
+//        density = stod(paramMap["density"]);
+//    }
+//    if (paramMap.find("initUcell") != paramMap.end()) {
+//        // Assuming initUcell is a std::vector of two integers
+//        int x, y;
+//        sscanf_s(paramMap["initUcell"].c_str(), "%d %d", &x, &y);
+//        initUcell.x = x;
+//        initUcell.y = y;
+//    }
+//    if (paramMap.find("stepAvg") != paramMap.end()) {
+//        stepAvg = stoi(paramMap["stepAvg"]);
+//    }
+//    if (paramMap.find("stepEquil") != paramMap.end()) {
+//        stepEquil = stoi(paramMap["stepEquil"]);
+//    }
+//    if (paramMap.find("stepLimit") != paramMap.end()) {
+//        stepLimit = stoi(paramMap["stepLimit"]);
+//    }
+//    if (paramMap.find("temperature") != paramMap.end()) {
+//        temperature = stod(paramMap["temperature"]);
+//    }
+//    if (paramMap.find("limitVel") != paramMap.end()) {
+//        limitVel = stoi(paramMap["limitVel"]);
+//    }
+//    if (paramMap.find("rangeVel") != paramMap.end()) {
+//        rangeVel = stod(paramMap["rangeVel"]);
+//    }
+//    if (paramMap.find("sizeHistVel") != paramMap.end()) {
+//        sizeHistVel = stoi(paramMap["sizeHistVel"]);
+//    }
+//    if (paramMap.find("stepVel") != paramMap.end()) {
+//        stepVel = stoi(paramMap["stepVel"]);
+//    }
+//
+//    // Assuming rCut, region, nMol, and velMag are global variables
+//    rCut = pow(2.0, 1.0/6.0);
+//    VSCopy(region, 1/sqrt(density), initUcell);
+//    nMol = VProd(&initUcell);
+//    velMag = sqrt(NDIM*(1 - (1/nMol)*temperature));
+//}
 
 
 
@@ -608,43 +612,43 @@ void SetupJob(){
     AccumProps(0);
 };
 
-void GetNameList(const char* fd, std::vector<KeyValue>* data) {
-    std::ifstream file(fd);
-    if (!file.is_open()) {
-        std::cerr << "Error opening file" << "\n";
-        return;
-    }
-
-    std::string line;
-    const std::string pattern = "initUcell";
-
-    while (std::getline(file, line)) {
-        KeyValue kv;
-
-        if (line.substr(0, pattern.size()) == pattern) {
-            line.erase(0, pattern.size());
-            kv.key = pattern;
-            size_t pos = line.find_first_not_of(" \t");
-            if (pos != std::string::npos) {
-                line.erase(0, pos);
-                kv.value = line;
-                (*data).push_back(kv);
-            }
-        } else {
-            size_t pos = line.find_first_of(" \t");
-            if (pos != std::string::npos) {
-                kv.key = line.substr(0, pos);
-                line.erase(0, pos);
-                size_t pos = line.find_first_not_of(" ");
-                line.erase(0, pos);
-                kv.value = line;
-                (*data).push_back(kv);
-            }
-        }
-    }
-
-    file.close();
-};
+//void GetNameList(const char* fd, std::vector<KeyValue>* data) {
+//    std::ifstream file(fd);
+//    if (!file.is_open()) {
+//        std::cerr << "Error opening file" << "\n";
+//        return;
+//    }
+//
+//    std::string line;
+//    const std::string pattern = "initUcell";
+//
+//    while (std::getline(file, line)) {
+//        KeyValue kv;
+//
+//        if (line.substr(0, pattern.size()) == pattern) {
+//            line.erase(0, pattern.size());
+//            kv.key = pattern;
+//            size_t pos = line.find_first_not_of(" \t");
+//            if (pos != std::string::npos) {
+//                line.erase(0, pos);
+//                kv.value = line;
+//                (*data).push_back(kv);
+//            }
+//        } else {
+//            size_t pos = line.find_first_of(" \t");
+//            if (pos != std::string::npos) {
+//                kv.key = line.substr(0, pos);
+//                line.erase(0, pos);
+//                size_t pos = line.find_first_not_of(" ");
+//                line.erase(0, pos);
+//                kv.value = line;
+//                (*data).push_back(kv);
+//            }
+//        }
+//    }
+//
+//    file.close();
+//};
 
 void PrintNameList (std::vector<KeyValue> *data){
     for(const auto& kv : (*data)) {

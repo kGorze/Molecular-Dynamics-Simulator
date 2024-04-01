@@ -36,6 +36,8 @@
 #endif
 
 
+InputHandler::InputHandler() {
+}
 
 InputHandler::InputHandler(const char* inputFileName) {
 
@@ -45,7 +47,7 @@ InputHandler::InputHandler(const char* inputFileName) {
 		exit(EXIT_FAILURE);
 	}
 
-	mInputDataFile.open(inputFileName);
+	this->mInputDataFile.open(inputFileName);
 
 	if (!mInputDataFile.is_open()) {
 		std::cout << "Error: File " << inputFileName << " could not be opened." << "\n";
@@ -53,6 +55,8 @@ InputHandler::InputHandler(const char* inputFileName) {
 	}
 
 	readInputFile();
+
+	this->mInputDataFile.close();
 
 }
 void InputHandler::readInputFile() {
@@ -79,6 +83,26 @@ void InputHandler::readInputFile() {
 		values.clear();
 	}
 }
+void InputHandler::loadInputFile(const char* inputFileName) {
+
+	if (!checkFileState(inputFileName)) {
+		std::cout << "Error: File " << inputFileName << " not found." << "\n";
+		exit(EXIT_FAILURE);
+	}
+
+	this->mInputDataFile.open(inputFileName);
+
+	if (!mInputDataFile.is_open()) {
+		std::cout << "Error: File " << inputFileName << " could not be opened." << "\n";
+		exit(EXIT_FAILURE);
+	}
+
+	readInputFile();
+
+	this->mInputDataFile.close();
+}
+
+
 void InputHandler::printInputData() const {
 	for (auto& [key, entry] : this->mInputData) {
 		if (std::holds_alternative<std::string>(entry)) {
@@ -94,4 +118,7 @@ void InputHandler::printInputData() const {
 			std::cout << "\n";
 		}
 	}
+}
+std::map<std::string, std::variant<std::string, std::vector<std::string>>> InputHandler::getmInputData() const {
+	return this->mInputData;
 }

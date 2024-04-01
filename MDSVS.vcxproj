@@ -133,6 +133,7 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="inputhandler.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="outputhandler.cpp" />
     <ClCompile Include="render.cpp" />
     <ClCompile Include="simulation.cpp" />
   </ItemGroup>

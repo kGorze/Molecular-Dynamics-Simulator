@@ -3,9 +3,11 @@
 #include "filehandler.h"
 class OutputHandler: protected FileHandler{
 private:
-	FILE* mpGeneralDataOutput;
-	FILE* mpCoordinatesDataOutput;
-	FILE* mpHistogramDataOutput;
+	std::ifstream mpGeneralDataOutput;
+	std::ifstream mpCoordinatesDataOutput;
+	std::ifstream mpHistogramDataOutput;
 public:
+	OutputHandler();
+	OutputHandler(const char* outputFileName);
 
 };
