@@ -1,6 +1,6 @@
 deltaT            0.005
 density           0.8
-initUcell         20 20
+initUcell         40 40
 stepAvg           100
 stepEquil         0
 stepLimit         500

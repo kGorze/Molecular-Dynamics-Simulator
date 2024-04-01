@@ -134,6 +134,7 @@
     <ClCompile Include="inputhandler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="outputhandler.cpp" />
+    <ClCompile Include="progressbar.cpp" />
     <ClCompile Include="render.cpp" />
     <ClCompile Include="simulation.cpp" />
     <ClCompile Include="statistics.cpp" />
@@ -590,6 +591,7 @@
     <ClInclude Include="leapfrog.h" />
     <ClInclude Include="outputhandler.h" />
     <ClInclude Include="physical.h" />
+    <ClInclude Include="progressbar.h" />
     <ClInclude Include="rand2D.h" />
     <ClInclude Include="render.h" />
     <ClInclude Include="shader.h" />

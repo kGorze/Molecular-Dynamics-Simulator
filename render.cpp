@@ -112,6 +112,10 @@ void renderAtoms(GLFWwindow* window, std::vector<std::vector<std::vector<double>
     auto startTime = std::chrono::high_resolution_clock::now();
     double frameDuration = 1.0 / 100; // Targeting 100 frames per second
 
+    std::cout << "\n-----------------------------------------------------------------------\n";
+    std::cout << "Data visualization\n";
+    std::cout << "-----------------------------------------------------------------------\n\n";
+
     while (!glfwWindowShouldClose(window)) {
         auto currentTime = std::chrono::high_resolution_clock::now();
         double deltaTime = std::chrono::duration<double>(currentTime - startTime).count();
