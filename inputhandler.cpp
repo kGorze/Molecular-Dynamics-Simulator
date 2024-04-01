@@ -1,47 +1,18 @@
+#pragma once
+
 #include "inputhandler.h"
+#include "filehandler.h"
 
-#ifndef IOSTREAM_H
-#define IOSTREAM_H
-#include <iostream>
-#endif
 
-#ifndef FSTREAM_H
-#define FSTREAM_H
-#include <fstream>
-#endif
-
-#ifndef STRING_H
-#define STRING_H
-#include <string>
-#endif
-
-#ifndef MAP_H
-#define MAP_H
-#include <map>
-#endif
-
-#ifndef VARIANT_H
-#define VARIANT_H
-#include <variant>
-#endif
-
-#ifndef VECTOR_H
-#define VECTOR_H
 #include <vector>
-#endif
-
-#ifndef SSTREAM_H
-#define SSTREAM_H
 #include <sstream>
-#endif
-
+#include <variant>
+#include <string>
 
 InputHandler::InputHandler() {
 }
 
-InputHandler::InputHandler(const char* inputFileName) {
-
-	//could have done it with .good() but this is more readable
+void InputHandler::setVariables(const char* inputFileName, const char* coordinatesFileName) {
 	if (!checkFileState(inputFileName)) {
 		std::cout << "Error: File " << inputFileName << " not found." << "\n";
 		exit(EXIT_FAILURE);
@@ -54,12 +25,20 @@ InputHandler::InputHandler(const char* inputFileName) {
 		exit(EXIT_FAILURE);
 	}
 
-	readInputFile();
+	readInputDataFile();
 
-	this->mInputDataFile.close();
-
+	if (!checkFileState(coordinatesFileName)) {
+		std::cout << "Error: File " << coordinatesFileName << " not found." << "\n";
+		exit(EXIT_FAILURE);
+	}
+	this->mCoordinatesDataFile.open(coordinatesFileName);
+	if (!mCoordinatesDataFile.is_open()) {
+		std::cout << "Error: File " << coordinatesFileName << " could not be opened." << "\n";
+		exit(EXIT_FAILURE);
+	}
 }
-void InputHandler::readInputFile() {
+
+void InputHandler::readInputDataFile() {
 	std::string line;
 	std::string key, value;
 	std::vector<std::string> values;
@@ -83,6 +62,7 @@ void InputHandler::readInputFile() {
 		values.clear();
 	}
 }
+
 void InputHandler::loadInputFile(const char* inputFileName) {
 
 	if (!checkFileState(inputFileName)) {
@@ -97,10 +77,42 @@ void InputHandler::loadInputFile(const char* inputFileName) {
 		exit(EXIT_FAILURE);
 	}
 
-	readInputFile();
+	readInputDataFile();
 
 	this->mInputDataFile.close();
 }
+
+
+void InputHandler::readCoordinatesFile() {
+	int iteration;
+	double x, y;
+
+	while (mCoordinatesDataFile >> iteration >> x >> y) {
+		if (mCoordinatesDataFile.fail()) {
+			std::cerr << "Error: Failed to read data from file." << std::endl;
+			mCoordinatesDataFile.clear();
+			mCoordinatesDataFile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			continue;
+		}
+		mCoordinatesData.at(iteration).push_back({ x, y });
+	}
+}
+
+void InputHandler::loadCoordinatesFile(const char* coordinatesFileName) {
+	if (!checkFileState(coordinatesFileName)) {
+		std::cout << "Error: File " << coordinatesFileName << " not found." << "\n";
+		exit(EXIT_FAILURE);
+	}
+	this->mCoordinatesDataFile.open(coordinatesFileName);
+	if (!mCoordinatesDataFile.is_open()) {
+		std::cout << "Error: File " << coordinatesFileName << " could not be opened." << "\n";
+		exit(EXIT_FAILURE);
+	}
+	readCoordinatesFile();
+	this->mCoordinatesDataFile.close();
+}
+
+
 
 
 void InputHandler::printInputData() const {
@@ -121,4 +133,16 @@ void InputHandler::printInputData() const {
 }
 std::map<std::string, std::variant<std::string, std::vector<std::string>>> InputHandler::getmInputData() const {
 	return this->mInputData;
+}
+std::vector<std::vector<std::vector<double>>> InputHandler::getmCoordinatesData() const {
+	return this->mCoordinatesData;
+}
+
+void InputHandler::closeFiles() {
+	if (this->mInputDataFile.is_open()) {
+		this->mInputDataFile.close();
+	}
+	if (this->mCoordinatesDataFile.is_open()) {
+		this->mCoordinatesDataFile.close();
+	}
 }

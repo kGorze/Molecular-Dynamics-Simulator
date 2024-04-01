@@ -5,7 +5,7 @@
 class FileHandler {
 protected:
     bool checkFileState(const char* fileName) {
-        std::ifstream file(fileName);
+        std::fstream file(fileName);
         return file.good();
     }
 };

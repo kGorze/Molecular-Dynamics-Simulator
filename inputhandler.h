@@ -1,33 +1,13 @@
 #pragma once
-#ifndef IOSTREAM_H
-#define IOSTREAM_H
-#include <iostream>
-#endif
 
-#ifndef FSTREAM_H
-#define FSTREAM_H
-#include <fstream>
-#endif
+#ifndef INPUTHANDLER_H
+#define INPUTHANDLER_H
 
-#ifndef STRING_H
-#define STRING_H
-#include <string>
-#endif
-
-#ifndef MAP_H
-#define MAP_H
 #include <map>
-#endif
-
-#ifndef VARIANT_H
-#define VARIANT_H
-#include <variant>
-#endif
-
-#ifndef VECTOR_H
-#define VECTOR_H
+#include <sstream>
 #include <vector>
-#endif
+#include <variant>
+#include <string>
 
 #include "filehandler.h"
 
@@ -35,13 +15,26 @@
 class InputHandler: protected FileHandler {
 private:
 	std::ifstream mInputDataFile;
+	std::ifstream mCoordinatesDataFile;
 	std::map<std::string, std::variant<std::string, std::vector<std::string>>> mInputData;
+	std::vector<std::vector<std::vector<double>>> mCoordinatesData;
+
 public:
-	InputHandler();
-	InputHandler(const char* inputFileName);
-	void readInputFile();
+	InputHandler(); //do poprawy
+	
+	void setVariables(const char* inputFileName, const char* coordinatesFileName);
+	void closeFiles();
+
+	void readInputDataFile();
 	void loadInputFile(const char* inputFileName);
+
+	void loadCoordinatesFile(const char* coordinatesFileName);
+	void readCoordinatesFile();
+
 	void printInputData() const;
 	std::map<std::string, std::variant<std::string, std::vector<std::string>>> getmInputData() const;
+	std::vector<std::vector<std::vector<double>>> getmCoordinatesData() const;
 
 };
+
+#endif
