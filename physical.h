@@ -1,6 +1,9 @@
+#pragma once
 #ifndef PHYSICAL_H
 #define PHYSICAL_H
 #include "types.h"
+
+
 
 void VWrapComponent(real& component, const real& region_component) {
     if (component >= 0.5 * region_component) {
@@ -19,5 +22,4 @@ void VWrapAll(VecR& v, const VecR& region) {
     // Add more lines for additional components if needed
 }
 
-
-#endif // PHYSICAL_H
+#endif

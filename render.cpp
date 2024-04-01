@@ -1,8 +1,6 @@
+#pragma once
 #include "shader.h"
 #include "render.h"
-
-
-using namespace std;
 
 void framebuffer_size_callback(GLFWwindow* window, int widht, int height) {
     glViewport(0, 0, widht, height);
@@ -38,7 +36,7 @@ GLFWwindow* initializeScreen(unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT) {
 };
 
 
-void buildCircle(float radius, int vCount, vector<glm::vec3>* vertices, vector<unsigned int>* indices)
+void buildCircle(float radius, int vCount, std::vector<glm::vec3>* vertices, std::vector<unsigned int>* indices)
 {
     float angle = 360.0f / vCount;
 
@@ -110,7 +108,7 @@ void renderAtoms(GLFWwindow* window, std::vector<std::vector<std::vector<double>
     glEnableVertexAttribArray(0);
 
     // Main rendering loop
-    int framesCount = 0;
+    int framesCount = -1;
     auto startTime = std::chrono::high_resolution_clock::now();
     double frameDuration = 1.0 / 100; // Targeting 100 frames per second
 
@@ -120,10 +118,9 @@ void renderAtoms(GLFWwindow* window, std::vector<std::vector<std::vector<double>
 
         // Check if it's time to render the next frame
         if (deltaTime >= frameDuration) {
-            startTime = currentTime;
             framesCount++;
+            startTime = currentTime;
 
-            // Input handling
             processInput(window);
 
             // Clear the screen
@@ -153,13 +150,15 @@ void renderAtoms(GLFWwindow* window, std::vector<std::vector<std::vector<double>
                 glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
             }
 
-            if (framesCount == dataCoords.size()) {
+            if (framesCount == (dataCoords.size()-1)) {
+                std::cout << "Frame: " << framesCount+1 << std::endl;
                 break;
             }
             // Swap buffers and poll events
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
+
     }
 
     // Clean up resources

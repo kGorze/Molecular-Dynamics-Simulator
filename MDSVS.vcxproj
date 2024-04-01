@@ -22,6 +22,7 @@
     <VCProjectVersion>17.0</VCProjectVersion>
     <ProjectGuid>{36308E1D-136A-4386-B6FA-83684C41879B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -89,6 +90,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WarningLevel>Level3</WarningLevel>
       <AdditionalIncludeDirectories>$(SolutionDir)\Dependencies\include </AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -114,6 +116,7 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WarningLevel>Level3</WarningLevel>
       <AdditionalIncludeDirectories>$(SolutionDir)\Dependencies\include </AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -128,8 +131,13 @@
     <ClCompile Include="Dependencies\include\glm\detail\glm.cpp" />
     <ClCompile Include="Dependencies\include\glm\glm.cppm" />
     <ClCompile Include="glad.c" />
+    <ClCompile Include="inputhandler.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="outputhandler.cpp" />
     <ClCompile Include="render.cpp" />
+    <ClCompile Include="simulation.cpp" />
+    <ClCompile Include="statistics.cpp" />
+    <ClCompile Include="vector_operations.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
@@ -577,11 +585,15 @@
     <ClInclude Include="Dependencies\include\glm\vec4.hpp" />
     <ClInclude Include="Dependencies\include\glm\vector_relational.hpp" />
     <ClInclude Include="Dependencies\include\KHR\khrplatform.h" />
+    <ClInclude Include="filehandler.h" />
+    <ClInclude Include="inputhandler.h" />
     <ClInclude Include="leapfrog.h" />
+    <ClInclude Include="outputhandler.h" />
     <ClInclude Include="physical.h" />
     <ClInclude Include="rand2D.h" />
     <ClInclude Include="render.h" />
     <ClInclude Include="shader.h" />
+    <ClInclude Include="simulation.h" />
     <ClInclude Include="statistics.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="vector_operations.h" />

@@ -2,7 +2,6 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-
 #ifndef GLAD_H
 #define GLAD_H
 #include <glad/glad.h>
@@ -12,8 +11,6 @@
 #define GLFW_H
 #include <GLFW/glfw3.h>
 #endif
-
-
 
 #ifndef GLM_H
 #define GLM_H
