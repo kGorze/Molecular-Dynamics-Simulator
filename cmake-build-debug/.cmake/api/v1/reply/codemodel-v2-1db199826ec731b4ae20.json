@@ -41,14 +41,14 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "MDS::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-MDS-Debug-38d413c5d88ede9dc126.json",
+					"jsonFile" : "target-MDS-Debug-13a853bf1cc23ccaa9e0.json",
 					"name" : "MDS",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "inih::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-inih-Debug-8921b3f7b49366b48389.json",
+					"jsonFile" : "target-inih-Debug-807e2f8057e8f0c25a5c.json",
 					"name" : "inih",
 					"projectIndex" : 0
 				}
@@ -58,8 +58,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/konrad_guest/CLionProjects/MDS/cmake-build-debug",
-		"source" : "C:/Users/konrad_guest/CLionProjects/MDS"
+		"build" : "C:/Users/konrad_guest/source/repos/MDS/cmake-build-debug",
+		"source" : "C:/Users/konrad_guest/source/repos/MDS"
 	},
 	"version" : 
 	{

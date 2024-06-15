@@ -75,11 +75,11 @@
 				},
 				{
 					"backtrace" : 4,
-					"path" : "C:/Users/konrad_guest/CLionProjects/MDS/Headers"
+					"path" : "C:/Users/konrad_guest/source/repos/MDS/Headers"
 				},
 				{
 					"backtrace" : 5,
-					"path" : "C:/Users/konrad_guest/CLionProjects/MDS/."
+					"path" : "C:/Users/konrad_guest/source/repos/MDS/."
 				}
 			],
 			"language" : "CXX",

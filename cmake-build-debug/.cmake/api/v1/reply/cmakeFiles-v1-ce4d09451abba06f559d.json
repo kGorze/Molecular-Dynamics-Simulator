@@ -802,8 +802,8 @@
 	"kind" : "cmakeFiles",
 	"paths" : 
 	{
-		"build" : "C:/Users/konrad_guest/CLionProjects/MDS/cmake-build-debug",
-		"source" : "C:/Users/konrad_guest/CLionProjects/MDS"
+		"build" : "C:/Users/konrad_guest/source/repos/MDS/cmake-build-debug",
+		"source" : "C:/Users/konrad_guest/source/repos/MDS"
 	},
 	"version" : 
 	{
