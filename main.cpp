@@ -28,12 +28,14 @@ int main() {
         director.getBuilder()->writeCoordinatesToFile(simulation2D->getDataCoordinates());
         director.getBuilder()->closeCoordinatesFile();
 
-        director.getBuilder()->getSimulation()->setSummaryIteration();
+        //getting the properties
+        director.getBuilder()->openPropertiesFile("Resources/properties.csv", 1);
+        director.getBuilder()->writePropertiesToFile(simulation2D->getDataProperties());
+        director.getBuilder()->closePropertiesFile();
+
         std::this_thread::sleep_for(std::chrono::seconds(2));
         director.getBuilder()->getSimulation()->printSummary();
-        //simulation2D->printAtomsSize();
-        //simulation2D->printAtomsSize();
-        //simulation2D->printAtoms();
+
     }
 
     return 0;

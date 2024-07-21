@@ -41,6 +41,7 @@ void Simulation2DBuilder::ensureDirectoryExists(const std::string &path) {
 }
 
 
+//COORDINATES FILE
 void Simulation2DBuilder::openCoordinatesFile(const std::string& filename, unsigned int mode) {
     //ensureDirectoryExists(filePath);
 
@@ -76,6 +77,61 @@ void Simulation2DBuilder::writeCoordinatesToFile(const std::vector<std::tuple<in
 void Simulation2DBuilder::closeCoordinatesFile() {
     if(this->getcoordinatesDataOutput().is_open()) {
         this->getcoordinatesDataOutput().close();
+    }
+}
+
+//PROPERTIES OF THE SIMULAITON FILE
+
+void Simulation2DBuilder::openPropertiesFile(const std::string& filename, unsigned int mode) {
+    //ensureDirectoryExists(filePath);
+
+    std::filesystem::path contentRoot = std::filesystem::current_path();
+    std::filesystem::path cleanFilePath = contentRoot.remove_filename();
+    std::filesystem::path relativePath = "Resources\\properties.csv";
+    std::filesystem::path filePath= cleanFilePath / relativePath;
+
+
+    auto& file = this->getPropertiesDataOutput();
+    if(mode == 0) {
+        file.open(filePath, std::ios::out | std::ios::app);
+    }else if(mode == 1) {
+        file.open(filePath, std::ios::out | std::ios::trunc);
+    }
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open file for writing." << "\n";
+    }
+};
+
+void Simulation2DBuilder::writePropertiesToFile(const std::vector<std::tuple<int, double, Eigen::Vector2d, double, double, double,
+double, double, double>>& data) {
+    auto& file = this->getPropertiesDataOutput();
+    if (!file.is_open()) {
+        std::cerr << "Error: File is not open for writing." << "\n";
+        return;
+    }
+
+    // Write the header row
+    file << "Step Count,Time Now,Velocity Sum Value X,Velocity Sum Value Y,Potential Energy Sum,"
+         << "Potential Energy Sum Squared,Kinetic Energy Sum,Kinetic Energy Sum Squared,Pressure Sum,Pressure Sum Squared\n";
+
+    // Write the data rows
+    for (const auto& entry : data) {
+        file << std::setw(5) << std::get<0>(entry) << ","
+             << std::setw(8) << std::fixed << std::setprecision(4) << std::get<1>(entry) << ","
+             << std::setw(8) << std::fixed << std::setprecision(4) << std::get<2>(entry).x() << ","
+             << std::setw(8) << std::fixed << std::setprecision(4) << std::get<2>(entry).y() << ","
+             << std::setw(8) << std::fixed << std::setprecision(4) << std::get<3>(entry) << ","
+             << std::setw(8) << std::fixed << std::setprecision(4) << std::get<4>(entry) << ","
+             << std::setw(8) << std::fixed << std::setprecision(4) << std::get<5>(entry) << ","
+             << std::setw(8) << std::fixed << std::setprecision(4) << std::get<6>(entry) << ","
+             << std::setw(8) << std::fixed << std::setprecision(4) << std::get<7>(entry) << ","
+             << std::setw(8) << std::fixed << std::setprecision(4) << std::get<8>(entry) << "\n";
+    }
+}
+
+void Simulation2DBuilder::closePropertiesFile() {
+    if(this->getPropertiesDataOutput().is_open()) {
+        this->getPropertiesDataOutput().close();
     }
 }
 
@@ -451,7 +507,8 @@ void Simulation2D::evaluateVelocityDistribution() {
 void Simulation2D::printSummary() const {
     std::cout<<"\nPrinting summary"<<std::endl;
     std::cout << "Length of iteration data: " << iterationData.size() << std::endl;
-    for (const auto& data : iterationData) {
+    if (!iterationData.empty()) {
+        const auto& data = iterationData.back(); // Get the last element
         std::cout << "Step Count: " << std::get<0>(data) << "\n"
                   << "Time Now: " << std::get<1>(data) << "\n"
                   << "Velocity Sum Value X: " << std::get<2>(data).x() << "\n"  // Access the x component
@@ -465,7 +522,7 @@ void Simulation2D::printSummary() const {
     }
 }
 
-void Simulation2D::setSummaryIteration() {
+void Simulation2D::setIterationProperties() {
     Eigen::Vector2d velocitySumValue = get<Eigen::Vector2d>("velocitiesSum") / get<int>("numberOfAtoms");
 
 
@@ -497,8 +554,8 @@ void Simulation2D::run(unsigned int option) {
 
     while(true) {
         singleSimulationStep();
-        if(this->countStep%100 == 0) {
-            //this will showcase the values of the properties
+        if(this->countStep%10 == 0) {
+            setIterationProperties();
         }
         if (get<int>("stepCount") >= total_steps) {
             break;

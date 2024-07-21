@@ -23,7 +23,7 @@ public:
     virtual void accumulateProperties(unsigned int code) = 0;
     virtual void printSummary() const = 0;;
 
-    virtual void setSummaryIteration() = 0;
+    virtual void setIterationProperties() = 0;
 };
 
 

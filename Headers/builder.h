@@ -37,6 +37,9 @@ public:
     virtual void writeCoordinatesToFile(const std::vector<std::tuple<int, double, double>>& data) = 0;
     virtual void closeCoordinatesFile() = 0;
 
+    virtual void openPropertiesFile(const std::string& filename,unsigned int mode) = 0;
+virtual void writePropertiesToFile(const std::vector<std::tuple<int, double, Eigen::Vector2d, double, double, double, double, double, double>>& data) = 0;    virtual void closePropertiesFile() = 0;
+
     //PARAMETERS SETTERS
     virtual void setDeltaT(double deltaT) = 0;
     virtual void setDensity(double density) = 0;
@@ -57,6 +60,7 @@ public:
     virtual int getinitUcellX()& = 0;
     virtual int getinitUcellY()& = 0;
     virtual std::ofstream& getcoordinatesDataOutput() = 0;
+    virtual std::ofstream& getPropertiesDataOutput() = 0;
 
 
     virtual void initializeParameters() = 0;
@@ -123,7 +127,7 @@ public:
     void accumulateProperties(unsigned int code) override;
     void printSummary() const override;
 
-    void setSummaryIteration() override;
+    void setIterationProperties() override;
 
     //PARAMETERS SETTER
     void setDeltaT(double deltaT) { this->deltaT = deltaT; }
@@ -172,6 +176,7 @@ public:
     std::vector<std::shared_ptr<Atom2D>>& getAtoms() { return atoms; }
     std::vector<double>& getHistogramVelocities()& {return histogramVelocities;}
     std::vector<std::tuple<int, double, double>>& getDataCoordinates() {return dataCoordinates;}
+    std::vector<std::tuple<int, double, Eigen::Vector2d, double, double, double, double, double, double>>& getDataProperties() {return iterationData;}
     std::shared_ptr<AtomFactory>& getAtomFactory() {return atomFactory;}
     std::shared_ptr<Progressbar>& getProgressbar() { return progressbar; }
 
@@ -256,6 +261,7 @@ class Simulation2DBuilder : public Builder {
 private:
     std::shared_ptr<Simulation2D> simulation;
     std::ofstream coordinatesDataOutput;
+    std::ofstream propertiesDataOutput;
 
 public:
     void setConfig(std::unordered_map<std::string, std::string> config) override {
@@ -278,6 +284,7 @@ public:
     void setAtomFactory(std::shared_ptr<AtomFactory> atomFactory) { simulation->setAtomFactory(atomFactory); }
     void setNumberOfAtomIterations(int numberOfAtomIterations) { simulation->setNumberOfAtomIterations(numberOfAtomIterations); }
     void setCoordinatesDataOutput(std::ofstream&& coordinatesDataOutput) {this->coordinatesDataOutput = std::move(coordinatesDataOutput);}
+    void setPropertiesDataOutput(std::ofstream&& propertiesDataOutput) {this->propertiesDataOutput = std::move(propertiesDataOutput);}
 
     ////PARAMETERS GETTERS
     double getDeltaT()& override { return simulation->get<double>("deltaT"); }
@@ -288,6 +295,7 @@ public:
     std::vector<std::tuple<int, double, double>>& getDataCoordinates() { return simulation->getDataCoordinates();}
     std::shared_ptr<AtomFactory>& getAtomFactory() {return simulation->getAtomFactory();}
     std::ofstream& getcoordinatesDataOutput() override { return coordinatesDataOutput; }
+    std::ofstream& getPropertiesDataOutput() { return propertiesDataOutput; }
 
 
     Simulation2DBuilder() {
@@ -305,6 +313,11 @@ public:
     void openCoordinatesFile(const std::string& filename,unsigned int mode) override;
     void writeCoordinatesToFile(const std::vector<std::tuple<int, double, double>>& data) override;
     void closeCoordinatesFile() override;
+
+    void openPropertiesFile(const std::string& filename,unsigned int mode) override;
+    void writePropertiesToFile(const std::vector<std::tuple<int, double, Eigen::Vector2d, double, double, double,
+ double, double, double>>& data) override;
+    void closePropertiesFile() override;
 
 
     void initializeParameters() override{
