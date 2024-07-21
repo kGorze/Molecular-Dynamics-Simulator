@@ -336,9 +336,9 @@ double Simulation2D::singleSimulationStep() {
         if (stepCount >= get<int>("stepEquil") && (stepCount - get<int>("stepEquil")) % get<int>("stepVel") == 0) {
             evaluateVelocityDistribution();
         }
-        // if (get<int>("stepCount") != get<int>("stepLimit")) {
-        //     accumulateProperties(0);
-        // }
+    }
+    if (get<int>("stepCount") == get<int>("stepLimit")) {
+        printVelocityDestribution();
     }
     clock_t end = clock();
 
@@ -470,39 +470,73 @@ void Simulation2D::evaluateProperties() {
 }
 
 void Simulation2D::evaluateVelocityDistribution() {
-    setDeltaVelocity(0.0);
-    setHistogramSum(0.0);
+    double deltaVelocity = get<double>("deltaVelocity");
+    deltaVelocity = 0.0;
+
+    double histSum = get<double>("histogramSum");
+    histSum = 0.0;
+
 
     std::vector<double> hist = getHistogramVelocities();
     std::vector<std::shared_ptr<Atom2D>> atoms = this->getAtoms();
     int j;
+
+    // If the velocity count is zero, initialize the histogram array to zeros
     if(get<int>("countVelocities") == 0) {
         std::fill(hist.begin(), hist.end(), 0);
     }
-    setDeltaVelocity(get<double>("rangeVel") / get<int>("sizeHistVel"));
 
+    // Calculate the bin width for the histogram
+    deltaVelocity = (get<double>("rangeVel") / get<int>("sizeHistVel"));
+
+    // Determine the histogram bin index for the current molecule's velocity magnitude
     for (const auto& atom : atoms) {
-        j = static_cast<int>(atom->getVelocities().norm() / get<double>("deltaVelocity"));
+        j = static_cast<int>(atom->getVelocities().norm() / deltaVelocity);
+
+        // Increment the histogram bin, using Min to ensure the index does not exceed the array bounds
         hist.at(std::min(j, get<int>("sizeHistVel") - 1)) += 1;
     }
 
+    // Increment the velocity count
     setCountVelocities(get<int>("countVelocities") + 1);
+
+    // If the count reaches the limit, normalize and print the histogram
     if(get<int>("countVelocities") == get<int>("limitVel")) {
         setHistogramSum(std::accumulate(hist.begin(), hist.end(), 0.0));
-        for (auto& value : hist) {
-            value /= get<double>("histogramSum");
+
+        // Calculate the total sum of the histogram bins
+        for(auto& value: hist) {
+            histSum += value;
         }
+
+        // Normalize the histogram bins by dividing by the total sum
+        for (auto& value : hist) {
+            value /= histSum;
+        }
+
+        // Reset the velocity count
         setCountVelocities(0);
     }
-    setEntropyFunction(0.0);
-    for(int i = 0; i < get<int>("sizeHistVel"); i++) {
-        if(hist[i] > 0) {
-            double entf = get<double>("entropyFunction");
-            entf += hist[i] * std::log(hist[i]) / ((j+0.5)*get<double>("deltaVelocity"));
-            setEntropyFunction(entf);
-        }
-    }
+
+    setHistogramVelocities(hist);
+    // setEntropyFunction(0.0);
+    // for(int i = 0; i < get<int>("sizeHistVel"); i++) {
+    //     if(hist[i] > 0) {
+    //         double entf = get<double>("entropyFunction");
+    //         entf += hist[i] * std::log(hist[i]) / ((j+0.5)*get<double>("deltaVelocity"));
+    //         setEntropyFunction(entf);
+    //     }
+    // }
 }
+
+void Simulation2D::printVelocityDestribution() const {
+    std::cout << "Printing velocity distribution" << std::endl;
+    for(int n = 0; n < get<int>("sizeHistVel"); n++) {
+
+        std::cout << "Velocity: " << (n+0.5) * get<double>("rangeVel")/get<int>("sizeHistVel") << " Distribution: " <<
+        histogramVelocities[n] << std::endl;
+    }
+};
 
 void Simulation2D::printSummary() const {
     std::cout<<"\nPrinting summary"<<std::endl;

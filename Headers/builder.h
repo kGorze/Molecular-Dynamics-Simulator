@@ -126,6 +126,7 @@ public:
     void evaluateVelocityDistribution() override;
     void accumulateProperties(unsigned int code) override;
     void printSummary() const override;
+    void printVelocityDestribution() const override;
 
     void setIterationProperties() override;
 
@@ -168,6 +169,7 @@ public:
     void setKineticEnergy(Eigen::Vector3d kineticEnergy) { this->kineticEnergy = kineticEnergy; }
     void setPotentialEnergy(Eigen::Vector3d potentialEnergy) { this->potentialEnergy = potentialEnergy; }
     void setPressure(Eigen::Vector3d pressure) { this->pressure = pressure; }
+    void setHistogramVelocities(std::vector<double> histogramVelocities) { this->histogramVelocities = histogramVelocities; }
 
     // PARAMETERS GETTER
     template<typename T>
