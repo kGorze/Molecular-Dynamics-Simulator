@@ -94,9 +94,12 @@ private:
     std::vector<std::shared_ptr<Atom2D>> atoms;
     std::vector<double> histogramVelocities;
     std::vector<std::tuple<int, double, double>> dataCoordinates;
+
     std::unordered_map<std::string, std::string> config;
     std::shared_ptr<AtomFactory> atomFactory;
     std::shared_ptr<Progressbar> progressbar;
+
+    std::vector<std::tuple<int, double, Eigen::Vector2d, double, double, double, double, double, double>> iterationData;
 
 
     Eigen::Vector2d region;
@@ -119,6 +122,8 @@ public:
     void evaluateVelocityDistribution() override;
     void accumulateProperties(unsigned int code) override;
     void printSummary() const override;
+
+    void setSummaryIteration() override;
 
     //PARAMETERS SETTER
     void setDeltaT(double deltaT) { this->deltaT = deltaT; }

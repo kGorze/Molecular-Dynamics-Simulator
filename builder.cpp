@@ -206,7 +206,7 @@ void Simulation2DBuilder::initializeAccelerations() {
 }
 
 void Simulation2D::accumulateProperties(unsigned int code) {
-    if(code ==0) {
+    if(code == 0) {
         Eigen::Vector3d temp(0,0,0);
         this->setKineticEnergy(temp);
         this->setPotentialEnergy(temp);
@@ -219,30 +219,30 @@ void Simulation2D::accumulateProperties(unsigned int code) {
 
         Eigen::Vector3d pot = this->get<Eigen::Vector3d>("potentialEnergy");
         double &pvalue = pot(0);
-        this->setKineticEnergy(Eigen::Vector3d(pvalue, pvalue, std::pow(pvalue, 2)));
+        this->setPotentialEnergy(Eigen::Vector3d(pvalue, pvalue, std::pow(pvalue, 2)));
 
         Eigen::Vector3d pre = this->get<Eigen::Vector3d>("pressure");
         double &prvalue = pre(0);
-        this->setKineticEnergy(Eigen::Vector3d(prvalue, prvalue, std::pow(prvalue, 2)));
-    }else if(code == 2) {
+        this->setPressure(Eigen::Vector3d(prvalue, prvalue, std::pow(prvalue, 2)));
+    } else if(code == 2) {
         int stepAvg = this->get<int>("stepAvg");
         Eigen::Vector3d kin = this->get<Eigen::Vector3d>("kineticEnergy");
         double &kvalue = kin(0);
         double &ksumSquared = kin(2);
-        this->setKineticEnergy(Eigen::Vector3d(kvalue, kvalue/stepAvg,std::sqrt(std::max(ksumSquared / stepAvg - kvalue * kvalue, 0.0))));
-
+        this->setKineticEnergy(Eigen::Vector3d(kvalue, kvalue/stepAvg, std::sqrt(std::max(ksumSquared / stepAvg - std::pow(kvalue / stepAvg, 2), 0.0))));
 
         Eigen::Vector3d pot = this->get<Eigen::Vector3d>("potentialEnergy");
         double &pvalue = pot(0);
         double &psumSquared = pot(2);
-        this->setPotentialEnergy(Eigen::Vector3d(pvalue, pvalue/stepAvg,std::sqrt(std::max(psumSquared / stepAvg - pvalue * pvalue, 0.0))));
+        this->setPotentialEnergy(Eigen::Vector3d(pvalue, pvalue/stepAvg, std::sqrt(std::max(psumSquared / stepAvg - std::pow(pvalue / stepAvg, 2), 0.0))));
 
         Eigen::Vector3d pre = this->get<Eigen::Vector3d>("pressure");
         double &prvalue = pre(0);
         double &prsumSquared = pre(2);
-        this->setPressure(Eigen::Vector3d(prvalue, prvalue/stepAvg,std::sqrt(std::max(prsumSquared / stepAvg - prvalue * prvalue, 0.0))));
+        this->setPressure(Eigen::Vector3d(prvalue, prvalue/stepAvg, std::sqrt(std::max(prsumSquared / stepAvg - std::pow(prvalue / stepAvg, 2), 0.0))));
     }
 }
+
 void Simulation2DBuilder::setupStaticSimulation() {
     this->simulation->setCountStep(0);
     this->simulation->setCountVelocities(0);
@@ -280,9 +280,9 @@ double Simulation2D::singleSimulationStep() {
         if (stepCount >= get<int>("stepEquil") && (stepCount - get<int>("stepEquil")) % get<int>("stepVel") == 0) {
             evaluateVelocityDistribution();
         }
-        if (get<int>("stepCount") != get<int>("stepLimit")) {
-            accumulateProperties(0);
-        }
+        // if (get<int>("stepCount") != get<int>("stepLimit")) {
+        //     accumulateProperties(0);
+        // }
     }
     clock_t end = clock();
 
@@ -395,6 +395,7 @@ void Simulation2D::evaluateProperties() {
         velocitySquared = atom->getVelocities().squaredNorm(); // Calculate the squared velocity
         velocitySquaredSum += velocitySquared; // Accumulate the sum of squared velocities
     }
+    this->setVelocitiesSum(velocitiesSum);
 
     // Calculate the kinetic energy
     Eigen::Vector3d kin = this->get<Eigen::Vector3d>("kineticEnergy");
@@ -448,38 +449,65 @@ void Simulation2D::evaluateVelocityDistribution() {
 }
 
 void Simulation2D::printSummary() const {
+    std::cout<<"\nPrinting summary"<<std::endl;
+    std::cout << "Length of iteration data: " << iterationData.size() << std::endl;
+    for (const auto& data : iterationData) {
+        std::cout << "Step Count: " << std::get<0>(data) << "\n"
+                  << "Time Now: " << std::get<1>(data) << "\n"
+                  << "Velocity Sum Value X: " << std::get<2>(data).x() << "\n"  // Access the x component
+                  << "Velocity Sum Value Y: " << std::get<2>(data).y() << "\n"  // Access the y component
+                  << "Potential Energy Sum: " << std::get<3>(data) << "\n"
+                  << "Potential Energy Sum Squared: " << std::get<4>(data) << "\n"
+                  << "Kinetic Energy Sum: " << std::get<5>(data) << "\n"
+                  << "Kinetic Energy Sum Squared: " << std::get<6>(data) << "\n"
+                  << "Pressure Sum: " << std::get<7>(data) << "\n"
+                  << "Pressure Sum Squared: " << std::get<8>(data) << "\n";
+    }
+}
+
+void Simulation2D::setSummaryIteration() {
     Eigen::Vector2d velocitySumValue = get<Eigen::Vector2d>("velocitiesSum") / get<int>("numberOfAtoms");
+
+
     double potentialEnergySum = get<Eigen::Vector3d>("potentialEnergy").y();
     double potentialEnergySumSquared = get<Eigen::Vector3d>("potentialEnergy").z();
     double kineticEnergySum = get<Eigen::Vector3d>("kineticEnergy").y();
     double kineticEnergySumSquared = get<Eigen::Vector3d>("kineticEnergy").z();
     double pressureSum = get<Eigen::Vector3d>("pressure").y();
     double pressureSumSquared = get<Eigen::Vector3d>("pressure").z();
+    iterationData.emplace_back(
+        get<int>("stepCount"),
+        get<double>("timeNow"),
+        velocitySumValue,
+        potentialEnergySum,
+        potentialEnergySumSquared,
+        kineticEnergySum,
+        kineticEnergySumSquared,
+        pressureSum,
+        pressureSumSquared
+        );
 
-    std::cout << "\n" << get<int>("stepCount") << "\t" << get<double>("timeNow") << "\t" << get<Eigen::Vector2d>
-    ("velocitiesSum") / get<int>("numberOfAtoms") << "\t"
-    << potentialEnergySum  << "\t" << potentialEnergySumSquared
-    << "\t" << kineticEnergySum << "\t" << kineticEnergySumSquared
-    << "\t" << pressureSum << "\t" << pressureSumSquared << "\n";
-}
-
+};
 
 void Simulation2D::run(unsigned int option) {
+    //fix the option in run function
     std::cout << "Starting simulation2D" << std::endl;
     uint64_t total_steps = get<int>("stepLimit");
     getProgressbar()->totalTicks(total_steps);
 
     while(true) {
         singleSimulationStep();
+        if(this->countStep%100 == 0) {
+            //this will showcase the values of the properties
+        }
         if (get<int>("stepCount") >= total_steps) {
             break;
         }
         getProgressbar()->tick();
     }
-    system("cls");
-    if (option == 1) {
-        std::cout<<"Printing summary"<<std::endl;
-        printSummary();
+    std::cout<<"\nEnding simulation2D"<<std::endl;
+    if (option == 1){
+        //printSummary();
         //this->saveSummaryToFile();
         //this->saveHistogramToFile();
     }
