@@ -533,10 +533,24 @@ void Simulation2D::evaluateVelocityDistribution() {
 
     // Determine the histogram bin index for the current molecule's velocity magnitude
     for (const auto& atom : atoms) {
-        j = static_cast<int>(atom->getVelocities().norm() / deltaVelocity);
-
-        // Increment the histogram bin, using Min to ensure the index does not exceed the array bounds
-        hist.at(std::min(j, get<int>("sizeHistVel") - 1)) += 1;
+        // Check if deltaVelocity is not zero or very close to zero
+        if (std::abs(deltaVelocity) > std::numeric_limits<double>::epsilon()) {
+            j = static_cast<int>(atom->getVelocities().norm() / deltaVelocity);
+            if(j < 0) {
+                j *= -1;
+            }
+            // Check if j is within the range of the vector size
+            if (j < hist.size()) {
+                // Increment the histogram bin, using Min to ensure the index does not exceed the array bounds
+                hist.at(std::min(j, get<int>("sizeHistVel") - 1)) += 1;
+            } else {
+                // Handle the case where j is out of range
+                std::cerr << "Error: Index out of range." << "\n";
+            }
+        } else {
+            // Handle the case where deltaVelocity is zero or very close to zero
+            std::cerr << "Error: deltaVelocity is zero or very close to zero." << "\n";
+        }
     }
 
     // Increment the velocity count

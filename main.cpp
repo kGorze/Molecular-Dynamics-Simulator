@@ -20,7 +20,7 @@ int main() {
      director.set_builder(builder2D);
 
      //CODE FOR PATH
-     std::string configFilePath = R"(C:\Users\konrad_guest\CLionProjects\MDS\Parameters\config.ini)";
+     std::string configFilePath = R"(C:\Users\konrad_guest\source\repos\MDS\Parameters\config.ini)";
      auto simulation2D = std::dynamic_pointer_cast<Simulation2D>(builder2D->getSimulation());
      if (simulation2D) {
          director.initializeSimulationWithConfig(configFilePath);
