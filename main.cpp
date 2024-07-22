@@ -9,36 +9,39 @@
 #include <thread>
 #include <atomic>
 
+//PLOTTING
+#include <matplot/matplot.h>
+#include <thread>
+#include <chrono>
+
 int main() {
-    Director director;
-    auto builder2D = std::make_shared<Simulation2DBuilder>();
-    director.set_builder(builder2D);
+     Director director;
+     auto builder2D = std::make_shared<Simulation2DBuilder>();
+     director.set_builder(builder2D);
 
-    //CODE FOR PATH
-    std::string configFilePath = R"(C:\Users\konrad_guest\CLionProjects\MDS\Parameters\config.ini)";
-    auto simulation2D = std::dynamic_pointer_cast<Simulation2D>(builder2D->getSimulation());
-    if (simulation2D) {
-        director.initializeSimulationWithConfig(configFilePath);
-        director.buildMinimalSimulation();
-        director.getBuilder()->getSimulation()->printConfig();
-        director.getBuilder()->getSimulation()->run(1);
+     //CODE FOR PATH
+     std::string configFilePath = R"(C:\Users\konrad_guest\CLionProjects\MDS\Parameters\config.ini)";
+     auto simulation2D = std::dynamic_pointer_cast<Simulation2D>(builder2D->getSimulation());
+     if (simulation2D) {
+         director.initializeSimulationWithConfig(configFilePath);
+         director.buildMinimalSimulation();
+         director.getBuilder()->getSimulation()->printConfig();
+         director.getBuilder()->getSimulation()->run(1);
 
-        //getting the coordinates
-        director.getBuilder()->openCoordinatesFile("Resources/results.csv", 1);
-        director.getBuilder()->writeCoordinatesToFile(simulation2D->getDataCoordinates());
-        director.getBuilder()->closeCoordinatesFile();
 
-        //getting the properties
-        director.getBuilder()->openPropertiesFile("Resources/properties.csv", 1);
-        director.getBuilder()->writePropertiesToFile(simulation2D->getDataProperties());
-        director.getBuilder()->closePropertiesFile();
+         builder2D->saveDataToFile("Resources/results.csv", simulation2D->getDataCoordinates(), 1);
+         builder2D->saveDataToFile("Resources/properties.csv", simulation2D->getDataProperties(), 1);
 
-        std::this_thread::sleep_for(std::chrono::seconds(2));
-        director.getBuilder()->getSimulation()->printSummary();
+
+         //getting the velocity distribution
+
+
+         std::this_thread::sleep_for(std::chrono::seconds(2));
+         director.getBuilder()->getSimulation()->printSummary();
 
     }
 
-    return 0;
 
+    return 0;
 
 }

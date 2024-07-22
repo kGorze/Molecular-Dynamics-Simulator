@@ -20,6 +20,10 @@ include_directories(.)
 # Define the ABI macro for the whole project
 # add_compile_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
 
+add_subdirectory(Third_party/matplotplusplus)
+
+
+
 # inih library
 add_library(inih STATIC third_party/inih/ini.c)
 # target_include_directories(inih PUBLIC third_party/inih)
@@ -49,5 +53,5 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 # target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_23)
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} inih)
+target_link_libraries(${PROJECT_NAME} inih matplot)
 # target_link_libraries(${PROJECT_NAME} stdc++ zmq)
