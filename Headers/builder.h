@@ -33,12 +33,7 @@ public:
     virtual void setupStaticSimulation() = 0;
 
     virtual void ensureDirectoryExists(const std::string& path) = 0;
-    virtual void openCoordinatesFile(const std::string& filename,unsigned int mode) = 0;
-    virtual void writeCoordinatesToFile(const std::vector<std::tuple<int, double, double>>& data) = 0;
-    virtual void closeCoordinatesFile() = 0;
 
-    virtual void openPropertiesFile(const std::string& filename,unsigned int mode) = 0;
-virtual void writePropertiesToFile(const std::vector<std::tuple<int, double, Eigen::Vector2d, double, double, double, double, double, double>>& data) = 0;    virtual void closePropertiesFile() = 0;
 
     //PARAMETERS SETTERS
     virtual void setDeltaT(double deltaT) = 0;
@@ -61,6 +56,7 @@ virtual void writePropertiesToFile(const std::vector<std::tuple<int, double, Eig
     virtual int getinitUcellY()& = 0;
     virtual std::ofstream& getcoordinatesDataOutput() = 0;
     virtual std::ofstream& getPropertiesDataOutput() = 0;
+    virtual std::ofstream& getVelocityDistributionDataOutput() = 0;
 
 
     virtual void initializeParameters() = 0;
@@ -97,6 +93,7 @@ private:
 
     std::vector<std::shared_ptr<Atom2D>> atoms;
     std::vector<double> histogramVelocities;
+    std::vector<std::vector<double>> dataHistogramVelocities;
     std::vector<std::tuple<int, double, double>> dataCoordinates;
 
     std::unordered_map<std::string, std::string> config;
@@ -170,6 +167,7 @@ public:
     void setPotentialEnergy(Eigen::Vector3d potentialEnergy) { this->potentialEnergy = potentialEnergy; }
     void setPressure(Eigen::Vector3d pressure) { this->pressure = pressure; }
     void setHistogramVelocities(std::vector<double> histogramVelocities) { this->histogramVelocities = histogramVelocities; }
+    void setDataHistogramVelocities(std::vector<std::vector<double>> dataHistogramVelocities) { this->dataHistogramVelocities = dataHistogramVelocities; }
 
     // PARAMETERS GETTER
     template<typename T>
@@ -178,6 +176,7 @@ public:
     std::vector<std::shared_ptr<Atom2D>>& getAtoms() { return atoms; }
     std::vector<double>& getHistogramVelocities()& {return histogramVelocities;}
     std::vector<std::tuple<int, double, double>>& getDataCoordinates() {return dataCoordinates;}
+    std::vector<std::vector<double>>& getDataHistogramVelocities() {return dataHistogramVelocities;}
     std::vector<std::tuple<int, double, Eigen::Vector2d, double, double, double, double, double, double>>& getDataProperties() {return iterationData;}
     std::shared_ptr<AtomFactory>& getAtomFactory() {return atomFactory;}
     std::shared_ptr<Progressbar>& getProgressbar() { return progressbar; }
@@ -264,6 +263,7 @@ private:
     std::shared_ptr<Simulation2D> simulation;
     std::ofstream coordinatesDataOutput;
     std::ofstream propertiesDataOutput;
+    std::ofstream velocityDistributionDataOutput;
 
 public:
     void setConfig(std::unordered_map<std::string, std::string> config) override {
@@ -287,6 +287,7 @@ public:
     void setNumberOfAtomIterations(int numberOfAtomIterations) { simulation->setNumberOfAtomIterations(numberOfAtomIterations); }
     void setCoordinatesDataOutput(std::ofstream&& coordinatesDataOutput) {this->coordinatesDataOutput = std::move(coordinatesDataOutput);}
     void setPropertiesDataOutput(std::ofstream&& propertiesDataOutput) {this->propertiesDataOutput = std::move(propertiesDataOutput);}
+    void setVelocityDistributionDataOutput(std::ofstream&& velocityDistributionDataOutput) {this->velocityDistributionDataOutput = std::move(velocityDistributionDataOutput);}
 
     ////PARAMETERS GETTERS
     double getDeltaT()& override { return simulation->get<double>("deltaT"); }
@@ -295,9 +296,11 @@ public:
     std::vector<std::shared_ptr<Atom2D>>& getAtoms()  { return simulation->getAtoms();}
     std::vector<double>& getHistogramVelocities()& { return simulation->getHistogramVelocities();}
     std::vector<std::tuple<int, double, double>>& getDataCoordinates() { return simulation->getDataCoordinates();}
+    std::vector<std::vector<double>>& getDataHistogramVelocities() { return simulation->getDataHistogramVelocities();}
     std::shared_ptr<AtomFactory>& getAtomFactory() {return simulation->getAtomFactory();}
     std::ofstream& getcoordinatesDataOutput() override { return coordinatesDataOutput; }
     std::ofstream& getPropertiesDataOutput() { return propertiesDataOutput; }
+    std::ofstream& getVelocityDistributionDataOutput() { return velocityDistributionDataOutput; }
 
 
     Simulation2DBuilder() {
@@ -312,15 +315,11 @@ public:
     void setupStaticSimulation() override;
 
     void ensureDirectoryExists(const std::string& path) override;
-    void openCoordinatesFile(const std::string& filename,unsigned int mode) override;
-    void writeCoordinatesToFile(const std::vector<std::tuple<int, double, double>>& data) override;
-    void closeCoordinatesFile() override;
 
-    void openPropertiesFile(const std::string& filename,unsigned int mode) override;
-    void writePropertiesToFile(const std::vector<std::tuple<int, double, Eigen::Vector2d, double, double, double,
- double, double, double>>& data) override;
-    void closePropertiesFile() override;
-
+    template <typename T>
+    void saveDataToFile(const std::string& filename, const T& data,  unsigned int mode) {
+        static_assert(sizeof(T) == -1, "This function must be used with a specific specialization.");
+    }
 
     void initializeParameters() override{
         simulation->setTemperature(10);
@@ -338,5 +337,23 @@ public:
     std::shared_ptr<Simulation> getSimulation() override;
 };
 
+template <> //template for the properties
+void Simulation2DBuilder::saveDataToFile(
+    const std::string& filename,
+    const std::vector<std::tuple<int, double, Eigen::Vector2d, double, double, double, double, double, double>>& data,
+    unsigned int mode);
+
+template <> //template for the velocities
+void Simulation2DBuilder::saveDataToFile(
+    const std::string& filename,
+    const std::vector<std::vector<double>>& data,
+    unsigned int mode);
+
+
+template <> //template for the coordinates
+void Simulation2DBuilder::saveDataToFile(
+    const std::string& filename,
+    const std::vector<std::tuple<int, double, double>>& data,
+    unsigned int mode);
 
 #endif //BUILDER_H

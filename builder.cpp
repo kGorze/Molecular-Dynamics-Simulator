@@ -39,52 +39,17 @@ void Simulation2DBuilder::ensureDirectoryExists(const std::string &path) {
         std::filesystem::create_directories(dirPath);
     }
 }
+template<> //PROPERTIES TEMPALTE
+void Simulation2DBuilder::saveDataToFile(
+    const std::string& filename,
+    const std::vector<std::tuple<int, double,Eigen::Vector2d,double, double, double, double, double, double>>& data,
+    unsigned int mode
+    )
+{
 
-
-//COORDINATES FILE
-void Simulation2DBuilder::openCoordinatesFile(const std::string& filename, unsigned int mode) {
     //ensureDirectoryExists(filePath);
 
-    std::filesystem::path contentRoot = std::filesystem::current_path();
-    std::filesystem::path cleanFilePath = contentRoot.remove_filename();
-    std::filesystem::path relativePath = "Resources\\results.csv";
-    std::filesystem::path filePath= cleanFilePath / relativePath;
-
-
-    auto& file = this->getcoordinatesDataOutput();
-    if(mode == 0) {
-        file.open(filePath, std::ios::out | std::ios::app);
-    }else if(mode == 1) {
-        file.open(filePath, std::ios::out | std::ios::trunc);
-    }
-    if (!file.is_open()) {
-        std::cerr << "Error: Could not open file for writing." << "\n";
-    }
-}
-void Simulation2DBuilder::writeCoordinatesToFile(const std::vector<std::tuple<int, double, double>>& data) {
-    auto& file = this->getcoordinatesDataOutput();
-    if (!file.is_open()) {
-        std::cerr << "Error: File is not open for writing." << "\n";
-        return;
-    }
-
-    for (const auto& entry : data) {
-        file << std::setw(5) << std::get<0>(entry) << "\t"
-                << std::setw(8) << std::fixed << std::setprecision(4) << std::get<1>(entry) << "\t"
-                << std::setw(8) << std::fixed << std::setprecision(4) << std::get<2>(entry) << "\n";
-    }
-}
-void Simulation2DBuilder::closeCoordinatesFile() {
-    if(this->getcoordinatesDataOutput().is_open()) {
-        this->getcoordinatesDataOutput().close();
-    }
-}
-
-//PROPERTIES OF THE SIMULAITON FILE
-
-void Simulation2DBuilder::openPropertiesFile(const std::string& filename, unsigned int mode) {
-    //ensureDirectoryExists(filePath);
-
+    //OPEN THE FILE PROTOCOL
     std::filesystem::path contentRoot = std::filesystem::current_path();
     std::filesystem::path cleanFilePath = contentRoot.remove_filename();
     std::filesystem::path relativePath = "Resources\\properties.csv";
@@ -99,15 +64,6 @@ void Simulation2DBuilder::openPropertiesFile(const std::string& filename, unsign
     }
     if (!file.is_open()) {
         std::cerr << "Error: Could not open file for writing." << "\n";
-    }
-};
-
-void Simulation2DBuilder::writePropertiesToFile(const std::vector<std::tuple<int, double, Eigen::Vector2d, double, double, double,
-double, double, double>>& data) {
-    auto& file = this->getPropertiesDataOutput();
-    if (!file.is_open()) {
-        std::cerr << "Error: File is not open for writing." << "\n";
-        return;
     }
 
     // Write the header row
@@ -127,13 +83,92 @@ double, double, double>>& data) {
              << std::setw(8) << std::fixed << std::setprecision(4) << std::get<7>(entry) << ","
              << std::setw(8) << std::fixed << std::setprecision(4) << std::get<8>(entry) << "\n";
     }
-}
 
-void Simulation2DBuilder::closePropertiesFile() {
     if(this->getPropertiesDataOutput().is_open()) {
         this->getPropertiesDataOutput().close();
     }
+
+};
+
+
+template <> //template for the velocities
+void Simulation2DBuilder::saveDataToFile(
+    const std::string& filename,
+    const std::vector<std::vector<double>>& data,
+    unsigned int mode)
+{
+    //ensureDirectoryExists(filePath);
+
+    //OPEN THE FILE PROTOCOL
+    std::filesystem::path contentRoot = std::filesystem::current_path();
+    std::filesystem::path cleanFilePath = contentRoot.remove_filename();
+    std::filesystem::path relativePath = "Resources\\velocity_distribution.csv";
+    std::filesystem::path filePath= cleanFilePath / relativePath;
+
+    auto& file = this->getVelocityDistributionDataOutput();
+    if(mode == 0) {
+        file.open(filePath, std::ios::out | std::ios::app);
+    }else if(mode == 1) {
+        file.open(filePath, std::ios::out | std::ios::trunc);
+    }
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open file for writing." << "\n";
+    }
+
+    // Write the header row
+    file << "Velocity distribution attitude\n";
+
+    // Write the data rows
+    for (const auto& row : data) {
+        for (const auto& column : row) {
+            file << std::setw(8) << std::fixed << std::setprecision(4) << column << ",";
+        }
+        file << "\n";
+        file << "---\n";
+    }
+
+
+    if(this->getVelocityDistributionDataOutput().is_open()) {
+        this->getVelocityDistributionDataOutput().close();
+    }
 }
+
+template <> //COORDINATES TEMPLATE
+void Simulation2DBuilder::saveDataToFile(
+    const std::string& filename,
+    const std::vector<std::tuple<int, double, double>>& data,
+    unsigned int mode
+)
+{
+    //ensureDirectoryExists(filePath);
+
+    std::filesystem::path contentRoot = std::filesystem::current_path();
+    std::filesystem::path cleanFilePath = contentRoot.remove_filename();
+    std::filesystem::path relativePath = "Resources\\results.csv";
+    std::filesystem::path filePath= cleanFilePath / relativePath;
+
+
+    auto& file = this->getcoordinatesDataOutput();
+    if(mode == 0) {
+        file.open(filePath, std::ios::out | std::ios::app);
+    }else if(mode == 1) {
+        file.open(filePath, std::ios::out | std::ios::trunc);
+    }
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open file for writing." << "\n";
+    }
+
+    for (const auto& entry : data) {
+        file << std::setw(5) << std::get<0>(entry) << "\t"
+                << std::setw(8) << std::fixed << std::setprecision(4) << std::get<1>(entry) << "\t"
+                << std::setw(8) << std::fixed << std::setprecision(4) << std::get<2>(entry) << "\n";
+    }
+
+    if(this->getcoordinatesDataOutput().is_open()) {
+        this->getcoordinatesDataOutput().close();
+    }
+}
+
 
 void Simulation2DBuilder::setRestOfParameters() const {
     std::shared_ptr<AtomFactory> atomFactory = std::make_shared<ArgonFactory>();
@@ -333,13 +368,20 @@ double Simulation2D::singleSimulationStep() {
 
     if (stepCount % get<int>("stepAvg") == 0) {
         accumulateProperties(2);
-        if (stepCount >= get<int>("stepEquil") && (stepCount - get<int>("stepEquil")) % get<int>("stepVel") == 0) {
-            evaluateVelocityDistribution();
-        }
+        // if (stepCount >= get<int>("stepEquil") && (stepCount - get<int>("stepEquil")) % get<int>("stepVel") == 0) {
+        // }
     }
-    if (get<int>("stepCount") == get<int>("stepLimit")) {
-        printVelocityDestribution();
+    if(get<int>("stepCount") % 50 == 0) {
+        evaluateVelocityDistribution();
+        //set the histogram data to first index of dataHistogramVelocities
+        std::vector<double> hist = getHistogramVelocities();
+        std::vector<std::vector<double>> dataHistogramVelocities = getDataHistogramVelocities();
+        dataHistogramVelocities.insert(dataHistogramVelocities.begin(), hist);
+        setDataHistogramVelocities(dataHistogramVelocities);
     }
+    // if (get<int>("stepCount") == get<int>("stepLimit")) {
+    //     printVelocityDestribution();
+    // }
     clock_t end = clock();
 
     double elapsed_secs = static_cast<double>(end - begin) / static_cast<double>(CLOCKS_PER_SEC);
@@ -519,6 +561,7 @@ void Simulation2D::evaluateVelocityDistribution() {
     }
 
     setHistogramVelocities(hist);
+
     // setEntropyFunction(0.0);
     // for(int i = 0; i < get<int>("sizeHistVel"); i++) {
     //     if(hist[i] > 0) {

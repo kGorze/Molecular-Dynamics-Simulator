@@ -31,6 +31,7 @@ int main() {
 
          builder2D->saveDataToFile("Resources/results.csv", simulation2D->getDataCoordinates(), 1);
          builder2D->saveDataToFile("Resources/properties.csv", simulation2D->getDataProperties(), 1);
+         builder2D->saveDataToFile("Resources/velocity_distribution.csv", simulation2D->getDataHistogramVelocities(), 1);
 
 
          //getting the velocity distribution
