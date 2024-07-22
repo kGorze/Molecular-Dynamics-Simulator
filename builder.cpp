@@ -7,6 +7,7 @@
 #include "Headers/boundary_conditions.h"
 #include <iostream>
 #include <random>
+#include <matplot/matplot.h>
 
 Eigen::Vector2d velocity_rand(std::mt19937& rng, std::uniform_real_distribution<double>& dist) {
     Eigen::Vector2d velocity;
@@ -371,7 +372,7 @@ double Simulation2D::singleSimulationStep() {
         // if (stepCount >= get<int>("stepEquil") && (stepCount - get<int>("stepEquil")) % get<int>("stepVel") == 0) {
         // }
     }
-    if(get<int>("stepCount") % 50 == 0) {
+    if(get<int>("stepCount") % 25 == 0) {
         evaluateVelocityDistribution();
         //set the histogram data to first index of dataHistogramVelocities
         std::vector<double> hist = getHistogramVelocities();
@@ -514,6 +515,7 @@ void Simulation2D::evaluateProperties() {
 void Simulation2D::evaluateVelocityDistribution() {
     double deltaVelocity = get<double>("deltaVelocity");
     deltaVelocity = 0.0;
+    int j;
 
     double histSum = get<double>("histogramSum");
     histSum = 0.0;
@@ -521,7 +523,6 @@ void Simulation2D::evaluateVelocityDistribution() {
 
     std::vector<double> hist = getHistogramVelocities();
     std::vector<std::shared_ptr<Atom2D>> atoms = this->getAtoms();
-    int j;
 
     // If the velocity count is zero, initialize the histogram array to zeros
     if(get<int>("countVelocities") == 0) {
@@ -533,23 +534,11 @@ void Simulation2D::evaluateVelocityDistribution() {
 
     // Determine the histogram bin index for the current molecule's velocity magnitude
     for (const auto& atom : atoms) {
-        // Check if deltaVelocity is not zero or very close to zero
         if (std::abs(deltaVelocity) > std::numeric_limits<double>::epsilon()) {
-            j = static_cast<int>(atom->getVelocities().norm() / deltaVelocity);
-            if(j < 0) {
-                j *= -1;
-            }
-            // Check if j is within the range of the vector size
-            if (j < hist.size()) {
-                // Increment the histogram bin, using Min to ensure the index does not exceed the array bounds
-                hist.at(std::min(j, get<int>("sizeHistVel") - 1)) += 1;
-            } else {
-                // Handle the case where j is out of range
-                std::cerr << "Error: Index out of range." << "\n";
-            }
-        } else {
-            // Handle the case where deltaVelocity is zero or very close to zero
-            std::cerr << "Error: deltaVelocity is zero or very close to zero." << "\n";
+            auto atomValue = atom->getVelocities().norm();
+            j = static_cast<int>(atomValue / (std::abs(deltaVelocity)));
+            // Increment the histogram bin, using Min to ensure the index does not exceed the array bounds
+            hist.at(std::min(j, get<int>("sizeHistVel") - 1)) += 1;
         }
     }
 
@@ -703,3 +692,15 @@ void Simulation2D::printConfig(){
 std::shared_ptr<Simulation> Simulation2DBuilder::getSimulation() {
     return this->simulation;
 }
+
+void Simulation2D::plotDataHistogramVelocities(const std::vector<std::vector<double>>& dataHistogramVelocities) {
+    // Create a new figure
+    auto figure = matplot::figure();
+
+    // Plot the data as an area plot
+    matplot::area(dataHistogramVelocities);
+
+    // Display the figure
+    matplot::show();
+}
+

@@ -14,6 +14,7 @@
 #include <thread>
 #include <chrono>
 
+
 int main() {
      Director director;
      auto builder2D = std::make_shared<Simulation2DBuilder>();
@@ -35,6 +36,10 @@ int main() {
 
 
          //getting the velocity distribution
+         auto dataHistogramVelocities = simulation2D->getDataHistogramVelocities();
+         simulation2D->plotDataHistogramVelocities(dataHistogramVelocities);
+
+
 
 
          std::this_thread::sleep_for(std::chrono::seconds(2));
