@@ -181,8 +181,8 @@ public:
     std::shared_ptr<AtomFactory>& getAtomFactory() {return atomFactory;}
     std::shared_ptr<Progressbar>& getProgressbar() { return progressbar; }
 
-
     //
+    static void plotDataHistogramVelocities(const std::vector<std::vector<double>>& dataHistogramVelocities);
 
     Simulation2D() = default;
     void run(unsigned int option) override;

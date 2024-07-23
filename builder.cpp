@@ -565,14 +565,14 @@ void Simulation2D::evaluateVelocityDistribution() {
 
     setHistogramVelocities(hist);
 
-    // setEntropyFunction(0.0);
-    // for(int i = 0; i < get<int>("sizeHistVel"); i++) {
-    //     if(hist[i] > 0) {
-    //         double entf = get<double>("entropyFunction");
-    //         entf += hist[i] * std::log(hist[i]) / ((j+0.5)*get<double>("deltaVelocity"));
-    //         setEntropyFunction(entf);
-    //     }
-    // }
+    setEntropyFunction(0.0);
+    for(int i = 0; i < get<int>("sizeHistVel"); i++) {
+        if(hist[i] > 0) {
+            double entf = get<double>("entropyFunction");
+            entf += hist[i] * std::log(hist[i]) / ((j+0.5)*get<double>("deltaVelocity"));
+            setEntropyFunction(entf);
+        }
+    }
 }
 
 void Simulation2D::printVelocityDestribution() const {

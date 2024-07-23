@@ -36,14 +36,16 @@ int main() {
 
 
          //getting the velocity distribution
-         auto dataHistogramVelocities = simulation2D->getDataHistogramVelocities();
-         simulation2D->plotDataHistogramVelocities(dataHistogramVelocities);
+
+         // auto dataHistogramVelocities = simulation2D->getDataHistogramVelocities();
+         // simulation2D->plotDataHistogramVelocities(dataHistogramVelocities);
 
 
 
 
          std::this_thread::sleep_for(std::chrono::seconds(2));
          director.getBuilder()->getSimulation()->printSummary();
+         std::cout<<"Simulation finished\n";
 
     }
 
