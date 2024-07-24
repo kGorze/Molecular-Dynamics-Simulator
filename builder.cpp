@@ -374,11 +374,22 @@ double Simulation2D::singleSimulationStep() {
     }
     if(get<int>("stepCount") % 25 == 0) {
         evaluateVelocityDistribution();
+
         //set the histogram data to first index of dataHistogramVelocities
-        std::vector<double> hist = getHistogramVelocities();
-        std::vector<std::vector<double>> dataHistogramVelocities = getDataHistogramVelocities();
-        dataHistogramVelocities.insert(dataHistogramVelocities.begin(), hist);
-        setDataHistogramVelocities(dataHistogramVelocities);
+        try {
+            std::vector<double> hist = getHistogramVelocities();
+            if(hist.size() == 0) {
+                throw std::runtime_error("Histogram data is empty");
+            }
+            std::vector<std::vector<double>> dataHistogramVelocities = getDataHistogramVelocities();
+            dataHistogramVelocities.insert(dataHistogramVelocities.begin(), hist);
+            setDataHistogramVelocities(dataHistogramVelocities);
+        } catch(const std::exception& e) {
+            std::cerr << "Caught exception: " << e.what() << '\n';
+        } catch(...) {
+            std::cerr << "Caught an unknown exception\n";
+        }
+
     }
     // if (get<int>("stepCount") == get<int>("stepLimit")) {
     //     printVelocityDestribution();
@@ -530,7 +541,18 @@ void Simulation2D::evaluateVelocityDistribution() {
     }
 
     // Calculate the bin width for the histogram
-    deltaVelocity = (get<double>("rangeVel") / get<int>("sizeHistVel"));
+    try {
+        double temp = static_cast<double>(get<double>("rangeVel")) / get<int>("sizeHistVel");
+        if (temp > std::numeric_limits<double>::max() || temp < std::numeric_limits<double>::lowest()) {
+            throw std::overflow_error("Overflow occurred in deltaVelocity calculation");
+        }
+        deltaVelocity = temp;
+    } catch(const std::overflow_error& e) {
+        std::cerr << "Caught exception: " << e.what() << '\n';
+    } catch(...) {
+        std::cerr << "Caught an unknown exception\n";
+    }
+
 
     // Determine the histogram bin index for the current molecule's velocity magnitude
     for (const auto& atom : atoms) {
@@ -550,14 +572,9 @@ void Simulation2D::evaluateVelocityDistribution() {
         setHistogramSum(std::accumulate(hist.begin(), hist.end(), 0.0));
 
         // Calculate the total sum of the histogram bins
-        for(auto& value: hist) {
-            histSum += value;
-        }
-
+        for(auto& value: hist) {histSum += value;}
         // Normalize the histogram bins by dividing by the total sum
-        for (auto& value : hist) {
-            value /= histSum;
-        }
+        for (auto& value : hist) {value /= histSum;}
 
         // Reset the velocity count
         setCountVelocities(0);
@@ -569,7 +586,27 @@ void Simulation2D::evaluateVelocityDistribution() {
     for(int i = 0; i < get<int>("sizeHistVel"); i++) {
         if(hist[i] > 0) {
             double entf = get<double>("entropyFunction");
-            entf += hist[i] * std::log(hist[i]) / ((j+0.5)*get<double>("deltaVelocity"));
+
+            try {
+                double temp = 0.0;
+                if(hist[i] > 1 and get<double>("deltaVelocity") > 0.0){
+                    temp = (hist[i] * std::log(hist[i])) / ((j+0.5)*get<double>("deltaVelocity"));
+                }
+                else {
+                    temp = hist[i] / 0.01;
+                }
+
+                if (temp > std::numeric_limits<double>::max() || temp < std::numeric_limits<double>::lowest()) {
+                    throw std::overflow_error("Overflow occurred in entropy function calculation");
+                }
+                entf += temp;
+            } catch(const std::overflow_error& e) {
+                std::cerr << "Caught exception: " << e.what() << '\n';
+            } catch(...) {
+                std::cerr << "Caught an unknown exception\n";
+            }
+
+
             setEntropyFunction(entf);
         }
     }
