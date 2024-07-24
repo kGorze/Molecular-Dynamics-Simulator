@@ -44,8 +44,11 @@ set(SOURCES
         Headers/leapfrog.h
         Headers/boundary_conditions.h
         Headers/progressbar.h
+        Headers/simulation2d.h
         progressbar.cpp
         errorcodes.cpp
+        simulation2d.cpp
+        leapfrog.cpp
 )
 
 # Main executable

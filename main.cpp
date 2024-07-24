@@ -1,5 +1,6 @@
 #include "Headers/director.h"
 #include "Headers/builder.h"
+#include "Headers/simulation2d.h"
 #include "Headers/command.h"
 #include "Headers/concretecommands.h"
 #include "Headers/menu.h"
