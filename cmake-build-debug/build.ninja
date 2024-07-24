@@ -153,6 +153,14 @@ build CMakeFiles/MDS.dir/progressbar.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug 
   OBJECT_DIR = CMakeFiles\MDS.dir
   OBJECT_FILE_DIR = CMakeFiles\MDS.dir
 
+build CMakeFiles/MDS.dir/errorcodes.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/errorcodes.cpp || cmake_object_order_depends_target_MDS
+  DEFINES = -DMATPLOT_BUILD_HIGH_RESOLUTION_WORLD_MAP -DNOMINMAX
+  DEP_FILE = CMakeFiles\MDS.dir\errorcodes.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -IC:/eigen-3.4.0 -IC:/Users/konrad_guest/source/repos/MDS/Headers -IC:/Users/konrad_guest/source/repos/MDS/. -IC:/Users/konrad_guest/source/repos/MDS/Third_party/matplotplusplus/source -IC:/Users/konrad_guest/source/repos/MDS/cmake-build-debug/Third_party/matplotplusplus/source/matplot
+  OBJECT_DIR = CMakeFiles\MDS.dir
+  OBJECT_FILE_DIR = CMakeFiles\MDS.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target MDS
@@ -161,7 +169,7 @@ build CMakeFiles/MDS.dir/progressbar.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug 
 #############################################
 # Link the executable MDS.exe
 
-build MDS.exe: CXX_EXECUTABLE_LINKER__MDS_Debug CMakeFiles/MDS.dir/main.cpp.obj CMakeFiles/MDS.dir/simulation.cpp.obj CMakeFiles/MDS.dir/builder.cpp.obj CMakeFiles/MDS.dir/director.cpp.obj CMakeFiles/MDS.dir/abstract_factory.cpp.obj CMakeFiles/MDS.dir/menu.cpp.obj CMakeFiles/MDS.dir/concretecommands.cpp.obj CMakeFiles/MDS.dir/command.cpp.obj CMakeFiles/MDS.dir/progressbar.cpp.obj | libinih.a Third_party/matplotplusplus/source/matplot/libmatplot.a Third_party/matplotplusplus/source/3rd_party/libnodesoup.a || Third_party/matplotplusplus/source/3rd_party/libnodesoup.a Third_party/matplotplusplus/source/matplot/libmatplot.a libinih.a
+build MDS.exe: CXX_EXECUTABLE_LINKER__MDS_Debug CMakeFiles/MDS.dir/main.cpp.obj CMakeFiles/MDS.dir/simulation.cpp.obj CMakeFiles/MDS.dir/builder.cpp.obj CMakeFiles/MDS.dir/director.cpp.obj CMakeFiles/MDS.dir/abstract_factory.cpp.obj CMakeFiles/MDS.dir/menu.cpp.obj CMakeFiles/MDS.dir/concretecommands.cpp.obj CMakeFiles/MDS.dir/command.cpp.obj CMakeFiles/MDS.dir/progressbar.cpp.obj CMakeFiles/MDS.dir/errorcodes.cpp.obj | libinih.a Third_party/matplotplusplus/source/matplot/libmatplot.a Third_party/matplotplusplus/source/3rd_party/libnodesoup.a || Third_party/matplotplusplus/source/3rd_party/libnodesoup.a Third_party/matplotplusplus/source/matplot/libmatplot.a libinih.a
   FLAGS = -g
   LINK_LIBRARIES = libinih.a  Third_party/matplotplusplus/source/matplot/libmatplot.a  -lgdi32  Third_party/matplotplusplus/source/3rd_party/libnodesoup.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\MDS.dir

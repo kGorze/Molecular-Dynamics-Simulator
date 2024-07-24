@@ -45,6 +45,7 @@ set(SOURCES
         Headers/boundary_conditions.h
         Headers/progressbar.h
         progressbar.cpp
+        errorcodes.cpp
 )
 
 # Main executable

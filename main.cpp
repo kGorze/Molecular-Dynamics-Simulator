@@ -15,7 +15,13 @@
 #include <chrono>
 
 
-int main() {
+int main(int argc, char** argv){
+
+    // if(argc != 2) {
+    //     std::cout<<"Usage: "<<argv[0]<<" <config_file_path>\n";
+    //     return 1;
+    // }
+
      Director director;
      auto builder2D = std::make_shared<Simulation2DBuilder>();
      director.set_builder(builder2D);

@@ -8,6 +8,7 @@
 #include <iostream>
 #include <random>
 #include <matplot/matplot.h>
+#include "Headers/errorcodes.h"
 
 Eigen::Vector2d velocity_rand(std::mt19937& rng, std::uniform_real_distribution<double>& dist) {
     Eigen::Vector2d velocity;
@@ -50,11 +51,43 @@ void Simulation2DBuilder::saveDataToFile(
 
     //ensureDirectoryExists(filePath);
 
+    // Get current date and time
+    auto now      = std::chrono::system_clock::now();
+    std::time_t now_time                = std::chrono::system_clock::to_time_t(now);
+    std::string date_time               = std::ctime(&now_time);
+    date_time.pop_back();
+
+
+    std::replace(date_time.begin(), date_time.end(), ':', '_');
+    std::replace(date_time.begin(), date_time.end(), ' ', '_');
+    std::replace(date_time.begin(), date_time.end(), '.', '_');
+
+
+    // Get number of atoms, iterations, and density
+    std::string num_atoms       = std::to_string(simulation->get<int>("numberOfAtoms"));
+    std::string iterations      = std::to_string(simulation->get<int>("stepLimit"));
+    std::string density         = std::to_string(simulation->get<double>("density"));
+
+    // Get the current working directory
+    std::string current_path = std::filesystem::current_path().string();
+
+
+    // Construct directory name
+    std::string dir_name = current_path + "\\Resources\\" + date_time + "_" + num_atoms + "_" + iterations + "_" + density;
+
+    // Create directory
+    std::filesystem::path dir_path(dir_name);
+    if (!std::filesystem::exists(dir_path))
+    {
+        std::filesystem::create_directories(dir_path);
+        std::cout << "Directory created: " << dir_path << std::endl;
+    }
+
     //OPEN THE FILE PROTOCOL
-    std::filesystem::path contentRoot = std::filesystem::current_path();
-    std::filesystem::path cleanFilePath = contentRoot.remove_filename();
-    std::filesystem::path relativePath = "Resources\\properties.csv";
-    std::filesystem::path filePath= cleanFilePath / relativePath;
+    std::string relativePath      = "properties.csv";
+
+    // Construct file path
+    std::filesystem::path filePath = dir_name + "\\" + relativePath;
 
 
     auto& file = this->getPropertiesDataOutput();
@@ -94,25 +127,61 @@ void Simulation2DBuilder::saveDataToFile(
 
 template <> //template for the velocities
 void Simulation2DBuilder::saveDataToFile(
-    const std::string& filename,
+    const std::string&                      filename,
     const std::vector<std::vector<double>>& data,
-    unsigned int mode)
+    unsigned int                            mode
+    )
 {
     //ensureDirectoryExists(filePath);
 
-    //OPEN THE FILE PROTOCOL
-    std::filesystem::path contentRoot = std::filesystem::current_path();
-    std::filesystem::path cleanFilePath = contentRoot.remove_filename();
-    std::filesystem::path relativePath = "Resources\\velocity_distribution.csv";
-    std::filesystem::path filePath= cleanFilePath / relativePath;
+    // Get current date and time
+    auto now      = std::chrono::system_clock::now();
+    std::time_t now_time                = std::chrono::system_clock::to_time_t(now);
+    std::string date_time               = std::ctime(&now_time);
+    date_time.pop_back();
+
+
+    std::replace(date_time.begin(), date_time.end(), ':', '_');
+    std::replace(date_time.begin(), date_time.end(), ' ', '_');
+    std::replace(date_time.begin(), date_time.end(), '.', '_');
+
+
+    // Get number of atoms, iterations, and density
+    std::string num_atoms       = std::to_string(simulation->get<int>("numberOfAtoms"));
+    std::string iterations      = std::to_string(simulation->get<int>("stepLimit"));
+    std::string density         = std::to_string(simulation->get<double>("density"));
+
+    // Get the current working directory
+    std::string current_path = std::filesystem::current_path().string();
+
+
+    // Construct directory name
+    std::string dir_name = current_path + "\\Resources\\" + date_time + "_" + num_atoms + "_" + iterations + "_" + density;
+
+    // Create directory
+    std::filesystem::path dir_path(dir_name);
+    if (!std::filesystem::exists(dir_path))
+    {
+        std::filesystem::create_directories(dir_path);
+        std::cout << "Directory created: " << dir_path << std::endl;
+    }
+
+    std::string relativePath      = "velocity_distribution.csv";
+
+    // Construct file path
+    std::filesystem::path filePath = dir_name + "\\" + relativePath;
+
 
     auto& file = this->getVelocityDistributionDataOutput();
-    if(mode == 0) {
+    if(mode == 0)
+    {
         file.open(filePath, std::ios::out | std::ios::app);
-    }else if(mode == 1) {
+    }else if(mode == 1)
+    {
         file.open(filePath, std::ios::out | std::ios::trunc);
     }
-    if (!file.is_open()) {
+    if (!file.is_open())
+    {
         std::cerr << "Error: Could not open file for writing." << "\n";
     }
 
@@ -121,53 +190,83 @@ void Simulation2DBuilder::saveDataToFile(
 
     // Write the data rows
     for (const auto& row : data) {
-        for (const auto& column : row) {
+        for (const auto& column : row)
+        {
             file << std::setw(8) << std::fixed << std::setprecision(4) << column << ",";
         }
-        file << "\n";
-        file << "---\n";
+            file << "\n"<< "---\n";
     }
 
-
-    if(this->getVelocityDistributionDataOutput().is_open()) {
-        this->getVelocityDistributionDataOutput().close();
-    }
+    if(this->getVelocityDistributionDataOutput().is_open()) {this->getVelocityDistributionDataOutput().close();}
 }
 
 template <> //COORDINATES TEMPLATE
 void Simulation2DBuilder::saveDataToFile(
-    const std::string& filename,
+    const std::string&                                  filename,
     const std::vector<std::tuple<int, double, double>>& data,
-    unsigned int mode
+    unsigned int                                        mode
 )
 {
     //ensureDirectoryExists(filePath);
 
-    std::filesystem::path contentRoot = std::filesystem::current_path();
-    std::filesystem::path cleanFilePath = contentRoot.remove_filename();
-    std::filesystem::path relativePath = "Resources\\results.csv";
-    std::filesystem::path filePath= cleanFilePath / relativePath;
+
+    auto now      = std::chrono::system_clock::now();
+    std::time_t now_time                = std::chrono::system_clock::to_time_t(now);
+    std::string date_time               = std::ctime(&now_time);
+    date_time.pop_back();
+
+
+    std::replace(date_time.begin(), date_time.end(), ':', '_');
+    std::replace(date_time.begin(), date_time.end(), ' ', '_');
+    std::replace(date_time.begin(), date_time.end(), '.', '_');
+
+
+    // Get number of atoms, iterations, and density
+    std::string num_atoms       = std::to_string(simulation->get<int>("numberOfAtoms"));
+    std::string iterations      = std::to_string(simulation->get<int>("stepLimit"));
+    std::string density         = std::to_string(simulation->get<double>("density"));
+
+    // Get the current working directory
+    std::string current_path = std::filesystem::current_path().string();
+
+
+    // Construct directory name
+    std::string dir_name = current_path + "\\Resources\\" + date_time + "_" + num_atoms + "_" + iterations + "_" + density;
+
+    // Create directory
+    std::filesystem::path dir_path(dir_name);
+    if (!std::filesystem::exists(dir_path))
+    {
+        std::filesystem::create_directories(dir_path);
+        std::cout << "Directory created: " << dir_path << std::endl;
+    }
+    std::string relativePath      = "results.csv";
+
+
+    // Construct file path
+    std::filesystem::path filePath = dir_name + "\\" + relativePath;
 
 
     auto& file = this->getcoordinatesDataOutput();
-    if(mode == 0) {
+    if(mode == 0)
+    {
         file.open(filePath, std::ios::out | std::ios::app);
-    }else if(mode == 1) {
+    }else if(mode == 1)
+    {
         file.open(filePath, std::ios::out | std::ios::trunc);
     }
-    if (!file.is_open()) {
+    if (!file.is_open())
+    {
         std::cerr << "Error: Could not open file for writing." << "\n";
     }
 
     for (const auto& entry : data) {
-        file << std::setw(5) << std::get<0>(entry) << "\t"
+        file    << std::setw(5) << std::get<0>(entry) << "\t"
                 << std::setw(8) << std::fixed << std::setprecision(4) << std::get<1>(entry) << "\t"
                 << std::setw(8) << std::fixed << std::setprecision(4) << std::get<2>(entry) << "\n";
     }
 
-    if(this->getcoordinatesDataOutput().is_open()) {
-        this->getcoordinatesDataOutput().close();
-    }
+    if(this->getcoordinatesDataOutput().is_open()) {this->getcoordinatesDataOutput().close();}
 }
 
 
@@ -379,13 +478,13 @@ double Simulation2D::singleSimulationStep() {
         try {
             std::vector<double> hist = getHistogramVelocities();
             if(hist.size() == 0) {
-                throw std::runtime_error("Histogram data is empty");
+                throw mds::eeInvalidValue;
             }
             std::vector<std::vector<double>> dataHistogramVelocities = getDataHistogramVelocities();
             dataHistogramVelocities.insert(dataHistogramVelocities.begin(), hist);
             setDataHistogramVelocities(dataHistogramVelocities);
-        } catch(const std::exception& e) {
-            std::cerr << "Caught exception: " << e.what() << '\n';
+        } catch(mds::ErrorCode& e) {
+            std::cerr << "Caught exception: " << mds::getErrorCodeString(e) << '\n';
         } catch(...) {
             std::cerr << "Caught an unknown exception\n";
         }
@@ -544,11 +643,11 @@ void Simulation2D::evaluateVelocityDistribution() {
     try {
         double temp = static_cast<double>(get<double>("rangeVel")) / get<int>("sizeHistVel");
         if (temp > std::numeric_limits<double>::max() || temp < std::numeric_limits<double>::lowest()) {
-            throw std::overflow_error("Overflow occurred in deltaVelocity calculation");
+            throw mds::eeInvalidValue;
         }
         deltaVelocity = temp;
-    } catch(const std::overflow_error& e) {
-        std::cerr << "Caught exception: " << e.what() << '\n';
+    } catch(mds::ErrorCode& e) {
+        std::cerr << "Caught exception: " << mds::getErrorCodeString(e) << '\n';
     } catch(...) {
         std::cerr << "Caught an unknown exception\n";
     }
@@ -597,11 +696,11 @@ void Simulation2D::evaluateVelocityDistribution() {
                 }
 
                 if (temp > std::numeric_limits<double>::max() || temp < std::numeric_limits<double>::lowest()) {
-                    throw std::overflow_error("Overflow occurred in entropy function calculation");
+                    throw mds::eeInvalidValue;
                 }
                 entf += temp;
-            } catch(const std::overflow_error& e) {
-                std::cerr << "Caught exception: " << e.what() << '\n';
+            } catch(mds::ErrorCode& e) {
+                std::cerr << "Caught exception: " << mds::getErrorCodeString(e) << '\n';
             } catch(...) {
                 std::cerr << "Caught an unknown exception\n";
             }
