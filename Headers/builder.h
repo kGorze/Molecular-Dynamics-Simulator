@@ -7,7 +7,10 @@
 
 
 #include "simulation.h"
-#include "simulation2d.h"
+
+#include "simulation2dap.h"
+
+#include "datasaver.h"
 
 #include "abstract_factory.h"
 
@@ -84,8 +87,9 @@ public:
 class Simulation2DBuilder : public Builder
 {
 private:
-    std::shared_ptr<Simulation2D>   simulation;
+    std::shared_ptr<simulation2dap>   simulation;
     std::ofstream                   coordinatesDataOutput,propertiesDataOutput,velocityDistributionDataOutput;
+    DataSaver2D dataSaver;
 public:
     void setConfig(std::unordered_map<std::string, std::string> config) override {simulation->setConfig(config);}
 
@@ -115,12 +119,15 @@ public:
     int getinitUcellY()& override   { return simulation->get<int>("initUcellY"); }
     std::vector<std::shared_ptr<Atom2D>>& getAtoms()                    { return simulation->getAtoms();}
     std::vector<double>& getHistogramVelocities()&                      { return simulation->getHistogramVelocities();}
-    std::vector<std::tuple<int, double, double>>& getDataCoordinates()  { return simulation->getDataCoordinates();}
+    std::vector<std::tuple<int, Eigen::VectorXd>>& getDataCoordinates()  { return simulation->getDataCoordinates();}
     std::vector<std::vector<double>>& getDataHistogramVelocities()      { return simulation->getDataHistogramVelocities();}
     std::shared_ptr<AtomFactory>& getAtomFactory()                      {return simulation->getAtomFactory();}
     std::ofstream& getcoordinatesDataOutput() override                  { return coordinatesDataOutput; }
     std::ofstream& getPropertiesDataOutput()                            { return propertiesDataOutput; }
     std::ofstream& getVelocityDistributionDataOutput()                  { return velocityDistributionDataOutput; }
+    DataSaver2D& getDataSaver2D()                                       { return dataSaver; }
+
+
 
 
     Simulation2DBuilder() {reset();}
@@ -134,33 +141,10 @@ public:
 
     void ensureDirectoryExists(const std::string& path) override;
 
-    template <typename T>
-    void saveDataToFile(const std::string& filename, const T& data,  unsigned int mode) {
-        static_assert(sizeof(T) == -1, "This function must be used with a specific specialization.");
-    }
-
     void initializeParameters() override{simulation->setTemperature(10);}
 
-    void reset() {simulation = std::make_shared<Simulation2D>();}
+    void reset() {simulation = std::make_shared<simulation2dap>();}
     std::shared_ptr<Simulation> getSimulation() override;
 };
-
-template <> //template for the properties
-void Simulation2DBuilder::saveDataToFile(
-    const std::string& filename,
-    const std::vector<std::tuple<int, double, Eigen::Vector2d, double, double, double, double, double, double>>& data,
-    unsigned int mode);
-
-template <> //template for the velocities
-void Simulation2DBuilder::saveDataToFile(
-    const std::string& filename,
-    const std::vector<std::vector<double>>& data,
-    unsigned int mode);
-
-template <> //template for the coordinates
-void Simulation2DBuilder::saveDataToFile(
-    const std::string& filename,
-    const std::vector<std::tuple<int, double, double>>& data,
-    unsigned int mode);
 
 #endif //BUILDER_H

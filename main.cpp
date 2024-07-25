@@ -1,6 +1,6 @@
 #include "Headers/director.h"
 #include "Headers/builder.h"
-#include "Headers/simulation2d.h"
+#include "Headers/simulation2dap.h"
 #include "Headers/command.h"
 #include "Headers/concretecommands.h"
 #include "Headers/menu.h"
@@ -29,7 +29,7 @@ int main(int argc, char** argv){
 
      //CODE FOR PATH
      std::string configFilePath = R"(C:\Users\konrad_guest\source\repos\MDS\Parameters\config.ini)";
-     auto simulation2D = std::dynamic_pointer_cast<Simulation2D>(builder2D->getSimulation());
+     auto simulation2D = std::dynamic_pointer_cast<simulation2dap>(builder2D->getSimulation());
      if (simulation2D) {
          director.initializeSimulationWithConfig(configFilePath);
          director.buildMinimalSimulation();
@@ -37,10 +37,29 @@ int main(int argc, char** argv){
          director.getBuilder()->getSimulation()->run(1);
 
 
-         builder2D->saveDataToFile("Resources/results.csv", simulation2D->getDataCoordinates(), 1);
-         builder2D->saveDataToFile("Resources/properties.csv", simulation2D->getDataProperties(), 1);
-         builder2D->saveDataToFile("Resources/velocity_distribution.csv", simulation2D->getDataHistogramVelocities(), 1);
+         builder2D->getDataSaver2D().saveCoordinateData(
+             "Resources/results.csv",
+             simulation2D->getDataCoordinates(),
+             1,
+             director.getBuilder()->getSimulation(),
+             director.getBuilder()->getcoordinatesDataOutput()
+             );
 
+         builder2D->getDataSaver2D().savePropertiesData(
+             "Resources/properties.csv",
+             simulation2D->getDataProperties(),
+             1,
+             director.getBuilder()->getSimulation(),
+             director.getBuilder()->getPropertiesDataOutput()
+             );
+
+         builder2D->getDataSaver2D().saveVelocityData(
+             "Resources/velocity_distribution.csv",
+             simulation2D->getDataHistogramVelocities(),
+             1,
+             director.getBuilder()->getSimulation(),
+             director.getBuilder()->getVelocityDistributionDataOutput()
+             );
 
          //getting the velocity distribution
 
