@@ -9,6 +9,6 @@
 -- Could NOT find BLAS (missing: BLAS_LIBRARIES) 
 -- Could NOT find FFTW (missing: FFTW_INCLUDE_DIRS) 
 Setting matplotplusplus compiler options
--- Configuring done (1.6s)
--- Generating done (0.0s)
+-- Configuring done (3.2s)
+-- Generating done (0.1s)
 -- Build files have been written to: C:/Users/konrad_guest/source/repos/MDS/cmake-build-debug

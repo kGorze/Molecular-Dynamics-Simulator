@@ -12,13 +12,17 @@
 #include "errorcodes.h"
 #include "boundary_conditions.h"
 #include "leapfrog.h"
+#include <list>
+#include "constants.h"
 
 class simulation3dcs :  public Simulation{
 private:
     double      timeNow,temperature, deltaT, density, rangeVel, potentialEnergySum, viralEnergySum, velocityMagnitude, cutoffRadius, deltaVelocity, histogramSum, entropyFunction;
     int         stepCount, stepAvg, stepEquil, stepLimit, limitVel, sizeHistVel, stepVel, randSeed,numberOfDimensions, numberOfAtoms, numberOfAtomIterations, countStep, countVelocities;
 
-    std::vector<std::shared_ptr<Atom2D>>            atoms;
+
+
+    std::vector<std::shared_ptr<Atom>>            atoms;
     std::vector<double>                             histogramVelocities;
     std::vector<std::vector<double>>                dataHistogramVelocities;
     std::vector<std::tuple<int,Eigen::VectorXd>>    dataCoordinates;
@@ -27,6 +31,9 @@ private:
     std::shared_ptr<Progressbar>                    progressbar;
 
     std::vector<std::tuple<int, double, Eigen::VectorXd, double, double, double, double, double, double>> iterationData;
+
+    Eigen::Vector3d cells;
+    std::list<Eigen::Vector3d> cellsList;
 
     Eigen::Vector2d initUcell,velocitiesSum,region;
     Eigen::Vector3d kineticEnergy, potentialEnergy, pressure;
@@ -91,7 +98,7 @@ public:
     template<typename T>
     T get(const std::string& param) const;
 
-    std::vector<std::shared_ptr<Atom2D>>&           getAtoms() { return atoms; }
+    std::vector<std::shared_ptr<Atom>>&           getAtoms() { return atoms; }
     std::vector<double>&                            getHistogramVelocities()& {return histogramVelocities;}
     std::vector<std::tuple<int, Eigen::VectorXd>>&   getDataCoordinates() {return dataCoordinates;}
     std::vector<std::vector<double>>&               getDataHistogramVelocities() {return dataHistogramVelocities;}

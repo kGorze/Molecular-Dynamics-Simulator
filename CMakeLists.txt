@@ -53,6 +53,7 @@ set(SOURCES
         simulation3dcs.cpp
         Headers/datasaver.h
         datasaver.cpp
+        Headers/constants.h
 )
 
 # Main executable

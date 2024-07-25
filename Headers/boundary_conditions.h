@@ -18,7 +18,7 @@ inline void wrapComponent(double& component, double regionComponent) {
 }
 
 // Function to wrap all components of a 2D vector
-inline void wrapAll(Eigen::Vector2d& vec, const Eigen::Vector2d& region) {
+inline void wrapAll(Eigen::VectorXd& vec, const Eigen::VectorXd& region) {
     wrapComponent(vec.x(), region.x());
     wrapComponent(vec.y(), region.y());
 }

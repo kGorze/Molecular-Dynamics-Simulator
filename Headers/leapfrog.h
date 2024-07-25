@@ -8,15 +8,15 @@
 #include <Eigen/Dense>
 
 void leapfrog_coordinates(
-    Eigen::Vector2d&            coordinates,
+    Eigen::VectorXd&            coordinates,
     double                      scale,
-    const Eigen::Vector2d&      velocity
+    const Eigen::VectorXd&      velocity
     );
 
 void leapfrog_velocity(
-    Eigen::Vector2d&        velocity,
+    Eigen::VectorXd&        velocity,
     double                  scale,
-    const Eigen::Vector2d&  acceleration
+    const Eigen::VectorXd&  acceleration
     );
 
 #endif //LEAPFROG_H

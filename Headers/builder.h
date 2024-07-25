@@ -117,7 +117,7 @@ public:
     double getDeltaT()& override    { return simulation->get<double>("deltaT"); }
     int getinitUcellX()& override   { return simulation->get<int>("initUcellX"); }
     int getinitUcellY()& override   { return simulation->get<int>("initUcellY"); }
-    std::vector<std::shared_ptr<Atom2D>>& getAtoms()                    { return simulation->getAtoms();}
+    std::vector<std::shared_ptr<Atom>>& getAtoms()                    { return simulation->getAtoms();}
     std::vector<double>& getHistogramVelocities()&                      { return simulation->getHistogramVelocities();}
     std::vector<std::tuple<int, Eigen::VectorXd>>& getDataCoordinates()  { return simulation->getDataCoordinates();}
     std::vector<std::vector<double>>& getDataHistogramVelocities()      { return simulation->getDataHistogramVelocities();}

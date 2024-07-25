@@ -75,7 +75,7 @@ void Simulation2DBuilder::initializeVectors(){
 
 void Simulation2DBuilder::initializeCoordinates() {
     Eigen::Vector2d coordinates, gap;
-    std::vector<std::shared_ptr<Atom2D>>& atoms = this->simulation->getAtoms();
+    std::vector<std::shared_ptr<Atom>>& atoms = this->simulation->getAtoms();
 
     // Initialize gap and coordinates to zero
     gap(0) = 0, gap(1) =  0;
@@ -116,7 +116,7 @@ void Simulation2DBuilder::initializeVelocities() {
     Eigen::Vector2d tempVelocities(0,0);
     this->simulation->setVelocitiesSum(vSum);
 
-    std::vector<std::shared_ptr<Atom2D>>& atoms = this->simulation->getAtoms();
+    std::vector<std::shared_ptr<Atom>>& atoms = this->simulation->getAtoms();
     double velMag = this->simulation->get<double>("velocityMagnitude");
     int numAtoms = this->simulation->get<int>("numberOfAtoms");
 

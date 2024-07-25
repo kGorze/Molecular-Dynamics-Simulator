@@ -67,8 +67,6 @@ int main(int argc, char** argv){
          // simulation2D->plotDataHistogramVelocities(dataHistogramVelocities);
 
 
-
-
          std::this_thread::sleep_for(std::chrono::seconds(2));
          director.getBuilder()->getSimulation()->printSummary();
          std::cout<<"Simulation finished\n";
