@@ -53,9 +53,6 @@ double simulation2dap::singleSimulationStep() {
         }
 
     }
-    // if (get<int>("stepCount") == get<int>("stepLimit")) {
-    //     printVelocityDestribution();
-    // }
     clock_t end = clock();
 
     double elapsed_secs = static_cast<double>(end - begin) / static_cast<double>(CLOCKS_PER_SEC);
@@ -98,7 +95,7 @@ void simulation2dap::applyBoundaryConditions() {
     auto atoms = this->getAtoms();
     for (auto& atom : atoms) {
         Eigen::VectorXd coordinates = atom->getCoordinates();
-        wrapAll(coordinates, region);
+        wrap_all_2d(coordinates, region);
         atom->setCoordinates(coordinates);
     }
 }
@@ -160,6 +157,9 @@ void simulation2dap::computeForces() {
 
 void simulation2dap::evaluateProperties()
 {
+
+
+
     std::vector<std::shared_ptr<Atom>>& atoms       = this->getAtoms();
     int numberOfAtoms                               = static_cast<int>(this->getAtoms().size());
     double velocitySquared,velocitySquaredSum       = 0; // Variable to hold the velocity squared
@@ -360,6 +360,31 @@ void simulation2dap::plotDataHistogramVelocities(
 }
 
 void simulation2dap::accumulateProperties(unsigned int code) {
+
+    //lambda function to calculate and set the property
+    auto calculateAndSetProperty = [this](const std::string& propertyName, int stepAvg)
+    {
+        Eigen::Vector3d property = this->get<Eigen::Vector3d>(propertyName);
+        double sum = property(0);
+        double sumSquared = property(2);
+
+        double average = sum / stepAvg;
+        double standardDeviation = std::sqrt(std::max(sumSquared / stepAvg - std::pow(average, 2), 0.0));
+
+        Eigen::Vector3d result(sum, average, standardDeviation);
+
+        if (propertyName == "kineticEnergy") {
+            this->setKineticEnergy(result);
+        } else if (propertyName == "potentialEnergy") {
+            this->setPotentialEnergy(result);
+        } else if (propertyName == "pressure") {
+            this->setPressure(result);
+        }
+    };
+
+
+
+
     if(code == 0) {
         Eigen::Vector3d temp(0,0,0);
         this->setKineticEnergy(temp);
@@ -379,6 +404,11 @@ void simulation2dap::accumulateProperties(unsigned int code) {
         double &prvalue = pre(0);
         this->setPressure(Eigen::Vector3d(prvalue, prvalue, std::pow(prvalue, 2)));
     } else if(code == 2) {
+
+        //calculateAndSetProperty("kineticEnergy", stepAvg);
+        //calculateAndSetProperty("potentialEnergy", stepAvg);
+        //calculateAndSetProperty("pressure", stepAvg);
+
         int stepAvg = this->get<int>("stepAvg");
         Eigen::Vector3d kin = this->get<Eigen::Vector3d>("kineticEnergy");
         double &kvalue = kin(0);

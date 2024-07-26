@@ -74,12 +74,19 @@ void Simulation2DBuilder::initializeVectors(){
 }
 
 void Simulation2DBuilder::initializeCoordinates() {
-    Eigen::Vector2d coordinates, gap;
+    auto coordinates = Eigen::VectorXd(2);
+    auto gap = Eigen::VectorXd(2);
+    //set the coordinates to two dimensions
+
     std::vector<std::shared_ptr<Atom>>& atoms = this->simulation->getAtoms();
 
     // Initialize gap and coordinates to zero
     gap(0) = 0, gap(1) =  0;
     coordinates(0) = 0; coordinates(1) = 0;
+
+    //print values of gap and coordinates
+    std::cout << "gap: " << gap << std::endl;
+    std::cout << "coordinates: " << coordinates << std::endl;
 
     int nx,ny;
     // Calculate the gap as the element-wise division of region and initUcell
@@ -101,7 +108,7 @@ void Simulation2DBuilder::initializeCoordinates() {
             coordinates -= this->simulation->get<Eigen::Vector2d>("region") * 0.5;
 
             // Set the atom's coordinates
-            atoms[this->simulation->get<int>("numberOfAtomIterations")]->setCoordinates(coordinates(0),coordinates(1));
+            atoms[this->simulation->get<int>("numberOfAtomIterations")]->setCoordinates(coordinates);
 
             // Increment the counter for the number of atoms initialized
             this->setNumberOfAtomIterations(this->simulation->get<int>("numberOfAtomIterations") + 1);
@@ -112,8 +119,8 @@ void Simulation2DBuilder::initializeCoordinates() {
 }
 
 void Simulation2DBuilder::initializeVelocities() {
-    Eigen::Vector2d vSum(0, 0);
-    Eigen::Vector2d tempVelocities(0,0);
+    Eigen::VectorXd vSum(0, 0);
+    Eigen::VectorXd tempVelocities(0,0);
     this->simulation->setVelocitiesSum(vSum);
 
     std::vector<std::shared_ptr<Atom>>& atoms = this->simulation->getAtoms();
@@ -134,7 +141,7 @@ void Simulation2DBuilder::initializeVelocities() {
         tempVelocities *= velMag;
 
         // Set the atom's velocity
-        atom->setVelocities(tempVelocities.x(), tempVelocities.y());
+        atom->setVelocities(tempVelocities);
 
         // Add the atom's velocity to the sum of velocities
         vSum += tempVelocities;
@@ -144,7 +151,7 @@ void Simulation2DBuilder::initializeVelocities() {
     for (auto& atom : atoms) {
         tempVelocities = atom->getVelocities();
         tempVelocities -= vSum / numAtoms;
-        atom->setVelocities(tempVelocities.x(), tempVelocities.y());
+        atom->setVelocities(tempVelocities);
     }
     std::cout<<"Velocities initialized"<<std::endl;
 }
@@ -153,7 +160,10 @@ void Simulation2DBuilder::initializeAccelerations() {
     auto atoms = simulation->getAtoms();
     for (const auto& atom : atoms) {
         // Set acceleration to zero
-        atom->setAccelerations(0.0, 0.0);
+        auto temp_accelerations = Eigen::VectorXd(2);
+        temp_accelerations << 0, 0;
+
+        atom->setAccelerations(temp_accelerations);
     }
 }
 

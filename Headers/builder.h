@@ -89,7 +89,7 @@ class Simulation2DBuilder : public Builder
 private:
     std::shared_ptr<simulation2dap>   simulation;
     std::ofstream                   coordinatesDataOutput,propertiesDataOutput,velocityDistributionDataOutput;
-    DataSaver2D dataSaver;
+    mds::DataSaver2D dataSaver;
 public:
     void setConfig(std::unordered_map<std::string, std::string> config) override {simulation->setConfig(config);}
 
@@ -125,7 +125,7 @@ public:
     std::ofstream& getcoordinatesDataOutput() override                  { return coordinatesDataOutput; }
     std::ofstream& getPropertiesDataOutput()                            { return propertiesDataOutput; }
     std::ofstream& getVelocityDistributionDataOutput()                  { return velocityDistributionDataOutput; }
-    DataSaver2D& getDataSaver2D()                                       { return dataSaver; }
+    mds::DataSaver2D& getDataSaver2D()                                       { return dataSaver; }
 
 
 

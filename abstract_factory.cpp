@@ -4,28 +4,28 @@
 
 #include "Headers/abstract_factory.h"
 
-Eigen::Vector2d Atom::getCoordinates() const {
+Eigen::VectorXd Atom::getCoordinates() const {
     return coordinates;
 }
 
-Eigen::Vector2d Atom::getVelocities() const {
+Eigen::VectorXd Atom::getVelocities() const {
     return velocities;
 }
 
-Eigen::Vector2d Atom::getAccelerations() const {
+Eigen::VectorXd Atom::getAccelerations() const {
     return accelerations;
 }
 
-void Atom::setCoordinates(double x, double y) {
-    coordinates << x, y;
+void Atom::setCoordinates(const Eigen::VectorXd& coords) {
+    coordinates << coords.x(), coords.y();
 }
 
-void Atom::setVelocities(double x, double y) {
-    velocities << x, y;
+void Atom::setVelocities(const Eigen::VectorXd& vels) {
+    velocities << vels.x(), vels.y();
 }
 
-void Atom::setAccelerations(double x, double y) {
-    accelerations << x, y;
+void Atom::setAccelerations(const Eigen::VectorXd& accels) {
+    accelerations << accels.x(), accels.y();
 }
 
 std::shared_ptr<Atom> ArgonFactory::createAtom() {

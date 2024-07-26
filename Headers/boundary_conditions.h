@@ -8,19 +8,13 @@
 
 #include <Eigen/Dense>
 
-// Function to wrap a single component of a vector
-inline void wrapComponent(double& component, double regionComponent) {
-    if (component >= 0.5 * regionComponent) {
-        component -= regionComponent;
-    } else if (component < -0.5 * regionComponent) {
-        component += regionComponent;
-    }
-}
+void wrap_component_2d(double& component, double regionComponent);
+void wrap_all_2d(Eigen::VectorXd& vec, const Eigen::VectorXd& region);
 
-// Function to wrap all components of a 2D vector
-inline void wrapAll(Eigen::VectorXd& vec, const Eigen::VectorXd& region) {
-    wrapComponent(vec.x(), region.x());
-    wrapComponent(vec.y(), region.y());
-}
+
+void wrap_component_Xd(double& component, double regionComponent);
+void wrap_all_Xd(Eigen::Vector2d& vec, const Eigen::Vector2d& region);
+
+
 
 #endif //BOUNDARY_CONDITIONS_H

@@ -56,7 +56,7 @@ private:
 
     std::vector<std::tuple<int, double, Eigen::VectorXd, double, double, double, double, double, double>> iterationData;
 
-    Eigen::Vector2d initUcell,velocitiesSum,region;
+    Eigen::VectorXd initUcell,velocitiesSum,region;
     Eigen::Vector3d kineticEnergy, potentialEnergy, pressure;
 public:
 
@@ -181,6 +181,15 @@ inline Eigen::Vector2d simulation2dap::get<Eigen::Vector2d>(const std::string& p
     if (param == "initUcell") return initUcell;
     if (param == "velocitiesSum") return velocitiesSum;
     throw std::invalid_argument("Invalid parameter name for type Eigen::Vector2d: " + param);
+}
+
+template<>
+inline Eigen::VectorXd simulation2dap::get<Eigen::VectorXd>(const std::string& param) const
+{
+    if (param == "region") return region;
+    if (param == "initUcell") return initUcell;
+    if (param == "velocitiesSum") return velocitiesSum;
+    throw std::invalid_argument("Invalid parameter name for type Eigen::VectorXd: " + param);
 }
 
 template<>

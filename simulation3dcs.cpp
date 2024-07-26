@@ -99,150 +99,90 @@ void simulation3dcs::applyBoundaryConditions() {
     auto atoms = this->getAtoms();
     for (auto& atom : atoms) {
         Eigen::Vector2d coordinates = atom->getCoordinates();
-        wrapAll(coordinates, region);
+        wrap_all_Xd(coordinates, region);
         atom->setCoordinates(coordinates);
     }
 }
 
 void simulation3dcs::computeForces() {
-    Eigen::Vector3d distanceVector, inverseCellWidth, scaledPosition, periodicShift;
-    Eigen::Vector3i cellCoords, cell1, cell2;
-    std::vector<Eigen::Vector3i> neighborOffsets(std::begin(OFFSET_VALS), std::end(OFFSET_VALS));
-
-    double forceScalar, distanceSquared, cutoffDistanceSquared, invDistanceSquared, invDistancePow6, potentialEnergy;
-    int cellIndex, molecule1, molecule2, x, y, z, neighborIndex, offset;
-    int atom1, atom2; // Declare atom1 and atom2
-
-    cutoffDistanceSquared = std::pow(this->get<double>("cutoffRadius"), 2);
-
-    inverseCellWidth = cells.cwiseQuotient(region);
-
-    int totalCells = cells.x() * cells.y() * cells.z();
-    std::vector<int> cellList(numberOfAtoms + totalCells, -1);
-
-    // Assign atoms to cells
-    for (int i = 0; i < numberOfAtoms; i++) {
-        scaledPosition = atoms[i]->position.cwiseProduct(inverseCellWidth);
-        cellCoords = scaledPosition.cast<int>();
-        cellIndex = cellCoords.x() + cells.x() * (cellCoords.y() + cells.y() * cellCoords.z()) + numberOfAtoms;
-        cellList[i] = cellList[cellIndex];
-        cellList[cellIndex] = i;
-    }
-
-    // Initialize accelerations
-    for (auto& atom : atoms) {
-        atom->acceleration.setZero();
-    }
-
-    potentialEnergySum = 0.0;
-    viralEnergySum = 0.0;
-
-    for (z = 0; z < cells.z(); z++) {
-        for (y = 0; y < cells.y(); y++) {
-            for (x = 0; x < cells.x(); x++) {
-                cell1 = Eigen::Vector3i(x, y, z);
-                int cell1Index = cell1.x() + cells.x() * (cell1.y() + cells.y() * cell1.z()) + numberOfAtoms;
-
-                for (const auto& offset : neighborOffsets) {
-                    cell2 = cell1 + offset;
-                    periodicShift.setZero();
-
-                    // Apply periodic boundary conditions
-                    for (int d = 0; d < 3; d++) {
-                        if (cell2[d] < 0) {
-                            cell2[d] += cells[d];
-                            periodicShift[d] = -region[d];
-                        } else if (cell2[d] >= cells[d]) {
-                            cell2[d] -= cells[d];
-                            periodicShift[d] = region[d];
-                        }
-                    }
-
-                    int cell2Index = cell2.x() + cells.x() * (cell2.y() + cells.y() * cell2.z()) + numberOfAtoms;
-
-                    for (atom1 = cellList[cell1Index]; atom1 >= 0; atom1 = cellList[atom1]) {
-                        for (atom2 = cellList[cell2Index]; atom2 >= 0; atom2 = cellList[atom2]) {
-                            if (cell1Index != cell2Index || atom2 < atom1) {
-                                distanceVector = atoms[atom1]->position - atoms[atom2]->position + periodicShift;
-                                distanceSquared = distanceVector.squaredNorm();
-
-                                if (distanceSquared < cutoffDistanceSquared) {
-                                    invDistanceSquared = 1.0 / distanceSquared;
-                                    invDistancePow6 = invDistanceSquared * invDistanceSquared * invDistanceSquared; // Declare and calculate invDistancePow6
-                                    forceScalar = 48.0 * invDistancePow6 * (invDistancePow6 - 0.5) * invDistanceSquared;
-                                    potentialEnergy = 4.0 * invDistancePow6 * (invDistancePow6 - 1.0) + 1.0;
-
-                                    atoms[atom1]->acceleration += forceScalar * distanceVector;
-                                    atoms[atom2]->acceleration -= forceScalar * distanceVector;
-
-                                    potentialEnergySum += potentialEnergy;
-                                    viralEnergySum += forceScalar * distanceSquared;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-
-
-
-
-
-
-
-
-
-    // Eigen::Vector2d distance(0,0);
-    // double radiusSquared, cutoffRadiusSquared;
+    // Eigen::Vector3d distanceVector, inverseCellWidth, scaledPosition, periodicShift;
+    // Eigen::Vector3i cellCoords, cell1, cell2;
+    // std::vector<Eigen::Vector3i> neighborOffsets(std::begin(OFFSET_VALS), std::end(OFFSET_VALS));
     //
-    // auto& atoms = this->getAtoms();
-    // size_t numAtoms = atoms.size();
-    // Eigen::Vector2d region = this->get<Eigen::Vector2d>("region");
-    // double cutOffRadius = this->get<double>("cutOffRadius");
+    // double forceScalar, distanceSquared, cutoffDistanceSquared, invDistanceSquared, invDistancePow6, potentialEnergy;
+    // int cellIndex, molecule1, molecule2, x, y, z, neighborIndex, offset;
+    // int atom1, atom2; // Declare atom1 and atom2
     //
-    // cutoffRadiusSquared = cutOffRadius * cutOffRadius;
+    // cutoffDistanceSquared = std::pow(this->get<double>("cutoffRadius"), 2);
     //
+    // inverseCellWidth = cells.cwiseQuotient(region);
+    //
+    // int totalCells = cells.x() * cells.y() * cells.z();
+    // std::vector<int> cellList(numberOfAtoms + totalCells, -1);
+    //
+    // // Assign atoms to cells
+    // for (int i = 0; i < numberOfAtoms; i++) {
+    //     scaledPosition = atoms[i]->position.cwiseProduct(inverseCellWidth);
+    //     cellCoords = scaledPosition.cast<int>();
+    //     cellIndex = cellCoords.x() + cells.x() * (cellCoords.y() + cells.y() * cellCoords.z()) + numberOfAtoms;
+    //     cellList[i] = cellList[cellIndex];
+    //     cellList[cellIndex] = i;
+    // }
+    //
+    // // Initialize accelerations
     // for (auto& atom : atoms) {
-    //     atom->setAccelerations(0,0);
+    //     atom->acceleration.setZero();
     // }
     //
-    // this->setpotentialEnergySum(0.0);
-    // this->setviralEnergySum(0.0);
+    // potentialEnergySum = 0.0;
+    // viralEnergySum = 0.0;
     //
-    // for (size_t j1 = 0; j1 < numAtoms - 1; ++j1) {
-    //     for (size_t j2 = j1 + 1; j2 < numAtoms; ++j2) {
-    //         distance = atoms[j1]->getCoordinates() - atoms[j2]->getCoordinates();
+    // for (z = 0; z < cells.z(); z++) {
+    //     for (y = 0; y < cells.y(); y++) {
+    //         for (x = 0; x < cells.x(); x++) {
+    //             cell1 = Eigen::Vector3i(x, y, z);
+    //             int cell1Index = cell1.x() + cells.x() * (cell1.y() + cells.y() * cell1.z()) + numberOfAtoms;
     //
-    //         if (distance.x() >= 0.5 * region.x()) distance.x() -= region.x();
-    //         else if (distance.x() < -0.5 * region.x()) distance.x() += region.x();
-    //         if (distance.y() >= 0.5 * region.y()) distance.y() -= region.y();
-    //         else if (distance.y() < -0.5 * region.y()) distance.y() += region.y();
+    //             for (const auto& offset : neighborOffsets) {
+    //                 cell2 = cell1 + offset;
+    //                 periodicShift.setZero();
     //
-    //         radiusSquared = distance.squaredNorm();
+    //                 // Apply periodic boundary conditions
+    //                 for (int d = 0; d < 3; d++) {
+    //                     if (cell2[d] < 0) {
+    //                         cell2[d] += cells[d];
+    //                         periodicShift[d] = -region[d];
+    //                     } else if (cell2[d] >= cells[d]) {
+    //                         cell2[d] -= cells[d];
+    //                         periodicShift[d] = region[d];
+    //                     }
+    //                 }
     //
-    //         if (radiusSquared < cutoffRadiusSquared) {
-    //             double radiusSquaredInverse = 1.0 / radiusSquared;
-    //             double radiusCubeInverse = std::pow(radiusSquaredInverse, 3);
-    //             double forceValue = 48.0 * radiusCubeInverse * (radiusCubeInverse - 0.5) * radiusSquaredInverse;
+    //                 int cell2Index = cell2.x() + cells.x() * (cell2.y() + cells.y() * cell2.z()) + numberOfAtoms;
     //
-    //             auto atom1 = atoms[j1]->getAccelerations();
-    //             atom1 += forceValue * distance;
-    //             auto atom2 = atoms[j2]->getAccelerations();
-    //             atom2 -= forceValue * distance;
-    //             atoms[j1]->setAccelerations(atom1.x(), atom1.y());
-    //             atoms[j2]->setAccelerations(atom2.x(), atom2.y());
+    //                 for (atom1 = cellList[cell1Index]; atom1 >= 0; atom1 = cellList[atom1]) {
+    //                     for (atom2 = cellList[cell2Index]; atom2 >= 0; atom2 = cellList[atom2]) {
+    //                         if (cell1Index != cell2Index || atom2 < atom1) {
+    //                             distanceVector = atoms[atom1]->position - atoms[atom2]->position + periodicShift;
+    //                             distanceSquared = distanceVector.squaredNorm();
     //
-    //             double temp = this->get<double>("potentialEnergySum");
-    //             temp += 4.0 * radiusCubeInverse * (radiusCubeInverse - 1.0) + 1.0;
-    //             this->setpotentialEnergySum(temp);
+    //                             if (distanceSquared < cutoffDistanceSquared) {
+    //                                 invDistanceSquared = 1.0 / distanceSquared;
+    //                                 invDistancePow6 = invDistanceSquared * invDistanceSquared * invDistanceSquared; // Declare and calculate invDistancePow6
+    //                                 forceScalar = 48.0 * invDistancePow6 * (invDistancePow6 - 0.5) * invDistanceSquared;
+    //                                 potentialEnergy = 4.0 * invDistancePow6 * (invDistancePow6 - 1.0) + 1.0;
     //
-    //             temp = this->get<double>("viralEnergySum");
-    //             temp += forceValue * radiusSquared;
-    //             this->setviralEnergySum(temp);
+    //                                 atoms[atom1]->acceleration += forceScalar * distanceVector;
+    //                                 atoms[atom2]->acceleration -= forceScalar * distanceVector;
+    //
+    //                                 potentialEnergySum += potentialEnergy;
+    //                                 viralEnergySum += forceScalar * distanceSquared;
+    //                             }
+    //                         }
+    //                     }
+    //                 }
+    //             }
     //         }
-    //     }
-    // }
 }
 
 void simulation3dcs::evaluateProperties()

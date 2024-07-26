@@ -54,6 +54,7 @@ set(SOURCES
         Headers/datasaver.h
         datasaver.cpp
         Headers/constants.h
+        boundary_conditions.cpp
 )
 
 # Main executable
