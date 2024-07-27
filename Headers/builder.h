@@ -58,7 +58,7 @@ public:
 
     virtual void    setDeltaT(double deltaT) = 0;
     virtual void    setDensity(double density) = 0;
-    virtual void    setInitUcell(int x, int y) = 0;
+    virtual void    setInitUcell(Eigen::VectorXd initUcell) = 0;
     virtual void    setStepAvg(int stepAvg) = 0;
     virtual void    setStepEquil(int stepEquil) = 0;
     virtual void    setStepLimit(int stepLimit) = 0;
@@ -96,7 +96,7 @@ public:
 
     void setDeltaT(const double deltaT) override                    { simulation->setDeltaT(deltaT); }
     void setDensity(const double density) override                  { simulation->setDensity(density); }
-    void setInitUcell(const int x,const  int y) override            { simulation->setInitUcell(x, y); }
+    void setInitUcell(const Eigen::VectorXd initUcell) override     { simulation->setInitUcell(initUcell); }
     void setStepAvg(const int stepAvg) override                     { simulation->setStepAvg(stepAvg); }
     void setStepEquil(const int stepEquil) override                 { simulation->setStepEquil(stepEquil); }
     void setStepLimit(const int stepLimit) override                 { simulation->setStepLimit(stepLimit); }
@@ -115,9 +115,9 @@ public:
 
 
     double getDeltaT()& override    { return simulation->get<double>("deltaT"); }
-    int getinitUcellX()& override   { return simulation->get<int>("initUcellX"); }
-    int getinitUcellY()& override   { return simulation->get<int>("initUcellY"); }
-    std::vector<std::shared_ptr<Atom>>& getAtoms()                    { return simulation->getAtoms();}
+    int getinitUcellX()& override   {  return simulation->get<Eigen::VectorXd>("initUcell").x(); }
+    int getinitUcellY()& override   {  return simulation->get<Eigen::VectorXd>("initUcell").y(); }
+    std::vector<std::shared_ptr<Atom2D>>& getAtoms()                    { return simulation->getAtoms();}
     std::vector<double>& getHistogramVelocities()&                      { return simulation->getHistogramVelocities();}
     std::vector<std::tuple<int, Eigen::VectorXd>>& getDataCoordinates()  { return simulation->getDataCoordinates();}
     std::vector<std::vector<double>>& getDataHistogramVelocities()      { return simulation->getDataHistogramVelocities();}

@@ -37,8 +37,8 @@ void Simulation2DBuilder::setRestOfParameters() const {
     this->simulation->setAtomFactory(atomFactory);
     this->simulation->setProgressbar(progressbar);
     this->simulation->setCutoffRadius(std::pow(2.0 , (1.0)/(6.0)));
-    this->simulation->setRegion(this->simulation->get<Eigen::Vector2d>("initUcell") * (1.0 / std::sqrt(this->simulation->get<double>("density"))));
-    this->simulation->setNumberOfAtoms(static_cast<int>(this->simulation->get<Eigen::Vector2d>("initUcell").prod()));
+    this->simulation->setRegion(this->simulation->get<Eigen::VectorXd>("initUcell") * (1.0 / std::sqrt(this->simulation->get<double>("density"))));
+    this->simulation->setNumberOfAtoms(static_cast<int>(this->simulation->get<Eigen::VectorXd>("initUcell").prod()));
     this->simulation->setVelocityMagnitude(std::sqrt(this->simulation->get<int>("numberOfDimensions") *  (1.0 - (1.0/this->simulation->get<int>("numberOfAtoms"))*(this->simulation->get<double>("temperature")))));
 }
 
@@ -78,7 +78,7 @@ void Simulation2DBuilder::initializeCoordinates() {
     auto gap = Eigen::VectorXd(2);
     //set the coordinates to two dimensions
 
-    std::vector<std::shared_ptr<Atom>>& atoms = this->simulation->getAtoms();
+    std::vector<std::shared_ptr<Atom2D>>& atoms = this->simulation->getAtoms();
 
     // Initialize gap and coordinates to zero
     gap(0) = 0, gap(1) =  0;
@@ -90,7 +90,7 @@ void Simulation2DBuilder::initializeCoordinates() {
 
     int nx,ny;
     // Calculate the gap as the element-wise division of region and initUcell
-    gap = this->simulation->get<Eigen::Vector2d>("region").cwiseQuotient(this->simulation->get<Eigen::Vector2d>("initUcell"));
+    gap = this->simulation->get<Eigen::VectorXd>("region").cwiseQuotient(this->simulation->get<Eigen::VectorXd>("initUcell"));
 
     // Reset the counter for the number of atoms initialized
     this->setNumberOfAtomIterations(0);
@@ -105,7 +105,7 @@ void Simulation2DBuilder::initializeCoordinates() {
             coordinates = coordinates.cwiseProduct(gap);
 
             // Adjust the coordinates to the region
-            coordinates -= this->simulation->get<Eigen::Vector2d>("region") * 0.5;
+            coordinates -= this->simulation->get<Eigen::VectorXd>("region") * 0.5;
 
             // Set the atom's coordinates
             atoms[this->simulation->get<int>("numberOfAtomIterations")]->setCoordinates(coordinates);
@@ -119,11 +119,12 @@ void Simulation2DBuilder::initializeCoordinates() {
 }
 
 void Simulation2DBuilder::initializeVelocities() {
-    Eigen::VectorXd vSum(0, 0);
-    Eigen::VectorXd tempVelocities(0,0);
+    Eigen::VectorXd vSum(2),tempVelocities(2);
+    vSum << 0, 0;
+    tempVelocities << 0, 0;
     this->simulation->setVelocitiesSum(vSum);
 
-    std::vector<std::shared_ptr<Atom>>& atoms = this->simulation->getAtoms();
+    std::vector<std::shared_ptr<Atom2D>>& atoms = this->simulation->getAtoms();
     double velMag = this->simulation->get<double>("velocityMagnitude");
     int numAtoms = this->simulation->get<int>("numberOfAtoms");
 

@@ -5,7 +5,7 @@
 #include "simulation2dap.h"
 
 double simulation2dap::singleSimulationStep() {
-    std::vector<std::shared_ptr<Atom>>& atoms = this->getAtoms();
+    std::vector<std::shared_ptr<Atom2D>>& atoms = this->getAtoms();
     int stepCount = get<int>("stepCount");
     this->setStepCount(stepCount + 1);
     stepCount = get<int>("stepCount");
@@ -61,7 +61,7 @@ double simulation2dap::singleSimulationStep() {
 
 void simulation2dap::leapfrogStep(unsigned int part) {
     double deltaT = this->get<double>("deltaT");
-    std::vector<std::shared_ptr<Atom>>& atoms = this->getAtoms();
+    std::vector<std::shared_ptr<Atom2D>>& atoms = this->getAtoms();
 
     if (part == 1) {
         for (auto& atom : atoms) {
@@ -91,7 +91,7 @@ void simulation2dap::leapfrogStep(unsigned int part) {
 }
 
 void simulation2dap::applyBoundaryConditions() {
-    Eigen::Vector2d region = this->get<Eigen::Vector2d>("region");
+    Eigen::Vector2d region = this->get<Eigen::VectorXd>("region");
     auto atoms = this->getAtoms();
     for (auto& atom : atoms) {
         Eigen::VectorXd coordinates = atom->getCoordinates();
@@ -101,12 +101,13 @@ void simulation2dap::applyBoundaryConditions() {
 }
 
 void simulation2dap::computeForces() {
-    Eigen::Vector2d distance(0,0);
+    Eigen::VectorXd distance = Eigen::VectorXd(2);
+    distance << 0, 0;
     double radiusSquared, cutoffRadiusSquared;
 
     auto& atoms = this->getAtoms();
     size_t numAtoms = atoms.size();
-    Eigen::Vector2d region = this->get<Eigen::Vector2d>("region");
+    Eigen::VectorXd region = this->get<Eigen::VectorXd>("region");
     double cutOffRadius = this->get<double>("cutOffRadius");
 
     cutoffRadiusSquared = cutOffRadius * cutOffRadius;
@@ -160,7 +161,7 @@ void simulation2dap::evaluateProperties()
 
 
 
-    std::vector<std::shared_ptr<Atom>>& atoms       = this->getAtoms();
+    std::vector<std::shared_ptr<Atom2D>>& atoms       = this->getAtoms();
     int numberOfAtoms                               = static_cast<int>(this->getAtoms().size());
     double velocitySquared,velocitySquaredSum       = 0; // Variable to hold the velocity squared
     Eigen::Vector2d velocitiesSum(0, 0); // Initialize the sum of velocities to zero
@@ -193,7 +194,7 @@ void simulation2dap::evaluateVelocityDistribution()
 {
     int j;
     std::vector<double> hist = getHistogramVelocities();
-    std::vector<std::shared_ptr<Atom>> atoms = this->getAtoms();
+    std::vector<std::shared_ptr<Atom2D>> atoms = this->getAtoms();
 
     if(get<int>("countVelocities") == 0){std::fill(hist.begin(), hist.end(), 0);}
 
@@ -299,7 +300,7 @@ void simulation2dap::printSummary() const
 
 void simulation2dap::setIterationProperties()
 {
-    Eigen::Vector2d velocitySumValue    = get<Eigen::Vector2d>("velocitiesSum") / get<int>("numberOfAtoms");
+    Eigen::Vector2d velocitySumValue    = get<Eigen::VectorXd>("velocitiesSum") / get<int>("numberOfAtoms");
 
 
     double potentialEnergySum           = get<Eigen::Vector3d>("potentialEnergy").y();

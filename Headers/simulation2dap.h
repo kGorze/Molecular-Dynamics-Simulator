@@ -46,7 +46,7 @@ private:
     double      timeNow,temperature, deltaT, density, rangeVel, potentialEnergySum, viralEnergySum, velocityMagnitude, cutoffRadius, deltaVelocity, histogramSum, entropyFunction;
     int         stepCount, stepAvg, stepEquil, stepLimit, limitVel, sizeHistVel, stepVel, randSeed,numberOfDimensions, numberOfAtoms, numberOfAtomIterations, countStep, countVelocities;
 
-    std::vector<std::shared_ptr<Atom>>            atoms;
+    std::vector<std::shared_ptr<Atom2D>>            atoms;
     std::vector<double>                             histogramVelocities;
     std::vector<std::vector<double>>                dataHistogramVelocities;
     std::vector<std::tuple<int, Eigen::VectorXd>>   dataCoordinates;
@@ -56,7 +56,9 @@ private:
 
     std::vector<std::tuple<int, double, Eigen::VectorXd, double, double, double, double, double, double>> iterationData;
 
-    Eigen::VectorXd initUcell,velocitiesSum,region;
+    Eigen::VectorXd initUcell = Eigen::VectorXd(2);
+    Eigen::VectorXd velocitiesSum = Eigen::VectorXd(2);
+    Eigen::Vector2d region = Eigen::Vector2d(2);
     Eigen::Vector3d kineticEnergy, potentialEnergy, pressure;
 public:
 
@@ -78,7 +80,8 @@ public:
 
     void setDeltaT(double deltaT) { this->deltaT = deltaT; }
     void setDensity(double density) { this->density = density; }
-    void setInitUcell(int x, int y) { this->initUcell(0) = x; this->initUcell(1) = y; }
+    void setInitUcell(const Eigen::VectorXd& initUCell) { this->initUcell(0) = initUCell.x(); this->initUcell(1) =
+    initUCell.y(); }
     void setStepAvg(int stepAvg) { this->stepAvg = stepAvg; }
     void setStepEquil(int stepEquil) { this->stepEquil = stepEquil; }
     void setStepLimit(int stepLimit) { this->stepLimit = stepLimit; }
@@ -119,7 +122,7 @@ public:
     template<typename T>
     T get(const std::string& param) const;
 
-    std::vector<std::shared_ptr<Atom>>&           getAtoms() { return atoms; }
+    std::vector<std::shared_ptr<Atom2D>>&           getAtoms() { return atoms; }
     std::vector<double>&                            getHistogramVelocities()& {return histogramVelocities;}
     std::vector<std::tuple<int, Eigen::VectorXd>>&   getDataCoordinates() {return dataCoordinates;}
     std::vector<std::vector<double>>&               getDataHistogramVelocities() {return dataHistogramVelocities;}
@@ -172,15 +175,6 @@ inline int simulation2dap::get<int>(const std::string& param) const
     if (param == "countVelocities") return countVelocities;
     if (param == "stepCount") return stepCount;
     throw std::invalid_argument("Invalid parameter name for type int: " + param);
-}
-
-template<>
-inline Eigen::Vector2d simulation2dap::get<Eigen::Vector2d>(const std::string& param) const
-{
-    if (param == "region") return region;
-    if (param == "initUcell") return initUcell;
-    if (param == "velocitiesSum") return velocitiesSum;
-    throw std::invalid_argument("Invalid parameter name for type Eigen::Vector2d: " + param);
 }
 
 template<>

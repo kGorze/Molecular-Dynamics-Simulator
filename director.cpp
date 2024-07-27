@@ -42,10 +42,13 @@ void Director::initializeSimulationWithConfig(const std::string& configFilePath)
         int randSeed = std::stoi(config["Parameters.randSeed"]);
         int numberOfDimensions = std::stoi(config["Parameters.numberOfDimensions"]);
 
+        Eigen::VectorXd initUcell(2);
+        initUcell << initUcellX, initUcellY;
+
 
         this->builder->setDeltaT(deltaT);
         this->builder->setDensity(density);
-        this->builder->setInitUcell(initUcellX, initUcellY);
+        this->builder->setInitUcell(initUcell);
         this->builder->setStepAvg(stepAvg);
         this->builder->setStepEquil(stepEquil);
         this->builder->setStepLimit(stepLimit);
