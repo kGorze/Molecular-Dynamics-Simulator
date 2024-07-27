@@ -192,6 +192,7 @@ void simulation2dap::evaluateProperties()
 
 void simulation2dap::evaluateVelocityDistribution()
 {
+    double deltaVelocity;
     int j;
     std::vector<double> hist = getHistogramVelocities();
     std::vector<std::shared_ptr<Atom2D>> atoms = this->getAtoms();
@@ -200,7 +201,7 @@ void simulation2dap::evaluateVelocityDistribution()
 
     try
         {
-        double deltaVelocity = static_cast<double>(get<double>("rangeVel")) / get<int>("sizeHistVel");
+        deltaVelocity = static_cast<double>(get<double>("rangeVel")) / get<int>("sizeHistVel");
         if (deltaVelocity > std::numeric_limits<double>::max() || deltaVelocity < std::numeric_limits<double>::lowest()){throw mds::eeInvalidValue;}
         }
     catch(mds::ErrorCode& e)

@@ -65,3 +65,5 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 # Link libraries
 target_link_libraries(${PROJECT_NAME} inih matplot)
 # target_link_libraries(${PROJECT_NAME} stdc++ zmq)
+
+add_subdirectory(Google_tests)
