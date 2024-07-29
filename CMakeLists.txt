@@ -20,6 +20,8 @@ include_directories(.)
 # Define the ABI macro for the whole project
 # add_compile_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
 
+set(MATPLOTPP_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(MATPLOTPP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 add_subdirectory(Third_party/matplotplusplus)
 
 
@@ -31,39 +33,45 @@ add_library(inih STATIC third_party/inih/ini.c)
 
 # Source files
 set(SOURCES
-        main.cpp
-        simulation.cpp
-        builder.cpp
-        director.cpp
         abstract_factory.cpp
-        menu.cpp
-        concretecommands.cpp
+        boundary_conditions.cpp
+        builder.cpp
         command.cpp
-        Headers/vector_operations.h
-        Headers/types.h
-        Headers/leapfrog.h
-        Headers/boundary_conditions.h
-        Headers/progressbar.h
-        Headers/simulation2dap.h
-        Headers/simulation3dcs.h
-        progressbar.cpp
+        concretecommands.cpp
+        datasaver.cpp
+        director.cpp
         errorcodes.cpp
         leapfrog.cpp
+        main.cpp
+        menu.cpp
+        progressbar.cpp
+        simulation.cpp
         simulation2dap.cpp
         simulation3dcs.cpp
-        Headers/datasaver.h
-        datasaver.cpp
-        Headers/constants.h
-        boundary_conditions.cpp
+        Headers/core/constants.h
+        Headers/core/errorcodes.h
+        Headers/core/types.h
+        Headers/core/concretecommands.h
+        Headers/core/command.h
+        Headers/simulation/abstract_factory.h
+        Headers/simulation/boundary_conditions.h
+        Headers/simulation/builder.h
+        Headers/simulation/director.h
+        Headers/simulation/simulation.h
+        Headers/simulation/simulation2dap.h
+        Headers/simulation/simulation3dcs.h
+        Headers/ui/menu.h
+        Headers/utils/datasaver.h
+        Headers/utils/leapfrog.h
+        Headers/utils/progressbar.h
+        Headers/utils/vector_operations.h
 )
 
 # Main executable
 add_executable(${PROJECT_NAME} ${SOURCES})
-# add_executable(${PROJECT_NAME} ${SOURCES} ${ZMQ})
-# target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_23)
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME} inih matplot)
-# target_link_libraries(${PROJECT_NAME} stdc++ zmq)
+
 
 add_subdirectory(Google_tests)

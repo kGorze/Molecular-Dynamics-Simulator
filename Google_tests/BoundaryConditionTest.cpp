@@ -2,7 +2,7 @@
 // Created by konrad_guest on 27/07/2024.
 //
 #include "gtest/gtest.h"
-#include "Headers/boundary_conditions.h"
+#include "Headers/simulation/boundary_conditions.h"
 
 TEST(BoundaryConditionsTest,WrapComponent2D){ // 12/2/2020 -> 737761
     // Test case 1: component >= 0.5 * regionComponent

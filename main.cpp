@@ -1,17 +1,18 @@
-#include "Headers/director.h"
-#include "Headers/builder.h"
-#include "Headers/simulation2dap.h"
-#include "Headers/command.h"
-#include "Headers/concretecommands.h"
-#include "Headers/menu.h"
+#include "Headers/simulation/director.h"
+#include "Headers/simulation/builder.h"
+#include "Headers/simulation/simulation2dap.h"
+
+
 #include <iostream>
 #include <unordered_map>
 #include <string>
 #include <thread>
 #include <atomic>
 
-//PLOTTING
-#include <matplot/matplot.h>
+#ifndef TEST_BUILD
+#include "matplot/matplot.h"
+#endif
+
 #include <thread>
 #include <chrono>
 

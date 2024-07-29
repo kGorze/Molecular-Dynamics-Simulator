@@ -5,9 +5,11 @@
 #ifndef PROGRESSBAR_H
 #define PROGRESSBAR_H
 
+
 #include <thread>
 #include <chrono>
 #include <iostream>
+
 class Progressbar {
 private:
     typedef std::chrono::steady_clock Clock;

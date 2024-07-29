@@ -2,7 +2,7 @@
 // Created by konrad_guest on 18/05/2024.
 //
 
-#include "Headers/menu.h"
+#include "Headers/ui/menu.h"
 
 void menu::setCommand(const std::string& name, std::shared_ptr<command> command) {
     commands[name] = command;

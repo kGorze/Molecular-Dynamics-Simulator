@@ -6,11 +6,10 @@
 #define CONCRETECOMMANDS_H
 
 
-
-#include "Command.h"
-#include "builder.h"
-#include "director.h"
-#include "simulation2dap.h"
+#include "Headers/simulation/simulation2dap.h"
+#include "Headers/simulation/builder.h"
+#include "Headers/simulation/director.h"
+#include "Headers/core/command.h"
 
 class StartSimulationCommand : public command {
 private:

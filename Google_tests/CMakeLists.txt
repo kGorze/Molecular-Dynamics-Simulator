@@ -4,10 +4,12 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 # adding the Google_Tests_run target
 add_executable(Google_Tests_run
-        ConverterTests.cpp
+        SimulationSetupTest.cpp
         BoundaryConditionTest.cpp)
 
-# linking Google_Tests_run with DateConverter_lib which will be tested
-target_link_libraries(Google_Tests_run DateConverter_lib)
+target_compile_definitions(Google_Tests_run PRIVATE TEST_BUILD)
+
 
 target_link_libraries(Google_Tests_run gtest gtest_main)
+
+

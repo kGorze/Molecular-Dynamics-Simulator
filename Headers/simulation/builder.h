@@ -6,38 +6,27 @@
 #define BUILDER_H
 
 
-#include "simulation.h"
-
-#include "simulation2dap.h"
-
-#include "datasaver.h"
-
-#include "abstract_factory.h"
-
-#include "progressbar.h"
+#include "Headers/simulation/simulation.h"
+#include "Headers/simulation/simulation2dap.h"
+#include "Headers/simulation/abstract_factory.h"
+#include "Headers/utils/datasaver.h"
+#include "Headers/utils/progressbar.h"
 
 #include <unordered_map>
-
 #include <memory>
-
+#include <random>
 #include <iomanip>
-
 #include <fstream>
-
 #include <cmath>
+#include <filesystem>
+#include <chrono>
+#include <ctime>
+#include <filesystem>
 
 #include <Eigen/Dense>
 
-#include <filesystem>
 
-#include <chrono>
-
-#include <ctime>
-
-#include <filesystem>
-
-
-
+Eigen::Vector2d velocity_rand(std::mt19937& rng, std::uniform_real_distribution<double>& dist);
 
 class Builder
 {

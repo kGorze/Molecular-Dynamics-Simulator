@@ -1,7 +1,7 @@
 //
 // Created by konrad_guest on 16/05/2024.
 //
-#include "Headers/director.h"
+#include "Headers/simulation/director.h"
 
 // Handler for parsing INI file
 static int handler(void* user, const char* section, const char* name, const char* value) {

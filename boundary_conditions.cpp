@@ -1,7 +1,7 @@
 //
 // Created by konrad_guest on 26/07/2024.
 //
-#include "boundary_conditions.h"
+#include "Headers/simulation/boundary_conditions.h"
 
 // Function to wrap a single component of a vector
 void wrap_component_2d(double& component, double regionComponent) {

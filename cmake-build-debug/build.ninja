@@ -81,17 +81,17 @@ build libinih.a: C_STATIC_LIBRARY_LINKER__inih_Debug CMakeFiles/inih.dir/Third_p
 
 build cmake_object_order_depends_target_MDS: phony || cmake_object_order_depends_target_inih cmake_object_order_depends_target_matplot cmake_object_order_depends_target_nodesoup
 
-build CMakeFiles/MDS.dir/main.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/main.cpp || cmake_object_order_depends_target_MDS
+build CMakeFiles/MDS.dir/abstract_factory.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/abstract_factory.cpp || cmake_object_order_depends_target_MDS
   DEFINES = -DMATPLOT_BUILD_HIGH_RESOLUTION_WORLD_MAP -DNOMINMAX
-  DEP_FILE = CMakeFiles\MDS.dir\main.cpp.obj.d
+  DEP_FILE = CMakeFiles\MDS.dir\abstract_factory.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   INCLUDES = -IC:/eigen-3.4.0 -IC:/Users/konrad_guest/source/repos/MDS/Headers -IC:/Users/konrad_guest/source/repos/MDS/. -IC:/Users/konrad_guest/source/repos/MDS/Third_party/matplotplusplus/source -IC:/Users/konrad_guest/source/repos/MDS/cmake-build-debug/Third_party/matplotplusplus/source/matplot
   OBJECT_DIR = CMakeFiles\MDS.dir
   OBJECT_FILE_DIR = CMakeFiles\MDS.dir
 
-build CMakeFiles/MDS.dir/simulation.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/simulation.cpp || cmake_object_order_depends_target_MDS
+build CMakeFiles/MDS.dir/boundary_conditions.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/boundary_conditions.cpp || cmake_object_order_depends_target_MDS
   DEFINES = -DMATPLOT_BUILD_HIGH_RESOLUTION_WORLD_MAP -DNOMINMAX
-  DEP_FILE = CMakeFiles\MDS.dir\simulation.cpp.obj.d
+  DEP_FILE = CMakeFiles\MDS.dir\boundary_conditions.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   INCLUDES = -IC:/eigen-3.4.0 -IC:/Users/konrad_guest/source/repos/MDS/Headers -IC:/Users/konrad_guest/source/repos/MDS/. -IC:/Users/konrad_guest/source/repos/MDS/Third_party/matplotplusplus/source -IC:/Users/konrad_guest/source/repos/MDS/cmake-build-debug/Third_party/matplotplusplus/source/matplot
   OBJECT_DIR = CMakeFiles\MDS.dir
@@ -105,25 +105,9 @@ build CMakeFiles/MDS.dir/builder.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/
   OBJECT_DIR = CMakeFiles\MDS.dir
   OBJECT_FILE_DIR = CMakeFiles\MDS.dir
 
-build CMakeFiles/MDS.dir/director.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/director.cpp || cmake_object_order_depends_target_MDS
+build CMakeFiles/MDS.dir/command.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/command.cpp || cmake_object_order_depends_target_MDS
   DEFINES = -DMATPLOT_BUILD_HIGH_RESOLUTION_WORLD_MAP -DNOMINMAX
-  DEP_FILE = CMakeFiles\MDS.dir\director.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/eigen-3.4.0 -IC:/Users/konrad_guest/source/repos/MDS/Headers -IC:/Users/konrad_guest/source/repos/MDS/. -IC:/Users/konrad_guest/source/repos/MDS/Third_party/matplotplusplus/source -IC:/Users/konrad_guest/source/repos/MDS/cmake-build-debug/Third_party/matplotplusplus/source/matplot
-  OBJECT_DIR = CMakeFiles\MDS.dir
-  OBJECT_FILE_DIR = CMakeFiles\MDS.dir
-
-build CMakeFiles/MDS.dir/abstract_factory.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/abstract_factory.cpp || cmake_object_order_depends_target_MDS
-  DEFINES = -DMATPLOT_BUILD_HIGH_RESOLUTION_WORLD_MAP -DNOMINMAX
-  DEP_FILE = CMakeFiles\MDS.dir\abstract_factory.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/eigen-3.4.0 -IC:/Users/konrad_guest/source/repos/MDS/Headers -IC:/Users/konrad_guest/source/repos/MDS/. -IC:/Users/konrad_guest/source/repos/MDS/Third_party/matplotplusplus/source -IC:/Users/konrad_guest/source/repos/MDS/cmake-build-debug/Third_party/matplotplusplus/source/matplot
-  OBJECT_DIR = CMakeFiles\MDS.dir
-  OBJECT_FILE_DIR = CMakeFiles\MDS.dir
-
-build CMakeFiles/MDS.dir/menu.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/menu.cpp || cmake_object_order_depends_target_MDS
-  DEFINES = -DMATPLOT_BUILD_HIGH_RESOLUTION_WORLD_MAP -DNOMINMAX
-  DEP_FILE = CMakeFiles\MDS.dir\menu.cpp.obj.d
+  DEP_FILE = CMakeFiles\MDS.dir\command.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   INCLUDES = -IC:/eigen-3.4.0 -IC:/Users/konrad_guest/source/repos/MDS/Headers -IC:/Users/konrad_guest/source/repos/MDS/. -IC:/Users/konrad_guest/source/repos/MDS/Third_party/matplotplusplus/source -IC:/Users/konrad_guest/source/repos/MDS/cmake-build-debug/Third_party/matplotplusplus/source/matplot
   OBJECT_DIR = CMakeFiles\MDS.dir
@@ -137,17 +121,17 @@ build CMakeFiles/MDS.dir/concretecommands.cpp.obj: CXX_COMPILER__MDS_unscanned_D
   OBJECT_DIR = CMakeFiles\MDS.dir
   OBJECT_FILE_DIR = CMakeFiles\MDS.dir
 
-build CMakeFiles/MDS.dir/command.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/command.cpp || cmake_object_order_depends_target_MDS
+build CMakeFiles/MDS.dir/datasaver.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/datasaver.cpp || cmake_object_order_depends_target_MDS
   DEFINES = -DMATPLOT_BUILD_HIGH_RESOLUTION_WORLD_MAP -DNOMINMAX
-  DEP_FILE = CMakeFiles\MDS.dir\command.cpp.obj.d
+  DEP_FILE = CMakeFiles\MDS.dir\datasaver.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   INCLUDES = -IC:/eigen-3.4.0 -IC:/Users/konrad_guest/source/repos/MDS/Headers -IC:/Users/konrad_guest/source/repos/MDS/. -IC:/Users/konrad_guest/source/repos/MDS/Third_party/matplotplusplus/source -IC:/Users/konrad_guest/source/repos/MDS/cmake-build-debug/Third_party/matplotplusplus/source/matplot
   OBJECT_DIR = CMakeFiles\MDS.dir
   OBJECT_FILE_DIR = CMakeFiles\MDS.dir
 
-build CMakeFiles/MDS.dir/progressbar.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/progressbar.cpp || cmake_object_order_depends_target_MDS
+build CMakeFiles/MDS.dir/director.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/director.cpp || cmake_object_order_depends_target_MDS
   DEFINES = -DMATPLOT_BUILD_HIGH_RESOLUTION_WORLD_MAP -DNOMINMAX
-  DEP_FILE = CMakeFiles\MDS.dir\progressbar.cpp.obj.d
+  DEP_FILE = CMakeFiles\MDS.dir\director.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   INCLUDES = -IC:/eigen-3.4.0 -IC:/Users/konrad_guest/source/repos/MDS/Headers -IC:/Users/konrad_guest/source/repos/MDS/. -IC:/Users/konrad_guest/source/repos/MDS/Third_party/matplotplusplus/source -IC:/Users/konrad_guest/source/repos/MDS/cmake-build-debug/Third_party/matplotplusplus/source/matplot
   OBJECT_DIR = CMakeFiles\MDS.dir
@@ -169,6 +153,38 @@ build CMakeFiles/MDS.dir/leapfrog.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:
   OBJECT_DIR = CMakeFiles\MDS.dir
   OBJECT_FILE_DIR = CMakeFiles\MDS.dir
 
+build CMakeFiles/MDS.dir/main.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/main.cpp || cmake_object_order_depends_target_MDS
+  DEFINES = -DMATPLOT_BUILD_HIGH_RESOLUTION_WORLD_MAP -DNOMINMAX
+  DEP_FILE = CMakeFiles\MDS.dir\main.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -IC:/eigen-3.4.0 -IC:/Users/konrad_guest/source/repos/MDS/Headers -IC:/Users/konrad_guest/source/repos/MDS/. -IC:/Users/konrad_guest/source/repos/MDS/Third_party/matplotplusplus/source -IC:/Users/konrad_guest/source/repos/MDS/cmake-build-debug/Third_party/matplotplusplus/source/matplot
+  OBJECT_DIR = CMakeFiles\MDS.dir
+  OBJECT_FILE_DIR = CMakeFiles\MDS.dir
+
+build CMakeFiles/MDS.dir/menu.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/menu.cpp || cmake_object_order_depends_target_MDS
+  DEFINES = -DMATPLOT_BUILD_HIGH_RESOLUTION_WORLD_MAP -DNOMINMAX
+  DEP_FILE = CMakeFiles\MDS.dir\menu.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -IC:/eigen-3.4.0 -IC:/Users/konrad_guest/source/repos/MDS/Headers -IC:/Users/konrad_guest/source/repos/MDS/. -IC:/Users/konrad_guest/source/repos/MDS/Third_party/matplotplusplus/source -IC:/Users/konrad_guest/source/repos/MDS/cmake-build-debug/Third_party/matplotplusplus/source/matplot
+  OBJECT_DIR = CMakeFiles\MDS.dir
+  OBJECT_FILE_DIR = CMakeFiles\MDS.dir
+
+build CMakeFiles/MDS.dir/progressbar.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/progressbar.cpp || cmake_object_order_depends_target_MDS
+  DEFINES = -DMATPLOT_BUILD_HIGH_RESOLUTION_WORLD_MAP -DNOMINMAX
+  DEP_FILE = CMakeFiles\MDS.dir\progressbar.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -IC:/eigen-3.4.0 -IC:/Users/konrad_guest/source/repos/MDS/Headers -IC:/Users/konrad_guest/source/repos/MDS/. -IC:/Users/konrad_guest/source/repos/MDS/Third_party/matplotplusplus/source -IC:/Users/konrad_guest/source/repos/MDS/cmake-build-debug/Third_party/matplotplusplus/source/matplot
+  OBJECT_DIR = CMakeFiles\MDS.dir
+  OBJECT_FILE_DIR = CMakeFiles\MDS.dir
+
+build CMakeFiles/MDS.dir/simulation.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/simulation.cpp || cmake_object_order_depends_target_MDS
+  DEFINES = -DMATPLOT_BUILD_HIGH_RESOLUTION_WORLD_MAP -DNOMINMAX
+  DEP_FILE = CMakeFiles\MDS.dir\simulation.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -IC:/eigen-3.4.0 -IC:/Users/konrad_guest/source/repos/MDS/Headers -IC:/Users/konrad_guest/source/repos/MDS/. -IC:/Users/konrad_guest/source/repos/MDS/Third_party/matplotplusplus/source -IC:/Users/konrad_guest/source/repos/MDS/cmake-build-debug/Third_party/matplotplusplus/source/matplot
+  OBJECT_DIR = CMakeFiles\MDS.dir
+  OBJECT_FILE_DIR = CMakeFiles\MDS.dir
+
 build CMakeFiles/MDS.dir/simulation2dap.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/simulation2dap.cpp || cmake_object_order_depends_target_MDS
   DEFINES = -DMATPLOT_BUILD_HIGH_RESOLUTION_WORLD_MAP -DNOMINMAX
   DEP_FILE = CMakeFiles\MDS.dir\simulation2dap.cpp.obj.d
@@ -185,22 +201,6 @@ build CMakeFiles/MDS.dir/simulation3dcs.cpp.obj: CXX_COMPILER__MDS_unscanned_Deb
   OBJECT_DIR = CMakeFiles\MDS.dir
   OBJECT_FILE_DIR = CMakeFiles\MDS.dir
 
-build CMakeFiles/MDS.dir/datasaver.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/datasaver.cpp || cmake_object_order_depends_target_MDS
-  DEFINES = -DMATPLOT_BUILD_HIGH_RESOLUTION_WORLD_MAP -DNOMINMAX
-  DEP_FILE = CMakeFiles\MDS.dir\datasaver.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/eigen-3.4.0 -IC:/Users/konrad_guest/source/repos/MDS/Headers -IC:/Users/konrad_guest/source/repos/MDS/. -IC:/Users/konrad_guest/source/repos/MDS/Third_party/matplotplusplus/source -IC:/Users/konrad_guest/source/repos/MDS/cmake-build-debug/Third_party/matplotplusplus/source/matplot
-  OBJECT_DIR = CMakeFiles\MDS.dir
-  OBJECT_FILE_DIR = CMakeFiles\MDS.dir
-
-build CMakeFiles/MDS.dir/boundary_conditions.cpp.obj: CXX_COMPILER__MDS_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/boundary_conditions.cpp || cmake_object_order_depends_target_MDS
-  DEFINES = -DMATPLOT_BUILD_HIGH_RESOLUTION_WORLD_MAP -DNOMINMAX
-  DEP_FILE = CMakeFiles\MDS.dir\boundary_conditions.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IC:/eigen-3.4.0 -IC:/Users/konrad_guest/source/repos/MDS/Headers -IC:/Users/konrad_guest/source/repos/MDS/. -IC:/Users/konrad_guest/source/repos/MDS/Third_party/matplotplusplus/source -IC:/Users/konrad_guest/source/repos/MDS/cmake-build-debug/Third_party/matplotplusplus/source/matplot
-  OBJECT_DIR = CMakeFiles\MDS.dir
-  OBJECT_FILE_DIR = CMakeFiles\MDS.dir
-
 
 # =============================================================================
 # Link build statements for EXECUTABLE target MDS
@@ -209,7 +209,7 @@ build CMakeFiles/MDS.dir/boundary_conditions.cpp.obj: CXX_COMPILER__MDS_unscanne
 #############################################
 # Link the executable MDS.exe
 
-build MDS.exe: CXX_EXECUTABLE_LINKER__MDS_Debug CMakeFiles/MDS.dir/main.cpp.obj CMakeFiles/MDS.dir/simulation.cpp.obj CMakeFiles/MDS.dir/builder.cpp.obj CMakeFiles/MDS.dir/director.cpp.obj CMakeFiles/MDS.dir/abstract_factory.cpp.obj CMakeFiles/MDS.dir/menu.cpp.obj CMakeFiles/MDS.dir/concretecommands.cpp.obj CMakeFiles/MDS.dir/command.cpp.obj CMakeFiles/MDS.dir/progressbar.cpp.obj CMakeFiles/MDS.dir/errorcodes.cpp.obj CMakeFiles/MDS.dir/leapfrog.cpp.obj CMakeFiles/MDS.dir/simulation2dap.cpp.obj CMakeFiles/MDS.dir/simulation3dcs.cpp.obj CMakeFiles/MDS.dir/datasaver.cpp.obj CMakeFiles/MDS.dir/boundary_conditions.cpp.obj | libinih.a Third_party/matplotplusplus/source/matplot/libmatplot.a Third_party/matplotplusplus/source/3rd_party/libnodesoup.a || Third_party/matplotplusplus/source/3rd_party/libnodesoup.a Third_party/matplotplusplus/source/matplot/libmatplot.a libinih.a
+build MDS.exe: CXX_EXECUTABLE_LINKER__MDS_Debug CMakeFiles/MDS.dir/abstract_factory.cpp.obj CMakeFiles/MDS.dir/boundary_conditions.cpp.obj CMakeFiles/MDS.dir/builder.cpp.obj CMakeFiles/MDS.dir/command.cpp.obj CMakeFiles/MDS.dir/concretecommands.cpp.obj CMakeFiles/MDS.dir/datasaver.cpp.obj CMakeFiles/MDS.dir/director.cpp.obj CMakeFiles/MDS.dir/errorcodes.cpp.obj CMakeFiles/MDS.dir/leapfrog.cpp.obj CMakeFiles/MDS.dir/main.cpp.obj CMakeFiles/MDS.dir/menu.cpp.obj CMakeFiles/MDS.dir/progressbar.cpp.obj CMakeFiles/MDS.dir/simulation.cpp.obj CMakeFiles/MDS.dir/simulation2dap.cpp.obj CMakeFiles/MDS.dir/simulation3dcs.cpp.obj | libinih.a Third_party/matplotplusplus/source/matplot/libmatplot.a Third_party/matplotplusplus/source/3rd_party/libnodesoup.a || Third_party/matplotplusplus/source/3rd_party/libnodesoup.a Third_party/matplotplusplus/source/matplot/libmatplot.a libinih.a
   FLAGS = -g
   LINK_LIBRARIES = libinih.a  Third_party/matplotplusplus/source/matplot/libmatplot.a  -lgdi32  Third_party/matplotplusplus/source/3rd_party/libnodesoup.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\MDS.dir
@@ -964,15 +964,17 @@ build Third_party/matplotplusplus/source/matplot/install/strip: phony Third_part
 
 build cmake_object_order_depends_target_Google_Tests_run: phony || cmake_object_order_depends_target_gtest cmake_object_order_depends_target_gtest_main
 
-build Google_tests/CMakeFiles/Google_Tests_run.dir/ConverterTests.cpp.obj: CXX_COMPILER__Google_Tests_run_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/Google_tests/ConverterTests.cpp || cmake_object_order_depends_target_Google_Tests_run
-  DEP_FILE = Google_tests\CMakeFiles\Google_Tests_run.dir\ConverterTests.cpp.obj.d
+build Google_tests/CMakeFiles/Google_Tests_run.dir/SimulationSetupTest.cpp.obj: CXX_COMPILER__Google_Tests_run_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/Google_tests/SimulationSetupTest.cpp || cmake_object_order_depends_target_Google_Tests_run
+  DEFINES = -DTEST_BUILD
+  DEP_FILE = Google_tests\CMakeFiles\Google_Tests_run.dir\SimulationSetupTest.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   INCLUDES = -IC:/eigen-3.4.0 -IC:/Users/konrad_guest/source/repos/MDS/Headers -IC:/Users/konrad_guest/source/repos/MDS/. -isystem C:/Users/konrad_guest/source/repos/MDS/Google_tests/lib/googletest/include -isystem C:/Users/konrad_guest/source/repos/MDS/Google_tests/lib/googletest
   OBJECT_DIR = Google_tests\CMakeFiles\Google_Tests_run.dir
   OBJECT_FILE_DIR = Google_tests\CMakeFiles\Google_Tests_run.dir
 
-build Google_tests/CMakeFiles/Google_Tests_run.dir/AbsoluteDateTest.cpp.obj: CXX_COMPILER__Google_Tests_run_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/Google_tests/AbsoluteDateTest.cpp || cmake_object_order_depends_target_Google_Tests_run
-  DEP_FILE = Google_tests\CMakeFiles\Google_Tests_run.dir\AbsoluteDateTest.cpp.obj.d
+build Google_tests/CMakeFiles/Google_Tests_run.dir/BoundaryConditionTest.cpp.obj: CXX_COMPILER__Google_Tests_run_unscanned_Debug C$:/Users/konrad_guest/source/repos/MDS/Google_tests/BoundaryConditionTest.cpp || cmake_object_order_depends_target_Google_Tests_run
+  DEFINES = -DTEST_BUILD
+  DEP_FILE = Google_tests\CMakeFiles\Google_Tests_run.dir\BoundaryConditionTest.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   INCLUDES = -IC:/eigen-3.4.0 -IC:/Users/konrad_guest/source/repos/MDS/Headers -IC:/Users/konrad_guest/source/repos/MDS/. -isystem C:/Users/konrad_guest/source/repos/MDS/Google_tests/lib/googletest/include -isystem C:/Users/konrad_guest/source/repos/MDS/Google_tests/lib/googletest
   OBJECT_DIR = Google_tests\CMakeFiles\Google_Tests_run.dir
@@ -986,9 +988,9 @@ build Google_tests/CMakeFiles/Google_Tests_run.dir/AbsoluteDateTest.cpp.obj: CXX
 #############################################
 # Link the executable Google_tests\Google_Tests_run.exe
 
-build Google_tests/Google_Tests_run.exe: CXX_EXECUTABLE_LINKER__Google_Tests_run_Debug Google_tests/CMakeFiles/Google_Tests_run.dir/ConverterTests.cpp.obj Google_tests/CMakeFiles/Google_Tests_run.dir/AbsoluteDateTest.cpp.obj | lib/libgtest.a lib/libgtest_main.a lib/libgtest.a || lib/libgtest.a lib/libgtest_main.a
+build Google_tests/Google_Tests_run.exe: CXX_EXECUTABLE_LINKER__Google_Tests_run_Debug Google_tests/CMakeFiles/Google_Tests_run.dir/SimulationSetupTest.cpp.obj Google_tests/CMakeFiles/Google_Tests_run.dir/BoundaryConditionTest.cpp.obj | lib/libgtest.a lib/libgtest_main.a lib/libgtest.a || lib/libgtest.a lib/libgtest_main.a
   FLAGS = -g
-  LINK_LIBRARIES = -lDateConverter_lib  lib/libgtest.a  lib/libgtest_main.a  lib/libgtest.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_LIBRARIES = lib/libgtest.a  lib/libgtest_main.a  lib/libgtest.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = Google_tests\CMakeFiles\Google_Tests_run.dir
   POST_BUILD = cd .
   PRE_LINK = cd .

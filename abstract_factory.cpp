@@ -2,7 +2,7 @@
 // Created by konrad_guest on 16/05/2024.
 //
 
-#include "Headers/abstract_factory.h"
+#include "Headers/simulation/abstract_factory.h"
 
 Eigen::VectorXd Atom2D::getCoordinates() const {
     return coordinates;

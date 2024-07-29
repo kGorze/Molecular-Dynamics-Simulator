@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <memory>
+
 #include <Eigen/Core>
 
 class Atom {

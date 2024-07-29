@@ -5,10 +5,9 @@
 #ifndef MENU_H
 #define MENU_H
 
+#include "Headers/simulation/simulation.h"
+#include "Headers/core/command.h"
 
-
-#include "command.h"
-#include "simulation.h"
 #include <unordered_map>
 #include <memory>
 #include <string>

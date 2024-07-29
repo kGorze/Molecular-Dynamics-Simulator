@@ -1,7 +1,7 @@
 //
 // Created by konrad_guest on 25/07/2024.
 //
-#include "leapfrog.h"
+#include "Headers/utils/leapfrog.h"
 
 void leapfrog_coordinates(
     Eigen::VectorXd&            coordinates,

@@ -2,7 +2,7 @@
 // Created by konrad_guest on 24/07/2024.
 //
 
-#include "simulation2dap.h"
+#include "Headers/simulation/simulation2dap.h"
 
 double simulation2dap::singleSimulationStep() {
     std::vector<std::shared_ptr<Atom2D>>& atoms = this->getAtoms();

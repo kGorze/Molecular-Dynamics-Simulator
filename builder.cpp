@@ -2,9 +2,10 @@
 // Created by konrad_guest on 16/05/2024.
 //
 
-#include "Headers/builder.h"
+#include "Headers/simulation/builder.h"
+
 #include <iostream>
-#include <random>
+
 
 Eigen::Vector2d velocity_rand(std::mt19937& rng, std::uniform_real_distribution<double>& dist) {
     Eigen::Vector2d velocity;
@@ -75,18 +76,13 @@ void Simulation2DBuilder::initializeVectors(){
 
 void Simulation2DBuilder::initializeCoordinates() {
     auto coordinates = Eigen::VectorXd(2);
+    coordinates << 0,0;
     auto gap = Eigen::VectorXd(2);
+    gap << 0,0;
     //set the coordinates to two dimensions
 
     std::vector<std::shared_ptr<Atom2D>>& atoms = this->simulation->getAtoms();
 
-    // Initialize gap and coordinates to zero
-    gap(0) = 0, gap(1) =  0;
-    coordinates(0) = 0; coordinates(1) = 0;
-
-    //print values of gap and coordinates
-    std::cout << "gap: " << gap << std::endl;
-    std::cout << "coordinates: " << coordinates << std::endl;
 
     int nx,ny;
     // Calculate the gap as the element-wise division of region and initUcell
@@ -119,7 +115,8 @@ void Simulation2DBuilder::initializeCoordinates() {
 }
 
 void Simulation2DBuilder::initializeVelocities() {
-    Eigen::VectorXd vSum(2),tempVelocities(2);
+    Eigen::VectorXd vSum = Eigen::VectorXd(2);
+    Eigen::VectorXd tempVelocities = Eigen::VectorXd(2);
     vSum << 0, 0;
     tempVelocities << 0, 0;
     this->simulation->setVelocitiesSum(vSum);
