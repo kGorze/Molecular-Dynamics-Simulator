@@ -113,6 +113,30 @@ protected:
     simulation2dap* sim;
 };
 
+TEST_F(Simulation2DAPFixture, ConfigurationSetup) {
+    EXPECT_DOUBLE_EQ(sim->get<double>("deltaT"), 0.005);
+    EXPECT_DOUBLE_EQ(sim->get<double>("density"), 0.5);
+    EXPECT_EQ(sim->get<int>("initUcellX"), 5);
+    EXPECT_EQ(sim->get<int>("initUcellY"), 5);
+    EXPECT_EQ(sim->get<int>("stepAvg"), 50);
+    EXPECT_EQ(sim->get<int>("stepEquil"), 0);
+    EXPECT_EQ(sim->get<int>("stepLimit"), 100);
+    EXPECT_DOUBLE_EQ(sim->get<double>("temperature"), 1.0);
+    EXPECT_EQ(sim->get<int>("limitVel"), 4);
+    EXPECT_DOUBLE_EQ(sim->get<double>("rangeVel"), 3.0);
+    EXPECT_EQ(sim->get<int>("sizeHistVel"), 50);
+    EXPECT_EQ(sim->get<int>("stepVel"), 5);
+    EXPECT_EQ(sim->get<int>("randSeed"), 18);
+    EXPECT_EQ(sim->get<int>("numberOfDimensions"), 2);
+    EXPECT_DOUBLE_EQ(sim->get<double>("cutOffRadius"), std::pow(2.0, (1.0) / (6.0)));
+}
+
+TEST_F(Simulation2DAPFixture, AtomInitialization) {
+    EXPECT_EQ(sim->getAtoms().size(), sim->get<int>("numberOfAtoms"));
+    EXPECT_EQ(sim->get<int>("numberOfAtoms"), 25);  // 5x5 grid
+}
+
+
 TEST_F(Simulation2DAPFixture, SingleSimulationStep)
 {
     EXPECT_EQ(sim->get<int>("stepCount"), 0);
@@ -175,4 +199,26 @@ TEST_F(Simulation2DAPFixture, ComputeForces)
         }
     }
     EXPECT_FALSE(allZero);
+}
+
+TEST_F(Simulation2DAPFixture, EvaluateProperties) {
+    sim->evaluateProperties();
+
+    EXPECT_GT(sim->get<Eigen::Vector3d>("kineticEnergy").norm(), 0.0);
+    EXPECT_GT(sim->get<Eigen::Vector3d>("potentialEnergy").norm(), 0.0);
+    EXPECT_GT(sim->get<Eigen::Vector3d>("pressure").norm(), 0.0);
+}
+
+TEST_F(Simulation2DAPFixture, EvaluateVelocityDistribution) {
+    sim->evaluateVelocityDistribution();
+
+    const auto& histogram = sim->getHistogramVelocities();
+    EXPECT_FALSE(histogram.empty());
+    EXPECT_EQ(histogram.size(), sim->get<int>("sizeHistVel"));
+}
+
+TEST_F(Simulation2DAPFixture, AccumulateProperties) {
+    int initialCount = sim->get<int>("countStep");
+    sim->accumulateProperties(0);
+    EXPECT_EQ(sim->get<int>("countStep"), initialCount + 1);
 }

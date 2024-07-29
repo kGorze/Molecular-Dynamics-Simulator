@@ -4,7 +4,7 @@
 #include "gtest/gtest.h"
 #include "Headers/simulation/boundary_conditions.h"
 
-TEST(BoundaryConditionsTest,WrapComponent2D){ // 12/2/2020 -> 737761
+TEST(BoundaryConditionsTest,WrapComponent2D){
     // Test case 1: component >= 0.5 * regionComponent
     double component1 = 6.0;
     double regionComponent1 = 10.0;
