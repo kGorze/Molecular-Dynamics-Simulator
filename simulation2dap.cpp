@@ -334,6 +334,7 @@ void simulation2dap::run(
     unsigned int    option
     )
 {
+    std::this_thread::sleep_for(std::chrono::seconds(2));
     std::cout<<"\nStarting simulation2D"<<std::endl;
     uint64_t total_steps = get<int>("stepLimit");
     getProgressbar()->totalTicks(total_steps);
