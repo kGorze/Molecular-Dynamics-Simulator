@@ -1,0 +1,4 @@
+The libraries in this folder are used for various components of the MDS project.
+
+Inih: Parses the configuration file.
+Matplotplusplus: Used for plotting velocity distributions in the main file. Currently commented out for convenience.
