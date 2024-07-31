@@ -66,7 +66,8 @@ pygame
 
 
 ## Installation
-
+The program is not only intended for  **Windows** environment and **JetBrains CLion IDE.**
+[installation youtube instruction](https://www.youtube.com/watch?v=NE3JG-eTcnU)
 
 ---
 
