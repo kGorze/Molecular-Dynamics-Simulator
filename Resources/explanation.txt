@@ -46,5 +46,16 @@ Velocity Distribution
 
 The output is a CSV file where each line represents a vector of values. The vector length is defined in the configuration and corresponds to the number of velocity bins. Each index within a vector indicates the number of particles in the corresponding velocity bin. The CSV includes multiple iterations of these vectors, allowing for the analysis of distribution evolution over time.
 
+--
+
+Directory
+
+--
+
+THE RESULTS OF THE PROGRAM ARE IN THE OUTPUT FOLDER WITHIN
+CMAKE-BUILD-DEBUG/RESOURCES/{SPECIFIED_NAME_OF_OUTPUT_FOLDER}
+
+Ideally, the output would be generated in the project's root directory. However, since I typically use CLion, IT IS IN
+THE CMAKE-BUILD-DEBUG FOLDER **IN MY CASE**.
 
 
