@@ -1,4 +1,4 @@
-// Created by konrad_guest on 25/07/2024.
+//WRITTEN BY: github.com/kgorze
 
 #ifndef DATASAVER_H
 #define DATASAVER_H

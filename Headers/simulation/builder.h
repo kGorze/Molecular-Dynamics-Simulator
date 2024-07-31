@@ -1,6 +1,4 @@
-//
-// Created by konrad_guest on 16/05/2024.
-//
+//WRITTEN BY: github.com/kgorze
 
 #ifndef BUILDER_H
 #define BUILDER_H

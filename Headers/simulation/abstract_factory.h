@@ -1,6 +1,4 @@
-//
-// Created by konrad_guest on 16/05/2024.
-//
+//WRITTEN BY: github.com/kgorze
 
 #ifndef ABSTRACT_FACTORY_H
 #define ABSTRACT_FACTORY_H

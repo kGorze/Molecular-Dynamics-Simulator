@@ -1,6 +1,4 @@
-//
-// Created by konrad_guest on 20/05/2024.
-//
+//WRITTEN BY: github.com/kgorze
 
 #ifndef BOUNDARY_CONDITIONS_H
 #define BOUNDARY_CONDITIONS_H

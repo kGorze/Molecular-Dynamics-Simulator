@@ -1,6 +1,4 @@
-//
-// Created by konrad_guest on 24/07/2024.
-//
+//WRITTEN BY: github.com/kgorze
 
 #include "Headers/simulation/simulation2dap.h"
 

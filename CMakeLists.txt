@@ -22,12 +22,12 @@ include_directories(.)
 
 set(MATPLOTPP_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(MATPLOTPP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-add_subdirectory(Third_party/matplotplusplus)
+add_subdirectory("External Non-compiled Libraries/matplotplusplus")
 
 
 
 # inih library
-add_library(inih STATIC third_party/inih/ini.c)
+add_library(inih STATIC "External Non-compiled Libraries/inih/ini.c")
 # target_include_directories(inih PUBLIC third_party/inih)
 # target_compile_features(inih PUBLIC cxx_std_23)
 

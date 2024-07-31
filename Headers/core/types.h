@@ -1,6 +1,4 @@
-//
-// Created by konrad_guest on 19/05/2024.
-//
+//WRITTEN BY: github.com/kgorze
 
 #ifndef TYPES_H
 #define TYPES_H

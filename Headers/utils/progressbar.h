@@ -1,6 +1,4 @@
-//
-// Created by konrad_guest on 20/05/2024.
-//
+//BASED ON THE STACKOVERFLOW ANSWER
 
 #ifndef PROGRESSBAR_H
 #define PROGRESSBAR_H

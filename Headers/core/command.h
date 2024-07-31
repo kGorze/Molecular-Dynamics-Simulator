@@ -1,6 +1,4 @@
-//
-// Created by konrad_guest on 18/05/2024.
-//
+//WRITTEN BY: github.com/kgorze
 
 #ifndef COMMAND_H
 #define COMMAND_H

@@ -1,6 +1,4 @@
-//
-// Created by konrad_guest on 25/07/2024.
-//
+//WRITTEN BY: github.com/kgorze
 
 #ifndef SIMULATION3DCS_H
 #define SIMULATION3DCS_H

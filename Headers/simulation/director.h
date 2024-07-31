@@ -1,13 +1,11 @@
-//
-// Created by konrad_guest on 16/05/2024.
-//
+//WRITTEN BY: github.com/kgorze
 
 #ifndef DIRECTOR_H
 #define DIRECTOR_H
 
 
 #include "Headers/simulation/builder.h"
-#include "Third_party/inih/ini.h"
+#include "External Non-compiled Libraries/inih/ini.h"
 
 #include <memory>
 #include <unordered_map>

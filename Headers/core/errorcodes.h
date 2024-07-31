@@ -1,3 +1,6 @@
+//BASED ON THE GROMACS SOURCE CODE github.com/gromacs/gromacs
+
+
 #ifndef MDS_UTILITY_ERRORCODES_H
 #define MDS_UTILITY_ERRORCODES_H
 

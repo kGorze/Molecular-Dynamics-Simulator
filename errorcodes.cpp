@@ -1,3 +1,6 @@
+//BASED ON THE GROMACS SOURCE CODE github.com/gromacs/gromacs
+
+
 #include "Headers/core/errorcodes.h"
 
 namespace mds

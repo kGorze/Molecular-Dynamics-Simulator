@@ -1,6 +1,7 @@
-/Third_party/
+
+/External Non-compiled Libraries/
 /cmake-build-debug/
-/.idea/
+
 
 /Google_tests/lib/
 /Google_tests/cmake-build-debug/

@@ -1,6 +1,4 @@
-//
-// Created by konrad_guest on 20/05/2024.
-//
+//BASED ON THE STACKOVERFLOW ANSWER
 
 #include "Headers/utils/progressbar.h"
 

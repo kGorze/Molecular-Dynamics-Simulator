@@ -1,6 +1,5 @@
-//
-// Created by konrad_guest on 26/07/2024.
-//
+//WRITTEN BY: github.com/kgorze
+
 #include "Headers/simulation/boundary_conditions.h"
 
 // Function to wrap a single component of a vector

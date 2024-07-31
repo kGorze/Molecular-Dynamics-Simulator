@@ -1,6 +1,4 @@
-//
-// Created by konrad_guest on 18/05/2024.
-//
+//WRITTEN BY: github.com/kgorze
 
 #include "Headers/ui/menu.h"
 

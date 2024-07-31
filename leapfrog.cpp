@@ -1,6 +1,6 @@
-//
-// Created by konrad_guest on 25/07/2024.
-//
+//WRITTEN BY: github.com/kgorze
+
+
 #include "Headers/utils/leapfrog.h"
 
 void leapfrog_coordinates(

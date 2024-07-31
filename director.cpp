@@ -1,6 +1,5 @@
-//
-// Created by konrad_guest on 16/05/2024.
-//
+//WRITTEN BY: github.com/kgorze
+
 #include "Headers/simulation/director.h"
 
 // Handler for parsing INI file

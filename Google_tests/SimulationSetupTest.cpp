@@ -1,6 +1,5 @@
-//
-// Created by konrad_guest on 27/07/2024.
-//
+//WRITTEN BY: github.com/kgorze
+
 #include "gtest/gtest.h"
 #include "Headers/simulation/simulation2dap.h"
 #include "Headers/simulation/builder.h"

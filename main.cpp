@@ -1,3 +1,5 @@
+//WRITTEN BY: github.com/kgorze
+
 #include "Headers/simulation/director.h"
 #include "Headers/simulation/builder.h"
 #include "Headers/simulation/simulation2dap.h"
