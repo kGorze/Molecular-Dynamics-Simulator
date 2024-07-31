@@ -1,0 +1,67 @@
+NOT EVERYTHING IS CHECKED, BUT I THINK THIS IS CORRECT. IF YOU WANT THE CLARIFICATION OF ANYTHING, PLEASE LET ME KNOW.
+IMPORTANT FOR THE PROGRAMMERS - (**************)
+--
+**************
+deltaT = 0.005:
+This is the time step for the simulation.
+It determines the size of each step in the integration of the equations of motion.
+
+--
+
+density = 0.5:
+This is the density of the system being simulated.
+
+--
+**************
+initUcell = 5 5:
+This specifies the initial configuration of particles in a unit cell.
+It suggests a 5x5 grid of particles in a 2D simulation.
+
+--
+
+stepAvg = 50:
+This indicates how often the system properties are averaged or recorded.
+--
+
+stepEquil = 0:
+This is the number of steps used for equilibration before data collection begins. In this case, it's set to 0, meaning no equilibration period.
+--
+**************
+stepLimit = 100:
+This is the total number of simulation steps to be performed.
+
+--
+
+temperature = 1.0:
+This sets the initial temperature of the system.
+
+--
+
+limitVel = 4:
+This is related to the velocity distribution calculation.
+It specifies how many times the velocity distribution should be calculated.
+
+--
+
+rangeVel = 3.0:
+This sets the range for the velocity distribution histogram.
+
+--
+**************
+sizeHistVel = 50:
+This specifies the number of bins in the velocity distribution histogram.
+
+--
+**************
+stepVel = 5:
+This determines how often the velocity distribution is calculated (every 5 steps in this case).
+
+--
+**************
+randSeed = 18:
+This is the seed for the random number generator, ensuring pseudo reproducibility of the simulation.
+
+--
+**************
+numberOfDimensions = 2:
+This specifies that the simulation is being run in two dimensions.

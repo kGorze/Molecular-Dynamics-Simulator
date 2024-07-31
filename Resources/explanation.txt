@@ -1,0 +1,50 @@
+Properties
+
+--
+Step Count: The current simulation step
+Time Now: The current simulation time
+3-4. Velocity Sum Value X/Y: Sum of velocities in X and Y directions (should be close to zero for momentum conservation)
+5-6. Potential Energy Sum/Squared: For calculating average and variance of potential energy
+7-8. Kinetic Energy Sum/Squared: For calculating average and variance of kinetic energy
+9-10. Pressure Sum/Squared: For calculating average and variance of pressure
+
+Each row represents a timestep in the simulation. The data shows how these properties evolve over time. Notable observations:
+Velocity sums remain close to zero, indicating momentum conservation.
+Potential energy remains fairly constant.
+Kinetic energy decreases over time.
+Pressure starts positive but becomes increasingly negative.
+--
+
+Results
+
+--
+The output is in CSV format. Each line represents a simulation step (iteration). The first column indicates the step number, while the second and third columns provide the x and y coordinates of an atom in a 2D simulation.
+
+For example, with two atoms, the CSV would look like this:
+
+1, 0.7, 0.3
+1, 0.0, 0.0
+2, 0.73, 0.21
+2, 0.5, 0.2
+3, 0.81, 0.15
+3, 0.6, 0.4
+This represents three iterations of two atoms:
+
+Line 1: Iteration 1, Atom 1 (x, y)
+Line 2: Iteration 1, Atom 2 (x, y)
+Line 3: Iteration 2, Atom 1 (x, y)
+Line 4: Iteration 2, Atom 2 (x, y)
+Line 5: Iteration 3, Atom 1 (x, y)
+Line 6: Iteration 3, Atom 2 (x, y)
+To obtain the coordinates of Atom 1, you would use lines 1, 3, 5, and so on.
+
+--
+
+Velocity Distribution
+
+--
+
+The output is a CSV file where each line represents a vector of values. The vector length is defined in the configuration and corresponds to the number of velocity bins. Each index within a vector indicates the number of particles in the corresponding velocity bin. The CSV includes multiple iterations of these vectors, allowing for the analysis of distribution evolution over time.
+
+
+
