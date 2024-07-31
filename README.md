@@ -32,6 +32,8 @@ A separate **Python script** utilizing Pygame generates a visual representation 
 draw_atoms_velocity_sensitive.py
 ```
 ![Alt Text](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaGtpeWl1MDkzb3N2MWtjY29tdmhpazM4Znd2MGJ1M3d3aGQyZDdmZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/g6oxb5B3CX98gutee8/giphy.gif)
+
+
 **No colour coded** by python script:
 ```
 draw_atoms_no_color_coded.py
