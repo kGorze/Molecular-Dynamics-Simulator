@@ -101,22 +101,30 @@ void simulation2dap::applyBoundaryConditions() {
 }
 
 void simulation2dap::computeForces() {
+    //strategy pattern
     Eigen::VectorXd distance = Eigen::VectorXd(2);
     distance << 0, 0;
     double radiusSquared, cutoffRadiusSquared;
 
     auto& atoms = this->getAtoms();
+
     size_t numAtoms = atoms.size();
+
+
     Eigen::VectorXd region = this->get<Eigen::VectorXd>("region");
+
     double cutOffRadius = this->get<double>("cutOffRadius");
 
     cutoffRadiusSquared = cutOffRadius * cutOffRadius;
+    //
 
+    //new function
     for (auto& atom : atoms) {
         Eigen::Vector2d acceleration;
         acceleration << 0, 0;
         atom->setAccelerations(acceleration);
     }
+
 
     this->setpotentialEnergySum(0.0);
     this->setviralEnergySum(0.0);

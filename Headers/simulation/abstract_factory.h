@@ -49,8 +49,6 @@ public:
 };
 class Atom3D : public Atom{};
 
-class Argon2D : public Atom {};
-
 class AtomFactory {
 public:
     virtual std::shared_ptr<Atom2D> createAtom() = 0;
