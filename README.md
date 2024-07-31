@@ -1,5 +1,3 @@
-parent:: [[_2 Molecular Dynamic Simulation MOC]]
-
 ## Project Name
 Molecular Dynamic Simulator - Simulates the molecular dynamics of atoms.
 
