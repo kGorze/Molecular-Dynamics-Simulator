@@ -96,3 +96,27 @@ The code is freely reusable. The license for the book-based portions is still un
 ## Authors and Acknowledgments
 This project is heavily inspired by the book: [The Art of Molecular Dynamics Simulation](https://www.cambridge.org/core/books/art-of-molecular-dynamics-simulation/57D40C5ECE9B7EA17C0E77E7754F5874)
 1. Rapaport DC. _The Art of Molecular Dynamics Simulation_. 2nd ed. Cambridge University Press; 2004.
+
+
+--
+## Post-Mortem
+First Iteration:
+The initial challenge arose when we needed to create 3D simulations using methods originally designed for 2D. As a quick solution, we implemented a very primitive object-oriented paradigm with a deeply hierarchical structure.
+
+Second Iteration:
+The structure became an issue again when we had to incorporate design patterns for the final project submission. To address this, we rewrote the program, adding design patterns like Factory and Builder.
+
+Third Iteration:
+The third challenge was related to making the base class too generic, which hindered further development. To overcome this, we:
+
+Created a UML diagram before coding.
+Added design patterns to promote code reusability, modularity, and scalability.
+Implemented a CI/DI framework with Google tests.
+Divided the work into modules responsible for multithreading, inter-module communication, physics, etc.
+
+Lessons Learned:
+
+Early planning: Creating a UML diagram from the beginning can prevent architectural issues.
+Design patterns: They are essential for maintainable and extensible code.
+Testing: A comprehensive test suite is crucial for catching regressions.
+Modularization: Breaking down the system into smaller, well-defined modules improves understanding and maintainability.
