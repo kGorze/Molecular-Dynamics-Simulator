@@ -28,8 +28,12 @@ void Director::initializeSimulationWithConfig(const std::string& configFilePath)
     try {
         double deltaT = std::stod(config["Parameters.deltaT"]);
         double density = std::stod(config["Parameters.density"]);
+
         int initUcellX = std::stoi(config["Parameters.initUcell"].substr(0, config["Parameters.initUcell"].find(' ')));
         int initUcellY = std::stoi(config["Parameters.initUcell"].substr(config["Parameters.initUcell"].find(' ') + 1));
+        Eigen::VectorXd initUcell(2);
+        initUcell << initUcellX, initUcellY;
+
         int stepAvg = std::stoi(config["Parameters.stepAvg"]);
         int stepEquil = std::stoi(config["Parameters.stepEquil"]);
         int stepLimit = std::stoi(config["Parameters.stepLimit"]);
@@ -41,8 +45,7 @@ void Director::initializeSimulationWithConfig(const std::string& configFilePath)
         int randSeed = std::stoi(config["Parameters.randSeed"]);
         int numberOfDimensions = std::stoi(config["Parameters.numberOfDimensions"]);
 
-        Eigen::VectorXd initUcell(2);
-        initUcell << initUcellX, initUcellY;
+
 
 
         this->builder->setDeltaT(deltaT);

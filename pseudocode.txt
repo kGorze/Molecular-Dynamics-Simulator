@@ -1,0 +1,106 @@
+Start Algorithm
+
+declare variable Director
+declare variable Builder2D
+
+set Builder for Director
+set variable ConfigurationPath
+
+declare Simulation_2D_AP object
+
+if Simulation_2D_AP is simulation2d pointer than:
+    Director use initializeSimulationWithConfiguration:
+        declare variable config
+        if config is null:
+            return
+        set variable DeltaT
+        set variable Density
+        set variable initUCellX
+        set variable initUCellY
+        set variable stepAverage
+        set variable stepEquil
+        set variable stepLimit
+        set variable temperature
+        set variable limitVel
+        set variable rangeVel
+        set variable sizeHistVel
+        set variable stepVel
+        set variable randSeed
+        set variable numberOfDimensions
+
+        set variable config
+    Director use buildMinimalSimulation:
+        Builder use setRestOfParameters:
+            set variable AtomFactory
+            set variable Progressbar
+            set variable CutoffRadius
+            set variable Region
+            set variable NumberOfAtoms
+            set variable VelocityMagnitude
+        Builder use InitializeVectors:
+            get numberOfAtoms
+            get sizeHistVel
+            get AtomFactory
+
+            if AtomFactory is null:
+                return
+            for numberOfAtoms do:
+                AtomsVector add one Atom
+            for sizeHistVel do:
+                HistogramVelocitiesVector add one Bin
+        Builder use setupStaticSimulation:
+            set variable CountStep
+            set varialbe CountVelocities
+
+            Builder use initializeCoordinates:
+                create variable nX,nY
+                create variable Coordinates2DVector
+                create variable GapVector2D
+                get AtomVector
+                Calculate GapVector2D
+                set variable numberOfAtomIterations
+                for initUCellX do:
+                    for initUCellY do:
+                        calculate coordinates(X)
+                        calculate coordinates(Y)
+                        scale Coordinates2DVector
+                        set Atom coordinates based on numberOfAtomIterations
+                        increment numberOfAtomInteractions
+
+            Builder use initializeVelocities:
+                create variable vSumVector2D
+                create variable tempVelocityVector2D
+
+                set variable tempVelocityVector2D
+                get variable AtomsVector
+                get variable velocityMagnitude
+                get variable numberOfAtoms
+
+                create random generator from random library
+
+                for atoms do:
+                    set variable tempVelocities
+                    scale tempVelocities with velocityMagnitude
+                    set Atom velocities
+                    set variable vSum
+            Builder use initializeAccelerations:
+                get variable AtomsVector
+                for atoms do:
+                    create variable tempAccelerations
+                    set Atom accelerations
+            Simulation use accumulateProperties:
+                set variable temp
+
+                set kineticEnergy
+                set potentialEnergy
+                set pressure
+    Builder use printConfig:
+        for config do:
+            print configVariable
+
+    Builder use runSimulation:
+
+
+
+
+
