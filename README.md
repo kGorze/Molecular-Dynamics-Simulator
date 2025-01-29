@@ -3,7 +3,7 @@ Molecular Dynamic Simulator - Simulates the molecular dynamics of atoms.
 
 ---
 ## Project Description
-**This is an academic project focused on developing a molecular dynamics simulator.** Currently, it simulates Lennard-Jones (LJ) forces using a (less efficient) all-pairs algorithm on a 2D Boltzmann lattice of atoms.
+**This is an academic project focused on developing a molecular dynamics simulator.** Currently, it simulates Lennard-Jones (LJ) forces using a (less efficient) all-pairs algorithm on a 2D Boltzmann lattice of atoms. Half an assignment for a project in object-oriented programming and on the other hand a hobby project related to simulations. Lab assignment for Dr. Carrascoza - Bioinformatics 2nd semester, object-oriented programming.
 
 **Am not familiar with Docker yet**,  so here's a breakdown of the "toolchain" dependencies needed for the project:
 Those are the files required to:
